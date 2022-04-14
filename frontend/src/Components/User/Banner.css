@@ -1,0 +1,5 @@
+.banner_img{
+    background-image: url('../../Images/imgOne.jpg');
+    background-size: cover;
+    background-position: 1px;
+}

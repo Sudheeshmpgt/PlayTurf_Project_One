@@ -8,7 +8,6 @@ function Footer() {
     
       <Grid
       container 
-      
       px={{xs:3,sm:20}}
       py={{xs:3,sm:5}}
       sx={{background:'linear-gradient(#4D4C4C, #000000)', color:'white'}}>

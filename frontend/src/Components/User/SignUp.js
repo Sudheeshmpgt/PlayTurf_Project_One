@@ -12,10 +12,13 @@ import { Box } from '@mui/system'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 
 function SignUp() {
 
+    const navigate = useNavigate()
     const { register,
         handleSubmit,
         formState: { errors }
@@ -23,18 +26,44 @@ function SignUp() {
     const theme = useTheme()
     const isMatch = useMediaQuery(theme.breakpoints.down('md'))
 
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'bottom-right',
+        showConfirmButton: false,
+        timer: 5000,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+
     const regOnSubmit = (data) => {
         const { name, phone, email, password, confirmPassword } = data
         if (name && phone && email && password && (password === confirmPassword)) {
             axios.post("http://localhost:9000/user_registration", data)
                 .then((res) => {
-                    alert(res.data.message)
+                    const message = res.data.message
+                    navigate('/login')
+                    Toast.fire({
+                        icon: 'success',
+                        title: message
+                    })
                 }).catch(e => {
-                    alert("error")
+                    Toast.fire({
+                        icon: 'error',
+                        title: "Some thing went wrong"
+                    })
                 })
         } else {
-            alert("Invalid Credetials")
+            Toast.fire({
+                icon: 'error',
+                title: "Invalid Credentials"
+            })
         }
+    }
+
+    const toLogin=()=>{
+        navigate('/login')
     }
 
     let paperStyle
@@ -160,8 +189,8 @@ function SignUp() {
                                     fullWidth>Sign Up</Button>
                             </form>
                             <Typography>
-                                <Grid container sx={{ marginTop: 1 }}>
-                                    <Link sx={{ fontSize: '0.9rem' }}>
+                                <Grid container sx={{ marginTop: 1 }} onClick={toLogin}>
+                                    <Link sx={{ fontSize: '0.9rem', cursor:'pointer'}} >
                                         Already have an account? Sign In
                                     </Link>
                                 </Grid>

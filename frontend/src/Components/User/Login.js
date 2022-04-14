@@ -1,30 +1,62 @@
-import {
-    Avatar,
-    Button,
-    Grid,
-    Link,
-    Paper,
-    TextField,
-    Typography,
-    useMediaQuery,
-    useTheme
-} from '@mui/material'
+import { Avatar, Button, Grid, Link, Paper, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { Box } from '@mui/system'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-import React from 'react'
+import React, { useContext } from 'react'
 import { useForm } from 'react-hook-form'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import { UserContext } from '../../Store/usercontext'
+import Swal from 'sweetalert2'
 
 function Login() {
-
-    const { register,
-        handleSubmit,
-        formState: { errors }
-    } = useForm()
+    const { setUser } = useContext(UserContext)
+    const navigate = useNavigate()
+    const { register, handleSubmit, formState: { errors } } = useForm()
     const theme = useTheme()
     const isMatch = useMediaQuery(theme.breakpoints.down('md'))
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'bottom-right',
+        showConfirmButton: false,
+        timer: 3000,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
     const logOnSubmit = (data) => {
-       
+        const { email, password } = data
+        if (email && password) {
+            axios.post("http://localhost:9000/user_signin", data)
+                .then((res) => {
+                    setUser(res.data.user)
+                    const message = res.data.message
+                    Toast.fire({
+                        icon: 'success',
+                        title: message
+                    })
+                    const token = res.data.user.tokens[0].token
+                    localStorage.setItem("usertoken",token)
+                    navigate('/')
+                }).catch((e) => {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Something went wrong'
+                    })
+
+                })
+        } else {
+            Toast.fire({
+                icon: 'warning',
+                title: 'Invalid user'
+            })
+        }
     }
+
+    const toSignup = ()=>{
+        navigate('/signup')
+    }
+
     let paperStyle
     if (isMatch) {
         paperStyle = {
@@ -91,17 +123,18 @@ function Login() {
                                     sx={{ marginTop: 1 }}
                                     variant="contained"
                                     type='submit'
-                                    fullWidth>Sign in</Button>
+                                    fullWidth
+                                >Sign in</Button>
                             </form>
                             <Typography>
                                 <Grid container spacing={1} sx={{ marginTop: 1 }}>
                                     <Grid item xs={12} md={4.5}>
-                                        <Link sx={{ fontSize: '0.9rem' }}>
+                                        <Link sx={{ fontSize: '0.9rem', cursor:'pointer' }}>
                                             Forgot password?
                                         </Link>
                                     </Grid>
                                     <Grid item xs={12} md={7.5}>
-                                        <Link sx={{ fontSize: '0.9rem' }}>
+                                        <Link sx={{ fontSize: '0.9rem', cursor:'pointer' }} onClick={toSignup}>
                                             Don't have an account? Sign Up
                                         </Link>
                                     </Grid>

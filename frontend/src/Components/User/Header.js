@@ -1,9 +1,15 @@
-import React, { useState } from 'react'
-import { Grid, AppBar, Toolbar, Box, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem } from '@mui/material'
+import React, { useState, useContext } from 'react'
+import { Grid, AppBar, Toolbar, Box, IconButton, Typography, Menu, Container, Button, Tooltip, MenuItem } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { UserContext } from '../../Store/usercontext'
+import { useNavigate } from 'react-router-dom';
+
 
 function Header() {
-    const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
+    const navigate = useNavigate();
+    const { user,setUser } = useContext(UserContext)
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -21,7 +27,20 @@ function Header() {
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
-    const user = false;
+
+    const logout =()=>{
+        setUser('')
+        localStorage.removeItem("usertoken")
+        navigate('/')
+    }
+
+    const signIn =()=>{
+        navigate('/login')
+    }
+
+    const signUp =()=>{
+        navigate('/signup')
+    }
     return (
         <>
             <Grid container>
@@ -115,9 +134,13 @@ function Header() {
 
                                 {
                                     user ? <Box sx={{ flexGrow: 0 }}>
+
                                         <Tooltip title="Open settings">
-                                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                                <Avatar alt="R" src="" />
+                                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, color:'white' }}>
+                                                <Typography>
+                                                    {`Hi, ${user.name}`}
+                                                </Typography>
+                                                <ArrowDropDownIcon sx={{marginLeft:"2px"}}/>
                                             </IconButton>
                                         </Tooltip>
                                         <Menu
@@ -136,22 +159,26 @@ function Header() {
                                             open={Boolean(anchorElUser)}
                                             onClose={handleCloseUserMenu}
                                         >
-                                            {settings.map((setting) => (
-                                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                                    <Typography textAlign="center">{setting}</Typography>
-                                                </MenuItem>
-                                            ))}
+                                            <MenuItem onClick={handleCloseUserMenu}>
+                                                <Typography textAlign="center">Account</Typography>
+                                            </MenuItem>
+                                            <MenuItem onClick={handleCloseUserMenu}>
+                                                <Typography textAlign="center">Bookings</Typography>
+                                            </MenuItem>
+                                            <MenuItem onClick={handleCloseUserMenu}>
+                                                <Typography textAlign="center" onClick={logout}>Logout</Typography>
+                                            </MenuItem>
                                         </Menu>
                                     </Box> :
                                         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
                                             <Button
-                                                onClick={handleCloseNavMenu}
+                                                onClick={signIn}
                                                 sx={{ my: 1, color: 'white', display: 'block' }}
                                             >
                                                 Sign In
                                             </Button>
                                             <Button
-                                                onClick={handleCloseNavMenu}
+                                                onClick={signUp}
                                                 sx={{ my: 1, color: 'white', display: 'block' }}
                                             >
                                                 Sign Up
