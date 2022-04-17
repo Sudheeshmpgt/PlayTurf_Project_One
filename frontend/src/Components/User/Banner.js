@@ -8,7 +8,7 @@ function Banner() {
     <Grid container>
         <Grid item xs={12} md={12}>
             <Paper 
-            elevation={10} 
+            elevation={5} 
             sx={{width:'96.5%', 
             height:350,
             marginLeft:'auto',

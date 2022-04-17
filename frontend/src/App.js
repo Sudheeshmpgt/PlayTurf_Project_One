@@ -1,22 +1,25 @@
 
 import './App.css';
 import {Routes,Route} from 'react-router-dom'
-import Home from './Components/User/Home';
-import Login from './Components/User/Login';
-import SignUp from './Components/User/SignUp';
-import AdminHome from './Components/Admin/AdminHome'
-import AdminLogin from './Components/Admin/AdminLogin';
-import Userpage from './Components/Admin/Pages/UserPage/Userpage';
-import Userupdate from './Components/Admin/Pages/UserPage/Userupdate';
-import Turfpage from './Components/Admin/Pages/TurfPage/Turfpage';
+import Home from './Pages/Home';
+import Login from './Pages/Login';
+import SignUp from './Pages/SignUp';
+import AdminHome from './Pages/AdminHome'
+import AdminLogin from './Pages/AdminLogin';
+import Userpage from './Pages/Userpage';
+import Userupdate from './Pages/Userupdate';
+import Turfpage from './Pages/Turfpage';
 import Turfadd from './Components/Admin/Turfadd';
 import Turfupdate from './Components/Admin/Turfupdate';
+import Turf from './Pages/Turf';
+
+
 
 function App() {
   
   return (
    <Routes>
-     <Route exact path='/' element={<Home/>}/> 
+     <Route path='/' element={<Home/>}/> 
      <Route path='/login' element={<Login/>}/> 
      <Route path='/signup' element={ <SignUp/>}/> 
      <Route path='/adminlogin' element={ <AdminLogin/>}/> 
@@ -25,7 +28,8 @@ function App() {
      <Route path='/userupdate' element={ <Userupdate/>}/> 
      <Route path='/turfpage' element={ <Turfpage/>}/> 
      <Route path='/turfadd' element={ <Turfadd/>}/> 
-     <Route path='/turfupdate' element={ <Turfupdate/>}/> 
+     <Route path='/turfupdate' element={ <Turfupdate/>}/>
+     <Route path='/turf' element={ <Turf/>}/>  
    </Routes>
   );
 }

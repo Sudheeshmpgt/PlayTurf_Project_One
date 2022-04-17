@@ -5,13 +5,19 @@ import './index.css';
 import App from './App';
 import User from './Store/usercontext'
 import Search from './Store/searchcontext';
+import {Theme} from './Theme'
+import {ThemeProvider} from '@mui/material/styles'
+
+
 
 ReactDOM.render(
   <React.StrictMode>
     <Search>
       <User>
         <BrowserRouter>
-          <App />
+        <ThemeProvider theme={Theme}>
+        <App />
+        </ThemeProvider>
         </BrowserRouter>
       </User>
     </Search>

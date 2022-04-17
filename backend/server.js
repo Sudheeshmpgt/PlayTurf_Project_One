@@ -2,9 +2,12 @@ require('dotenv').config()
 const express=require('express');
 const app=express();
 const path=require('path');
-const cors=require('cors')
+const cors=require('cors');
 
+const fileUpload = require('express-fileupload');
 const PORT = process.env.PORT||9000
+
+app.use(fileUpload());
 
 app.use(express.json());    
 app.use(express.urlencoded({extended:false}));

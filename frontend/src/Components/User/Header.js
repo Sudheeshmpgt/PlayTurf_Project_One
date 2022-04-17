@@ -4,6 +4,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { UserContext } from '../../Store/usercontext'
 import { useNavigate } from 'react-router-dom';
+import Search from './Search';
 
 
 function Header() {
@@ -41,11 +42,17 @@ function Header() {
     const signUp =()=>{
         navigate('/signup')
     }
+
+    const onClickTurf=()=>{
+        handleCloseNavMenu();
+        navigate('/turf')
+    }
+
     return (
         <>
             <Grid container>
                 <Grid item xs={12}>
-                    <AppBar position="static" sx={{ backgroundColor: '#DD0404' }}>
+                    <AppBar position="static" sx={{ backgroundColor: '#393939' }}>
                         <Container maxWidth="xl">
                             <Toolbar disableGutters>
                                 <Typography
@@ -55,7 +62,8 @@ function Header() {
                                     sx={{ mr: 5, display: { xs: 'none', md: 'flex' } }}
                                     fontFamily='Homemade Apple, cursive;'
                                     fontSize={18}
-                                    color='black'
+                                    color='#FF5A09'
+                                    fontWeight={400}
                                 >
                                     Play Turf
                                 </Typography>
@@ -91,7 +99,7 @@ function Header() {
                                     >
 
                                         <MenuItem onClick={handleCloseNavMenu}>
-                                            <Typography textAlign="center">Home</Typography>
+                                            <Typography textAlign="center" fontWeight={600}>Home</Typography>
                                         </MenuItem>
                                         <MenuItem onClick={handleCloseNavMenu}>
                                             <Typography textAlign="center">Turfs</Typography>
@@ -108,30 +116,37 @@ function Header() {
                                     sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
                                     fontFamily='Homemade Apple, cursive;'
                                     fontSize={18}
+                                    color='#FF5A09'
                                 >
                                     Play Turf
                                 </Typography>
+                                <Box sx={{display:'flex'}}>
                                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                                     <Button
                                         onClick={handleCloseNavMenu}
-                                        sx={{ my: 2, color: 'white', display: 'block' }}
+                                        sx={{ my: 1, color: 'white', display: 'block',fontWeight:500, fontSize:'1rem' }}
                                     >
                                         Home
                                     </Button>
                                     <Button
-                                        onClick={handleCloseNavMenu}
-                                        sx={{ my: 2, color: 'white', display: 'block' }}
+                                        onClick={onClickTurf}
+                                        sx={{ my: 1, color: 'white', display: 'block', fontWeight:500, fontSize:'1rem'}}
                                     >
                                         Turfs
                                     </Button>
                                     <Button
                                         onClick={handleCloseNavMenu}
-                                        sx={{ my: 2, color: 'white', display: 'block' }}
+                                        sx={{ my: 1, color: 'white', display: 'block', fontWeight:500, fontSize:'1rem' }}
                                     >
                                         Book Now
                                     </Button>
+                                </Box >
+                                <Box  sx={{marginTop:'1%'}}>
+                                <Search/>
                                 </Box>
-
+                                </Box>
+                                
+                                
                                 {
                                     user ? <Box sx={{ flexGrow: 0 }}>
 
@@ -169,17 +184,18 @@ function Header() {
                                                 <Typography textAlign="center" onClick={logout}>Logout</Typography>
                                             </MenuItem>
                                         </Menu>
+                                        
                                     </Box> :
                                         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
                                             <Button
                                                 onClick={signIn}
-                                                sx={{ my: 1, color: 'white', display: 'block' }}
+                                                sx={{ my: 1, color: 'white', display: 'block',fontWeight:500, fontSize:'1rem' }}
                                             >
                                                 Sign In
                                             </Button>
                                             <Button
                                                 onClick={signUp}
-                                                sx={{ my: 1, color: 'white', display: 'block' }}
+                                                sx={{ my: 1, color: 'white', display: 'block',fontWeight:500, fontSize:'1rem' }}
                                             >
                                                 Sign Up
                                             </Button>

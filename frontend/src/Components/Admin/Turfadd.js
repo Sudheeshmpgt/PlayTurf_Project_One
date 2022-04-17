@@ -12,7 +12,7 @@ import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import Swal from 'sweetalert2';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function Turfadd() {
 

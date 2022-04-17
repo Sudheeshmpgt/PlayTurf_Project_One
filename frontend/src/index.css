@@ -5,4 +5,7 @@
 body{
   padding:0;
   margin:0;
+  background-image: linear-gradient(black,grey);
+   background-size: cover;
+   background-repeat: no-repeat;
 }
