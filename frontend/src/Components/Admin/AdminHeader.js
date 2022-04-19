@@ -38,16 +38,18 @@ function AdminHeader() {
     }
 
     return (
-        <AppBar position="static" sx={{ backgroundColor: '#DD0404' }}>
+        <AppBar position="static" sx={{ backgroundColor: '#393939' }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <Typography
-                        variant="p"
+                        variant=''
                         noWrap
                         component="div"
-                        sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
+                        sx={{ mr: 5, display: { xs: 'none', md: 'flex' } }}
                         fontFamily='Homemade Apple, cursive;'
                         fontSize={18}
+                        color='#FF5A09'
+                        fontWeight={400}
                     >
                         Play Turf
                     </Typography>
@@ -105,6 +107,7 @@ function AdminHeader() {
                         variant="p"
                         noWrap
                         component="div"
+                        color='#FF5A09'
                         sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
                         fontFamily='Homemade Apple, cursive;'
                         fontSize={15}
@@ -115,9 +118,9 @@ function AdminHeader() {
                     </Box>
                     {
                         isMatch ?
-                           '':
+                            '' :
                             <TextField
-                                color='error'
+                                // color='error'
                                 size='small'
                                 variant='standard'
                                 value={search}
@@ -132,7 +135,7 @@ function AdminHeader() {
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Typography color='white' sx={{fontFamily:'Open Sans,sans-serif'}}>
+                                <Typography color='white' sx={{ fontFamily: 'Open Sans,sans-serif' }}>
                                     Hi, Admin
                                 </Typography>
                                 <ArrowDropDownIcon sx={{ color: 'white' }} />

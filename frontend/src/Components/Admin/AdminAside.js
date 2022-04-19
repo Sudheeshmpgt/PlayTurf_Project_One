@@ -21,6 +21,9 @@ function AdminAside() {
     const turfSubmit = ()=>{
         navigate('/turfpage')
     }
+    const categorySubmit = ()=>{
+        navigate('/categorypage')
+    }
     return (
         <Grid container>
             {
@@ -30,6 +33,7 @@ function AdminAside() {
                     sx={{
                         height: 575,
                         width: 275,
+                        backgroundColor:'rgba(255, 255, 255, 0.8)'
                     }}>
                     <Box
                     sx={{
@@ -58,7 +62,7 @@ function AdminAside() {
                             </Button>
                         </Box>
                         <Box  sx={{margin:'5px 0'}}>
-                            <Button sx={{color:'black', fontWeight:600, fontSize:'1.1rem',fontFamily:'Open Sans,sans-serif'}}>
+                            <Button onClick={categorySubmit} sx={{color:'black', fontWeight:600, fontSize:'1.1rem',fontFamily:'Open Sans,sans-serif'}}>
                             <CategoryIcon sx={{marginRight:2}}/>
                             Category
                             </Button>

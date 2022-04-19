@@ -15,11 +15,12 @@ export const Theme = createTheme({
     },
   typography:{
     fontFamily:[
-      'Open Sans,sans-serif'
+      'Open Sans,sans-serif',
+      
     ],
     fontSize:'1rem',
     body2:{
-      fontFamily:'sans-serif',
+      fontFamily:['sans-serif','Atkinson Hyperlegible, sans-serif'],
       fontSize:'1rem'
     }
   },

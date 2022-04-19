@@ -10,7 +10,7 @@ import Search from './Search';
 function Header() {
 
     const navigate = useNavigate();
-    const { user,setUser } = useContext(UserContext)
+    const { user, setUser } = useContext(UserContext)
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -29,23 +29,28 @@ function Header() {
         setAnchorElUser(null);
     };
 
-    const logout =()=>{
+    const logout = () => {
         setUser('')
         localStorage.removeItem("usertoken")
         navigate('/')
     }
 
-    const signIn =()=>{
+    const signIn = () => {
         navigate('/login')
     }
 
-    const signUp =()=>{
+    const signUp = () => {
         navigate('/signup')
     }
 
-    const onClickTurf=()=>{
+    const onClickTurf = () => {
         handleCloseNavMenu();
         navigate('/turf')
+    }
+
+    const onClickHome = () => {
+        handleCloseNavMenu();
+        navigate('/')
     }
 
     return (
@@ -120,42 +125,39 @@ function Header() {
                                 >
                                     Play Turf
                                 </Typography>
-                                <Box sx={{display:'flex'}}>
-                                <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                                    <Button
-                                        onClick={handleCloseNavMenu}
-                                        sx={{ my: 1, color: 'white', display: 'block',fontWeight:500, fontSize:'1rem' }}
-                                    >
-                                        Home
-                                    </Button>
-                                    <Button
-                                        onClick={onClickTurf}
-                                        sx={{ my: 1, color: 'white', display: 'block', fontWeight:500, fontSize:'1rem'}}
-                                    >
-                                        Turfs
-                                    </Button>
-                                    <Button
-                                        onClick={handleCloseNavMenu}
-                                        sx={{ my: 1, color: 'white', display: 'block', fontWeight:500, fontSize:'1rem' }}
-                                    >
-                                        Book Now
-                                    </Button>
-                                </Box >
-                                <Box  sx={{marginTop:'1%'}}>
-                                <Search/>
+                                <Box sx={{ display: 'flex' }}>
+                                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                                        <Button
+                                            onClick={onClickHome}
+                                            sx={{ my: 1, color: 'white', display: 'block', fontWeight: 500, fontSize: '1rem' }}
+                                        >
+                                            Home
+                                        </Button>
+                                        <Button
+                                            onClick={onClickTurf}
+                                            sx={{ my: 1, color: 'white', display: 'block', fontWeight: 500, fontSize: '1rem' }}
+                                        >
+                                            Turfs
+                                        </Button>
+                                        <Button
+                                            onClick={handleCloseNavMenu}
+                                            sx={{ my: 1, color: 'white', display: 'block', fontWeight: 500, fontSize: '1rem' }}
+                                        >
+                                            Book Now
+                                        </Button>
+                                    </Box >
+                                    <Box sx={{ marginTop: '1%' }}>
+                                        <Search />
+                                    </Box>
                                 </Box>
-                                </Box>
-                                
-                                
                                 {
-                                    user ? <Box sx={{ flexGrow: 0 }}>
-
+                                    user ? <Box sx={{ flexGrow: 1, display:'flex', justifyContent: 'flex-end' }}>
                                         <Tooltip title="Open settings">
-                                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, color:'white' }}>
+                                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, color: 'white' }}>
                                                 <Typography>
                                                     {`Hi, ${user.name}`}
                                                 </Typography>
-                                                <ArrowDropDownIcon sx={{marginLeft:"2px"}}/>
+                                                <ArrowDropDownIcon sx={{ marginLeft: "2px" }} />
                                             </IconButton>
                                         </Tooltip>
                                         <Menu
@@ -184,18 +186,18 @@ function Header() {
                                                 <Typography textAlign="center" onClick={logout}>Logout</Typography>
                                             </MenuItem>
                                         </Menu>
-                                        
+
                                     </Box> :
                                         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
                                             <Button
                                                 onClick={signIn}
-                                                sx={{ my: 1, color: 'white', display: 'block',fontWeight:500, fontSize:'1rem' }}
+                                                sx={{ my: 1, color: 'white', display: 'block', fontWeight: 500, fontSize: '1rem' }}
                                             >
                                                 Sign In
                                             </Button>
                                             <Button
                                                 onClick={signUp}
-                                                sx={{ my: 1, color: 'white', display: 'block',fontWeight:500, fontSize:'1rem' }}
+                                                sx={{ my: 1, color: 'white', display: 'block', fontWeight: 500, fontSize: '1rem' }}
                                             >
                                                 Sign Up
                                             </Button>

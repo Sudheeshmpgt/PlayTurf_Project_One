@@ -14,7 +14,7 @@ import axios from '../../axiosinstance'
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
-function Turfadd() {
+function Categoryadd() {
 
     const { register,
         handleSubmit,
@@ -35,17 +35,17 @@ function Turfadd() {
         }
     })
 
-    const addTurfOnSubmit = (data) => {
-        const { centername, phone, location, price } = data
-        if (centername && phone && location && price) {
-            axios.post("admin_panel/turfs/add_turfs", data)
+    const addCategoryOnSubmit = (data) => {
+        const { centername, location, category } = data
+        if (centername && location && category) {
+            axios.post("admin_panel/category/add_category", data)
                 .then((res) => {
                     const message = res.data.message
                     Toast.fire({
                         icon: 'success',
                         title: message
                     })
-                    navigate('/turfpage')
+                    navigate('/categorypage')
                 }).catch(e => {
                     Toast.fire({
                         icon: 'error',
@@ -89,8 +89,8 @@ function Turfadd() {
                     <Paper elevation={10} style={paperStyle}>
                         <Grid align='center'>
                             <Avatar style={avatarStyle}><SportsSoccerIcon /></Avatar>
-                            <h2 style={{ marginBottom: '10px' }}>ADD NEW TURF</h2>
-                            <form onSubmit={handleSubmit(addTurfOnSubmit)} autoComplete='off'>
+                            <h2 style={{ marginBottom: '10px' }}>ADD NEW CATEGORY</h2>
+                            <form onSubmit={handleSubmit(addCategoryOnSubmit)} autoComplete='off'>
                                 <TextField
                                     style={textStyle}
                                     name='centername'
@@ -114,23 +114,6 @@ function Turfadd() {
                                 />
                                 <TextField
                                     style={textStyle}
-                                    name='phone'
-                                    type='string'
-                                    {...register('phone', {
-                                        required: 'This field is required',
-                                        pattern: {
-                                            value: /^\d{10}$/,
-                                            message: 'Please enter a valid phone number'
-                                        }
-                                    })}
-                                    error={!!errors?.phone}
-                                    helperText={errors?.phone ? errors.phone.message : null}
-                                    label='Phone'
-                                    placeholder='Enter contact number'
-                                    fullWidth
-                                />
-                                <TextField
-                                    style={textStyle}
                                     name='location'
                                     type='string'
                                     {...register('location', {
@@ -147,19 +130,20 @@ function Turfadd() {
                                     fullWidth />
                                 <TextField
                                     style={textStyle}
-                                    name='price'
+                                    name='category'
                                     type='string'
-                                    {...register('price', {
+                                    {...register('category', {
                                         required: 'This field is required',
                                         pattern: {
-                                            value: /^[0-9]*$/,
-                                            message: 'Please enter only number'
+                                            value: /^[a-zA-Z][a-zA-Z][a-zA-Z ]*$/,
+                                            message: 'Please enter a valid category'
                                         }
+
                                     })}
-                                    error={!!errors?.price}
-                                    helperText={errors?.price ? errors.price.message : null}
-                                    label='Price'
-                                    placeholder='Enter price per hour'
+                                    error={!!errors?.category}
+                                    helperText={errors?.category ? errors.category.message : null}
+                                    label='Category'
+                                    placeholder='Enter category'
                                     fullWidth />
                                 <Button
                                     sx={{ marginTop: 1, marginBottom: 5 }}
@@ -175,4 +159,4 @@ function Turfadd() {
     )
 }
 
-export default Turfadd
+export default Categoryadd

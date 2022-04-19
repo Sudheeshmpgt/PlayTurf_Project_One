@@ -7,11 +7,15 @@ import SignUp from './Pages/SignUp';
 import AdminHome from './Pages/AdminHome'
 import AdminLogin from './Pages/AdminLogin';
 import Userpage from './Pages/Userpage';
-import Userupdate from './Pages/Userupdate';
+import Userupdate from './Components/Admin/Userupdate';
 import Turfpage from './Pages/Turfpage';
 import Turfadd from './Components/Admin/Turfadd';
 import Turfupdate from './Components/Admin/Turfupdate';
 import Turf from './Pages/Turf';
+import Turfview from './Pages/Turfview';
+import Categorypage from './Pages/Categorypage';
+import Categoryadd from './Components/Admin/Categoryadd';
+import Categoryupdate from './Components/Admin/Categoryupdate';
 
 
 
@@ -30,6 +34,10 @@ function App() {
      <Route path='/turfadd' element={ <Turfadd/>}/> 
      <Route path='/turfupdate' element={ <Turfupdate/>}/>
      <Route path='/turf' element={ <Turf/>}/>  
+     <Route path='/turfview' element={ <Turfview/>}/> 
+     <Route path='/categorypage' element={ <Categorypage/>}/>
+     <Route path='/categoryadd' element={ <Categoryadd/>}/>
+     <Route path='/categoryupdate' element={ <Categoryupdate/>}/>
    </Routes>
   );
 }

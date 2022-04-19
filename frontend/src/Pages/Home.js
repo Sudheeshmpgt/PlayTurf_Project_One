@@ -15,7 +15,7 @@ function Home() {
     if(!token){
     navigate('/')
     }
-  },[navigate])
+  })
   
   return (
     <Grid container>

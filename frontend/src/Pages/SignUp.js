@@ -9,7 +9,7 @@ import {
 } from '@mui/material'
 import { Box } from '@mui/system'
 import { useForm } from 'react-hook-form'
-import axios from 'axios'
+import axios from '../axiosinstance'
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
@@ -37,7 +37,7 @@ function SignUp() {
     const regOnSubmit = (data) => {
         const { name, phone, email, password, confirmPassword } = data
         if (name && phone && email && password && (password === confirmPassword)) {
-            axios.post("http://localhost:9000/user_registration", data)
+            axios.post("user_registration", data)
                 .then((res) => {
                     const message = res.data.message
                     navigate('/login')

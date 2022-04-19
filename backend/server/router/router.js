@@ -43,5 +43,20 @@ route.put('/admin_panel/turfs/edit_turfs/:id', controller.updateTurfData)
 //admin turf management delete turf details
 route.delete('/admin_panel/turfs/delete_turfs/:id', controller.deleteTurfData)
 
+//admin category management
+route.get('/admin_panel/category', controller.categoryManagement)
+
+//admin category management add new category
+route.post('/admin_panel/category/add_category', controller.addCategory)
+
+//admin turf management update request
+route.get('/admin_panel/category/edit_category/:id', controller.getCategoryData)
+
+//admin turf management get updated
+route.put('/admin_panel/category/edit_category/:id', controller.updateCategoryData)
+
+//admin turf management delete turf details
+route.delete('/admin_panel/category/delete_category/:id', controller.deleteCategoryData)
+
 
 module.exports=route;

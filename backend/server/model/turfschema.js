@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const CategoryModel = require('./categoryschema')
 
 const turfSchema = new mongoose.Schema({
     centername:{
@@ -13,11 +14,10 @@ const turfSchema = new mongoose.Schema({
     location:{
         type:String,
         required:true,
-        unique:true
     },
-    category:{
-        type:String,
-        required:true
+    categories:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'category'
     },
     price:{
         type:String,

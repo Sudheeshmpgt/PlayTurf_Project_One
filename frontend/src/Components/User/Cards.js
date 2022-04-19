@@ -16,7 +16,7 @@ function Cards() {
             // marginRight:'auto',
             // }}
             >
-                <h1 style={{ marginTop: '20px', marginLeft: '30px', color: '#FF5A09' }}>
+                <h1 style={{ marginTop: '20px', marginLeft: '30px', color: '#FF5A09', fontFamily:'Atkinson Hyperlegible, sans-serif' }}>
                     TURFS
                 </h1>
             </Typography>

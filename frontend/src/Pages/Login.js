@@ -2,7 +2,7 @@ import { Button, Grid, Link, Paper, TextField, Typography, useMediaQuery, useThe
 import { Box } from '@mui/system'
 import React, { useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import axios from 'axios'
+import axios from '../axiosinstance'
 import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../Store/usercontext'
 import Swal from 'sweetalert2'
@@ -26,7 +26,7 @@ function Login() {
     const logOnSubmit = (data) => {
         const { email, password } = data
         if (email && password) {
-            axios.post("http://localhost:9000/user_signin", data)
+            axios.post("user_signin", data)
                 .then((res) => {
                     setUser(res.data.user)
                     const message = res.data.message
@@ -76,7 +76,7 @@ function Login() {
             borderRadius: '15px'
         }
     }
-
+    
     const textStyle = { margin: '6px auto' }
     return (
         <Grid container>

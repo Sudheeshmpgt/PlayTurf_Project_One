@@ -3,7 +3,7 @@ import { Button, Grid, Paper, TextField, useTheme, useMediaQuery, Box, Avatar } 
 import { useForm } from 'react-hook-form'
 import EditIcon from '@mui/icons-material/Edit';
 import { useLocation, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import axios from '../../axiosinstance'
 import Swal from 'sweetalert2'
 
 function Userupdate() {
@@ -34,7 +34,7 @@ function Userupdate() {
 
     useEffect(() => {
         const id = location.state.id
-        axios.get(`http://localhost:9000/admin_panel/user_management/update/${id}`)
+        axios.get(`admin_panel/user_management/update/${id}`)
             .then((res) => {
                 setUser(res.data.user[0])
             })
@@ -53,7 +53,7 @@ function Userupdate() {
         const id = location.state.id
         const {name,phone,email} =user
         if(name && phone && email){
-            axios.put(`http://localhost:9000/admin_panel/user_management/edit_user/${id}`,user)
+            axios.put(`admin_panel/user_management/edit_user/${id}`,user)
             .then((res)=>{
                 const message = res.data.message;
                 Toast.fire({

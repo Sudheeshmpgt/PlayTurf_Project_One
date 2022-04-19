@@ -3,7 +3,7 @@ import { Button, Grid, Paper, TextField, useTheme, useMediaQuery, Box, Avatar, L
 import { useForm } from 'react-hook-form'
 import EditIcon from '@mui/icons-material/Edit';
 import { useLocation, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import axios from '../../axiosinstance'
 import Swal from 'sweetalert2'
 
 function Turfupdate() {
@@ -39,11 +39,11 @@ function Turfupdate() {
     useEffect(() => {
         const id = location.state.id
         setTurfId(id)
-        axios.get(`http://localhost:9000/admin_panel/turfs/edit_turfs/${id}`)
+        axios.get(`admin_panel/turfs/edit_turfs/${id}`)
             .then((res) => {
                 setTurf(res.data.turf[0])
             })
-    }, [])
+    }, [location.state.id])
 
 
     const handleChange = (e) => {
@@ -58,7 +58,7 @@ function Turfupdate() {
         const id = turfid
         const { centername, phone, location, category, price } = turf
         if (centername && phone && location && category && price) {
-            axios.put(`http://localhost:9000/admin_panel/turfs/edit_turfs/${id}`, turf)
+            axios.put(`admin_panel/turfs/edit_turfs/${id}`, turf)
                 .then((res) => {
                     const message = res.data.message;
                     Toast.fire({

@@ -1,9 +1,8 @@
-import { Avatar, Button, Grid, Paper, TextField, useMediaQuery, useTheme } from '@mui/material'
+import { Button, Grid, Paper, TextField, useMediaQuery, useTheme, Typography } from '@mui/material'
 import { Box } from '@mui/system'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import axios from 'axios'
+import axios from '../axiosinstance'
 import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 
@@ -25,7 +24,7 @@ function AdminLogin() {
     const logOnSubmit = (data) => {
         const { email, password } = data
         if (email && password) {
-            axios.post("http://localhost:9000/admin_login", data)
+            axios.post("admin_login", data)
                 .then((res) => {
                     console.log(res)
                     // setUser(res.data.user)
@@ -55,23 +54,24 @@ function AdminLogin() {
     let paperStyle
     if (isMatch) {
         paperStyle = {
+            backgroundColor:'rgba(255, 255, 255, 0.8)',
             padding: 20,
             height: 'auto',
             width: 280,
-            margin: "50px auto",
+            margin: "150px auto",
             borderRadius: '15px'
         }
     } else {
         paperStyle = {
+            backgroundColor:'rgba(255, 255, 255, 0.8)',
             padding: 20,
             height: 'auto',
             width: 375,
-            margin: "50px auto",
+            margin: "9.6% auto",
             borderRadius: '15px'
         }
     }
 
-    const avatarStyle = { backgroundColor: '#DD0404', margin: 15 }
     const textStyle = { margin: '6px auto' }
     return (
         <Grid container>
@@ -79,7 +79,13 @@ function AdminLogin() {
                 <Box>
                     <Paper elevation={10} style={paperStyle}>
                         <Grid align='center'>
-                            <Avatar style={avatarStyle}><LockOutlinedIcon /></Avatar>
+                        <Typography
+                            fontFamily='Homemade Apple, cursive;'
+                            fontSize={25}
+                            color='#FF5A09'
+                            fontWeight={500}
+                            marginTop='25px'
+                            marginBottom='15px'>Play Turf</Typography>
                             <h2 style={{ marginBottom: '10px' }}>ADMIN</h2>
                             <h4 style={{ marginBottom: '10px' }}>SIGN IN</h4>
                             <form onSubmit={handleSubmit(logOnSubmit)}>
@@ -116,8 +122,9 @@ function AdminLogin() {
                                     error={!!errors?.password}
                                     helperText={errors?.password ? errors.password.message : null} />
                                 <Button
-                                    sx={{ marginTop: 1, marginBottom:5 }}
+                                    sx={{ marginTop: 1, fontSize:16, fontWeight:600, marginBottom:3.5}}
                                     variant="contained"
+                                    color='secondary'
                                     type='submit'
                                     fullWidth
                                 >Sign in</Button>

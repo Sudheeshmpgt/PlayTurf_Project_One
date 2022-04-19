@@ -2,23 +2,22 @@ import { Grid, Box } from '@mui/material'
 import React from 'react'
 import AdminAside from '../Components/Admin/AdminAside'
 import AdminHeader from '../Components/Admin/AdminHeader'
-import User from '../Components/Admin/User'
+import Category from '../Components/Admin/Category'
 
-function Userpage() {
-   
-    return (
-        <Grid container>
-            <AdminHeader />
-            <Grid item sx={{ display: 'flex'}}>
+function Categorypage() {
+  return (
+    <Grid>
+        <AdminHeader/>
+        <Grid item sx={{ display: 'flex'}}>
                 <Box>
                     <AdminAside />
                 </Box>
                 <Box>
-                    <User/>
+                    <Category/>
                 </Box>
-            </Grid>
         </Grid>
-    )
+    </Grid>
+  )
 }
 
-export default Userpage
+export default Categorypage
