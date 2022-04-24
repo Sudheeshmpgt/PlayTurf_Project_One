@@ -5,7 +5,6 @@ import React from 'react'
 function Footer() {
 
   return (
-    
       <Grid
       container 
       px={{xs:3,sm:20}}
@@ -19,32 +18,32 @@ function Footer() {
           justifyContent:'space-around',
           alignItems:'center'}}>
             <Grid item xs={12} md={6} >
-              <Box fontSize='1.2rem' borderBottom={1} >Quick Links</Box>
-              <Box >
-                <Link color='inherit' underline='none'>Home</Link>
+              <Box fontSize='1.2rem' fontFamily='Open Sans,sans-serif' mb={2} borderBottom={1} >Quick Links</Box>
+              <Box mb={0.7}>
+                <Link color='inherit' fontFamily='Open Sans,sans-serif' underline='none'>Home</Link>
               </Box>
-              <Box >
-                <Link color='inherit' underline='none'>About us</Link>
+              <Box mb={0.7} >
+                <Link color='inherit' fontFamily='Open Sans,sans-serif' underline='none'>About us</Link>
               </Box>
-              <Box >
-                <Link color='inherit' underline='none'>Contact us</Link>
+              <Box mb={0.7}>
+                <Link color='inherit' fontFamily='Open Sans,sans-serif' underline='none'>Contact us</Link>
               </Box>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Box fontSize='1.2rem' borderBottom={1}>Connect Us</Box>
-              <Box >
-                <Link color='inherit' underline='none'>Facebook</Link>
+              <Box fontSize='1.2rem' fontFamily='Open Sans,sans-serif'mb={2} borderBottom={1}>Connect Us</Box>
+              <Box mb={0.7}>
+                <Link color='inherit' fontFamily='Open Sans,sans-serif' underline='none'>Facebook</Link>
               </Box>
-              <Box >
-                <Link color='inherit' underline='none'>Instagram</Link>
+              <Box mb={0.7}>
+                <Link color='inherit' fontFamily='Open Sans,sans-serif' underline='none'>Instagram</Link>
               </Box>
-              <Box >
-                <Link color='inherit' underline='none'>Linked In</Link>
+              <Box mb={0.7}>
+                <Link color='inherit' fontFamily='Open Sans,sans-serif' underline='none'>Linked In</Link>
               </Box>
             </Grid>
           </Grid>
           <Container>
-          <Box textAlign='center' pt={{xs:5, sm:7}} pb={{xs:5,sm:0}}>
+          <Box textAlign='center' fontFamily='Open Sans,sans-serif' fontSize={14} pt={{xs:5, sm:7}} pb={{xs:5,sm:0}}>
             Play turf &reg; {new Date().getFullYear()}
           </Box>
           </Container>

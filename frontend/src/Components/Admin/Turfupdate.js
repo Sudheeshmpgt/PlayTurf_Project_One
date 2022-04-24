@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Grid, Paper, TextField, useTheme, useMediaQuery, Box, Avatar, Link, Typography } from '@mui/material'
+import { Button, Grid, Paper, TextField, useTheme, useMediaQuery, Avatar, IconButton } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import EditIcon from '@mui/icons-material/Edit';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useLocation, useNavigate } from 'react-router-dom'
 import axios from '../../axiosinstance'
 import Swal from 'sweetalert2'
@@ -73,24 +74,30 @@ function Turfupdate() {
                 title: 'Invalid Credetials'
             })
         }
-
     }
+    
+    const goBack = () =>{
+        navigate('/turfpage')
+    }
+
     let paperStyle
     if (isMatch) {
         paperStyle = {
             padding: 20,
             height: 'auto',
             width: 280,
-            margin: "50px auto",
-            borderRadius: '15px'
+            margin: "10px auto",
+            backgroundColor:'rgba(255, 255, 255, 0.8)',
+            borderRadius: '1px'
         }
     } else {
         paperStyle = {
             padding: 20,
             height: 'auto',
             width: 500,
-            margin: "50px auto",
-            borderRadius: '15px'
+            margin: "10px auto",
+            backgroundColor:'rgba(255, 255, 255, 0.8)',
+            borderRadius: '1px'
         }
     }
 
@@ -98,12 +105,19 @@ function Turfupdate() {
     const textStyle = { margin: '6px auto' }
     return (
         <Grid container>
-            <Grid item xs={12}>
-                <Box>
-                    <Paper elevation={10} style={paperStyle}>
+             <Grid>
+            <IconButton 
+            variant='text' 
+            onClick={goBack}
+            sx={{marginTop:'10%', 
+            color:'white'}}>
+                <ArrowBackIcon/> Go Back
+            </IconButton>
+            </Grid>
+                    <Paper elevation={3} style={paperStyle}>
                         <Grid align='center'>
                             <Avatar style={avatarStyle}><EditIcon /></Avatar>
-                            <h2 style={{ marginBottom: '10px' }}>Edit Turf Details</h2>
+                            <h2 style={{ marginBottom: '10px', fontFamily: 'Atkinson Hyperlegible, sans-serif' }}>Edit Turf Details</h2>
                             <form onSubmit={handleSubmit(Edit)} autoComplete='off'>
                                 <TextField
                                     {...register('centername', {
@@ -210,8 +224,6 @@ function Turfupdate() {
                             </form>
                         </Grid>
                     </Paper>
-                </Box>
-            </Grid>
         </Grid >
     )
 }

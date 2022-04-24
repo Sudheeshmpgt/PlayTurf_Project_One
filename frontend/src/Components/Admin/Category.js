@@ -1,5 +1,5 @@
 import {
-    Paper, useTheme, useMediaQuery, TableContainer, Table, 
+    Paper, useTheme, useMediaQuery, TableContainer, Table,
     TableRow, TableCell, TableHead, TableBody, Box, Typography, Fab
 } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
@@ -16,8 +16,8 @@ function Category() {
     const { search } = useContext(SearchContext)
     const navigate = useNavigate()
     const theme = useTheme()
-    const isMatch = useMediaQuery(theme.breakpoints.down('md'))
-    const tableStyle = { width:'95%', margin: '15px auto', }
+    const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
+    const isMedium = useMediaQuery(theme.breakpoints.down('md'))
 
     //category management get request
     const getCategoryData = async () => {
@@ -40,12 +40,12 @@ function Category() {
         }
     }, [navigate])
 
-    //category management update turfs refquest
+    //category management update Category refquest
     const editCategory = (id) => {
         navigate('/categoryupdate', { state: { id: id } })
     }
 
-    //category management delete turf details
+    //category management delete Category details
     const deleteCategory = (id) => {
         Swal.fire({
             title: 'Are you sure?',
@@ -69,128 +69,202 @@ function Category() {
             }
         })
     }
-  return (
-    <Paper elevation={5} sx={{
-        backgroundColor:'rgba(255, 255, 255, 0.8)',
-        height: 575,
-        marginTop: 1,
-        width: 1065
-
-    }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 5 }}>
-            <Typography variant='h6' component={Box} sx={{
-                fontWeight: 700
-            }}>
-                CATEGORY DETAILS
-            </Typography>
-            <Fab color="success" size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
-                <AddIcon onClick={()=>navigate('/categoryadd')} />
-            </Fab>
-        </Box>
-        <Box sx={{ marginTop: '-40px' }}>
+    return (
+        <Box sx={{ marginTop: '1px' }}>
             {
-                isMatch ? (
-                    <TableContainer component={Paper} sx={{ width: 330, marginTop: '50px', marginLeft: '7%' }}>
-                        <Table sx={{ width: 900 }} aria-label="simple table">
-                            <TableHead sx={{ backgroundColor: '#0037ff6e' }}>
-                                <TableRow>
-                                    <TableCell>Id</TableCell>
-                                    <TableCell >Center Name</TableCell>
-                                    <TableCell >Location</TableCell>
-                                    <TableCell >Category</TableCell>
-                                    <TableCell align="center" colSpan={2}>
-                                        Actions
-                                    </TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {category.filter((data) => {
-                                    if (search === "") {
-                                        return data
-                                    } else if (data.centername.toLowerCase().includes(search.toLowerCase())) {
-                                        return data
-                                    }
-                                })
-                                    .map((data, index) => (
-                                        <TableRow
-                                            key={data._id}
-                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                        >
-                                            <TableCell component="th" scope="row">
-                                                {index + 1}
-                                            </TableCell>
-                                            <TableCell >{data.centername}</TableCell>
-                                            <TableCell >{data.location}</TableCell>
-                                            <TableCell >{data.category}</TableCell>
-                                            <TableCell colSpan={2}>Actions</TableCell>
-                                            <TableCell >
-                                                <Fab color='primary' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
-                                                    <EditIcon onClick={() => editCategory(data._id)} />
-                                                </Fab>
-                                            </TableCell>
-                                            <TableCell >
-                                                <Fab color='error' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
-                                                    <DeleteIcon onClick={() => deleteCategory(data._id)} />
-                                                </Fab>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                isSmall ? (
+                    <Paper elevation={3} sx={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        height: 577,
+                        margin: 1.5,
+                        width: 350,
+                        borderRadius: '1px',
+                    }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 5 }}>
+                            <Typography variant='h6' component={Box} sx={{
+                                fontWeight: 700
+                            }}>
+                                CATEGORY DETAILS
+                            </Typography>
+                            <Fab color="success" size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
+                                <AddIcon onClick={() => navigate('/categoryadd')} />
+                            </Fab>
+                        </Box>
+                        <TableContainer className='scrollbar-hidden' component={Paper} style={{ width: '95%', margin: '-20px auto' }}>
+                            <Table sx={{ width: 335 }} aria-label="simple table">
+                                <TableHead sx={{ backgroundColor: '#0037ff6e' }}>
+                                    <TableRow>
+                                        <TableCell align="center" >Id</TableCell>
+                                        <TableCell align="center" >Category</TableCell>
+                                        <TableCell align="center" colSpan={2}>
+                                            Actions
+                                        </TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {category.filter((data) => {
+                                        if (search === "") {
+                                            return data
+                                        } else if (data.centername.toLowerCase().includes(search.toLowerCase())) {
+                                            return data
+                                        }
+                                    })
+                                        .map((data, index) => (
+                                            <TableRow
+                                                key={data._id}
+                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                            >
+                                                <TableCell component="th" scope="row">
+                                                    {index + 1}
+                                                </TableCell>
+                                                <TableCell align="center" >{data.category}</TableCell>
+                                                <TableCell >
+                                                    <Fab color='primary' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
+                                                        <EditIcon onClick={() => editCategory(data._id)} />
+                                                    </Fab>
+                                                </TableCell>
+                                                <TableCell >
+                                                    <Fab color='error' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
+                                                        <DeleteIcon onClick={() => deleteCategory(data._id)} />
+                                                    </Fab>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Paper>
                 ) : (
-                    <TableContainer component={Paper} style={tableStyle}>
-                        <Table sx={{ width: 1011 }} aria-label="simple table">
-                            <TableHead sx={{ backgroundColor: '#0037ff6e' }}>
-                                <TableRow>
-                                    <TableCell align="center" >Id</TableCell>
-                                    <TableCell align="center" >Center Name</TableCell>
-                                    <TableCell align="center" >Location</TableCell>
-                                    <TableCell align="center" >Category</TableCell>
-                                    <TableCell align="center" colSpan={2}>
-                                        Actions
-                                    </TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {category.filter((data) => {
-                                    if (search === "") {
-                                        return data
-                                    } else if (data.centername.toLowerCase().includes(search.toLowerCase())) {
-                                        return data
-                                    }
-                                })
-                                    .map((data, index) => (
-                                        <TableRow
-                                            key={data._id}
-                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                        >
-                                            <TableCell component="th" scope="row">
-                                                {index + 1}
-                                            </TableCell>
-                                            <TableCell align="center" >{data.centername}</TableCell>
-                                            <TableCell align="center" >{data.location}</TableCell>
-                                            <TableCell align="center" >{data.category}</TableCell>
-                                            <TableCell >
-                                                <Fab color='primary' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
-                                                    <EditIcon onClick={() => editCategory(data._id)} />
-                                                </Fab>
-                                            </TableCell>
-                                            <TableCell >
-                                                <Fab color='error' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
-                                                    <DeleteIcon onClick={() => deleteCategory(data._id)} />
-                                                </Fab>
+                    isMedium ? (
+                        <Paper elevation={3} sx={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                            height: 577,
+                            margin: 1,
+                            width: 880,
+                            borderRadius: '1px',
+                        }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 5 }}>
+                                <Typography variant='h6' component={Box} sx={{
+                                    fontWeight: 700
+                                }}>
+                                    CATEGORY DETAILS
+                                </Typography>
+                                <Fab color="success" size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
+                                    <AddIcon onClick={() => navigate('/categoryadd')} />
+                                </Fab>
+                            </Box>
+                            <TableContainer className='scrollbar-hidden' component={Paper} style={{ width: '95%', margin: '-20px auto' }}>
+                                <Table sx={{ width: 1011 }} aria-label="simple table">
+                                    <TableHead sx={{ backgroundColor: '#0037ff6e' }}>
+                                        <TableRow>
+                                            <TableCell align="center" >Id</TableCell>
+                                            <TableCell align="center" >Category</TableCell>
+                                            <TableCell align="center" colSpan={2}>
+                                                Actions
                                             </TableCell>
                                         </TableRow>
-                                    ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                                    </TableHead>
+                                    <TableBody>
+                                        {category.filter((data) => {
+                                            if (search === "") {
+                                                return data
+                                            } else if (data.centername.toLowerCase().includes(search.toLowerCase())) {
+                                                return data
+                                            }
+                                        })
+                                            .map((data, index) => (
+                                                <TableRow
+                                                    key={data._id}
+                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                >
+                                                    <TableCell component="th" scope="row">
+                                                        {index + 1}
+                                                    </TableCell>
+                                                    <TableCell align="center" >{data.category}</TableCell>
+                                                    <TableCell >
+                                                        <Fab color='primary' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
+                                                            <EditIcon onClick={() => editCategory(data._id)} />
+                                                        </Fab>
+                                                    </TableCell>
+                                                    <TableCell >
+                                                        <Fab color='error' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
+                                                            <DeleteIcon onClick={() => deleteCategory(data._id)} />
+                                                        </Fab>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </Paper>
+
+                    ) : (
+                        <Paper elevation={3} sx={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                            height: 577,
+                            marginTop: 1,
+                            width: 1065,
+                            borderRadius: '1px',
+                        }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 5 }}>
+                                <Typography variant='h6' component={Box} sx={{
+                                    fontWeight: 700
+                                }}>
+                                    CATEGORY DETAILS
+                                </Typography>
+                                <Fab color="success" size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
+                                    <AddIcon onClick={() => navigate('/categoryadd')} />
+                                </Fab>
+                            </Box>
+                            <TableContainer className='scrollbar-hidden' component={Paper} style={{ width: '95%', margin: '-20px auto' }}>
+                                <Table sx={{ width: 1011 }} aria-label="simple table">
+                                    <TableHead sx={{ backgroundColor: '#0037ff6e' }}>
+                                        <TableRow>
+                                            <TableCell align="center" >Id</TableCell>
+                                            <TableCell align="center" >Category</TableCell>
+                                            <TableCell align="center" colSpan={2}>
+                                                Actions
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {category.filter((data) => {
+                                            if (search === "") {
+                                                return data
+                                            } else if (data.centername.toLowerCase().includes(search.toLowerCase())) {
+                                                return data
+                                            }
+                                        })
+                                            .map((data, index) => (
+                                                <TableRow
+                                                    key={data._id}
+                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                >
+                                                    <TableCell align="center" component="th" scope="row">
+                                                        {index + 1}
+                                                    </TableCell>
+                                                    <TableCell align="center" >{data.category}</TableCell>
+                                                    <TableCell align="center">
+                                                        <Fab color='primary' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
+                                                            <EditIcon onClick={() => editCategory(data._id)} />
+                                                        </Fab>
+                                                    </TableCell>
+                                                    <TableCell align="center" >
+                                                        <Fab color='error' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
+                                                            <DeleteIcon onClick={() => deleteCategory(data._id)} />
+                                                        </Fab>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </Paper>
+                    )
                 )
             }
         </Box>
-    </Paper>
-  )
+    )
 }
 
 export default Category

@@ -63,6 +63,10 @@ function SignUp() {
         navigate('/login')
     }
 
+    const goHome = ()=>{
+        navigate('/')
+    }
+
     let paperStyle
     if (isMatch) {
         paperStyle = {
@@ -71,7 +75,7 @@ function SignUp() {
             height: 'auto',
             width: 280,
             margin: "50px auto",
-            borderRadius: '15px'
+            borderRadius: '2px'
         }
     } else {
         paperStyle = {
@@ -80,7 +84,7 @@ function SignUp() {
             height: 'auto',
             width: 500,
             margin: "50px auto",
-            borderRadius: '15px',
+            borderRadius: '2px',
         }
     }
 
@@ -89,7 +93,7 @@ function SignUp() {
         <Grid container>
             <Grid item xs={12}>
                 <Box>
-                    <Paper elevation={10} style={paperStyle} sx={{ display: 'flex' }}>
+                    <Paper elevation={3} style={paperStyle} sx={{ display: 'flex' }}>
                         {/* {!isMatch &&
                             <Grid>
                                 <img style={{ height: '550px', margin: '10px' }} alt='' src='https://storyset.com/illustration/high-five/amico#263238FF&hide=&hide=complete' />
@@ -97,14 +101,16 @@ function SignUp() {
                         } */}
                         <Grid align='center'>
                             <Typography
+                            onClick={goHome}
                                 fontFamily='Homemade Apple, cursive;'
                                 fontSize={25}
                                 color='#FF5A09'
                                 fontWeight={500}
                                 marginTop='20px'
-                                marginBottom='20px'>Play Turf</Typography>
+                                marginBottom='20px'
+                                sx={{cursor:'pointer'}}>Play Turf</Typography>
                             <h2 style={{ marginBottom: '10px', fontFamily: 'sans-serif', fontWeight: 700 }}>SIGN UP</h2>
-                            <form onSubmit={handleSubmit(regOnSubmit)}>
+                            <form onSubmit={handleSubmit(regOnSubmit)} autoComplete='off'>
                                 <TextField
                                     style={textStyle}
                                     name='name'

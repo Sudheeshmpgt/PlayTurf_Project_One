@@ -1,5 +1,26 @@
 const route=require('express').Router();
 const controller=require('../controller/controller')
+const config = require('../../config')
+const { CloudinaryStorage } = require("multer-storage-cloudinary")
+const cloudinary = require('cloudinary').v2
+const multer = require("multer");
+
+cloudinary.config({
+    cloud_name: config.CLOUD_NAME,
+    api_key: config.API_KEY,
+    api_secret: config.API_SECRET,
+    secure: true
+});
+
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+      folder: "/uploads",
+    },
+  });
+
+  const upload = multer({ storage: storage });
+
 
 //routes
 route.get('/',controller.home)
@@ -9,6 +30,9 @@ route.post('/user_registration',controller.registration)
 
 //user login
 route.post('/user_signin',controller.login)
+
+//user google login
+route.post('/googlelogin', controller.googleLogin)
 
 //admin login
 route.post('/admin_login',controller.adminLogin)
@@ -32,7 +56,7 @@ route.delete('/admin_panel/user_management/delete_user/:id', controller.deleteUs
 route.get('/admin_panel/turfs', controller.turfManagement)
 
 //admin turf management add new turf
-route.post('/admin_panel/turfs/add_turfs', controller.addTurf)
+route.post('/admin_panel/turfs/add_turfs',upload.array("pictures"), controller.addTurf)
 
 //admin turf management update request
 route.get('/admin_panel/turfs/edit_turfs/:id', controller.getTurfData)

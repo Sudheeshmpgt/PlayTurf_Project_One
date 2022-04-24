@@ -6,6 +6,7 @@ import axios from '../axiosinstance'
 import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../Store/usercontext'
 import Swal from 'sweetalert2'
+import GoogleLogin from 'react-google-login'
 
 function Login() {
     const { setUser } = useContext(UserContext)
@@ -35,7 +36,7 @@ function Login() {
                         title: message
                     })
                     const token = res.data.user.tokens[0].token
-                    localStorage.setItem("usertoken",token)
+                    localStorage.setItem("usertoken", token)
                     navigate('/')
                 }).catch((e) => {
                     Toast.fire({
@@ -52,53 +53,89 @@ function Login() {
         }
     }
 
-    const toSignup = ()=>{
+    const responseSuccessGoogle = (response) => {
+        console.log(response)
+        axios({
+            method:'POST',
+            url: 'googlelogin',
+            data: {tokenId: response.tokenId}
+        }).then(res=>{
+            setUser(res.data.user)
+                    const message = res.data.message
+                    Toast.fire({
+                        icon: 'success',
+                        title: message
+                    })
+                    const token = res.data.user.tokens[0].token
+                    localStorage.setItem("usertoken", token)
+                    navigate('/')
+        }).catch((e) => {
+            Toast.fire({
+                icon: 'error',
+                title: 'Something went wrong'
+            })
+
+        })
+    }
+
+    const responseErrorGoogle = (response) => {
+
+    }
+
+    const toSignup = () => {
         navigate('/signup')
+    }
+
+    const goHome = () => {
+        navigate('/')
     }
 
     let paperStyle
     if (isMatch) {
         paperStyle = {
-            backgroundColor:'rgba(255, 255, 255, 0.8)',
+            backgroundColor: 'rgba(255, 255, 255, 0.8)',
             padding: 20,
             height: 'auto',
             width: 280,
             margin: "150px auto",
-            borderRadius: '15px'
+            borderRadius: '2px'
         }
     } else {
         paperStyle = {
-            backgroundColor:'rgba(255, 255, 255, 0.8)',
+            backgroundColor: 'rgba(255, 255, 255, 0.8)',
             padding: 20,
             height: 'auto',
             width: 775,
             margin: "8% auto",
-            borderRadius: '15px'
+            borderRadius: '2px'
         }
     }
-    
+
     const textStyle = { margin: '6px auto' }
     return (
         <Grid container>
-          
+
             <Grid items xs={12}>
                 <Box >
-                    <Paper elevation={10} style={paperStyle} sx={{display:'flex'}}>
-                        { !isMatch &&
-                          <Grid>
-                        <img style={{height:'400px', margin:'10px'}} alt='' src='https://cdn.pixabay.com/photo/2014/04/03/00/37/soccer-308853_960_720.png'/>
-                        </Grid>  
+                    <Paper elevation={3} style={paperStyle} sx={{ display: 'flex' }}>
+                        {!isMatch &&
+                            <Grid>
+                                <img style={{ height: '400px', margin: '10px' }} alt='' src='https://cdn.pixabay.com/photo/2014/04/03/00/37/soccer-308853_960_720.png' />
+                            </Grid>
                         }
                         <Grid align='center'>
                             <Typography
-                            fontFamily='Homemade Apple, cursive;'
-                            fontSize={25}
-                            color='#FF5A09'
-                            fontWeight={500}
-                            marginTop='25px'>Play Turf</Typography>
-                            <h2 style={{ marginBottom: '10px', marginTop:'50px', fontFamily:'sans-serif' }}>SIGN IN</h2>
-                            <form onSubmit={handleSubmit(logOnSubmit)}>
+                                onClick={goHome}
+                                fontFamily='Homemade Apple, cursive;'
+                                fontSize={25}
+                                color='#FF5A09'
+                                fontWeight={500}
+                                marginTop='25px'
+                                sx={{ cursor: 'pointer' }}>Play Turf</Typography>
+                            <h2 style={{ marginBottom: '10px', marginTop: '25px', fontFamily: 'sans-serif' }}>SIGN IN</h2>
+                            <form onSubmit={handleSubmit(logOnSubmit)} autoComplete='off'>
                                 <TextField
+                                fontColor='text.primary'
                                     style={textStyle}
                                     label='Username'
                                     placeholder='Enter Username'
@@ -131,27 +168,39 @@ function Login() {
                                     error={!!errors?.password}
                                     helperText={errors?.password ? errors.password.message : null} />
                                 <Button
-                                    sx={{ marginTop: 1, fontSize:16, fontWeight:600 }}
+                                    sx={{ marginTop: 1, fontSize: 16, fontWeight: 600 }}
                                     variant="contained"
                                     color='secondary'
                                     type='submit'
                                     fullWidth
                                 >Sign in</Button>
                             </form>
-                            <Typography>
+                            <Box>
+                                <Typography sx={{margin:1}}>Or</Typography>
+                                <Typography>
                                 <Grid container spacing={1} sx={{ marginTop: 1 }}>
-                                    <Grid item xs={12} md={4.5}>
-                                        <Link sx={{ fontSize: '0.9rem', cursor:'pointer' }}>
-                                            {/* Forgot password? */}
-                                        </Link>
+                                    <Grid item xs={12} md={6}>
+                                    <GoogleLogin
+                                    clientId="992753020822-b6nncsvofh7in71saop3af9pp1rcuqpk.apps.googleusercontent.com"
+                                    buttonText="Login with Google"
+                                    onSuccess={responseSuccessGoogle}
+                                    onFailure={responseErrorGoogle}
+                                    cookiePolicy={'single_host_origin'}
+                                />
                                     </Grid>
-                                    <Grid item xs={12} md={7.5}>
-                                        <Link sx={{ fontSize: '0.9rem', cursor:'pointer' }} onClick={toSignup}>
+                                    {/* <Grid item xs={12} md={4.5}> */}
+                                        {/* <Link sx={{ fontSize: '0.9rem', cursor: 'pointer' }}> */}
+                                            {/* Forgot password? */}
+                                        {/* </Link> */}
+                                    {/* </Grid> */}
+                                    <Grid item xs={12} md={6}>
+                                        <Link sx={{ fontSize: '0.9rem', cursor: 'pointer' }} onClick={toSignup}>
                                             Don't have an account? Sign Up
                                         </Link>
                                     </Grid>
                                 </Grid>
                             </Typography>
+                            </Box>
                         </Grid>
                     </Paper>
                 </Box>

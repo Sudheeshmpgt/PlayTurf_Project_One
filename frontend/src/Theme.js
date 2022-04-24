@@ -46,6 +46,13 @@ export const Theme = createTheme({
         defaultProps:{
             elevation:5,
         }
+    },
+    MuiInputBase:{
+      styleOverrides:{
+        root:{
+          // color:'white',
+        }
+      }
     }
   }
 })

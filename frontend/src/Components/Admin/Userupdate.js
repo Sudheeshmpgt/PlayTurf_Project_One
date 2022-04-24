@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Grid, Paper, TextField, useTheme, useMediaQuery, Box, Avatar } from '@mui/material'
+import { Button, Grid, Paper, TextField, useTheme, useMediaQuery, Avatar, IconButton } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import EditIcon from '@mui/icons-material/Edit';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useLocation, useNavigate } from 'react-router-dom'
 import axios from '../../axiosinstance'
 import Swal from 'sweetalert2'
 
 function Userupdate() {
-    
+
     const location = useLocation()
     const Toast = Swal.mixin({
         toast: true,
@@ -26,9 +27,9 @@ function Userupdate() {
     const theme = useTheme()
     const isMatch = useMediaQuery(theme.breakpoints.down('md'))
     const [user, setUser] = useState({
-    name:'',
-    phone:'',
-    email:''
+        name: '',
+        phone: '',
+        email: ''
     })
     const navigate = useNavigate()
 
@@ -41,35 +42,39 @@ function Userupdate() {
     }, [location.state.id])
 
 
-    const handleChange = (e)=>{
-        const {name,value}=e.target
+    const handleChange = (e) => {
+        const { name, value } = e.target
         setUser({
             ...user,
-            [name]:value
+            [name]: value
         })
-    }   
+    }
 
-    const Edit=()=>{
+    const Edit = () => {
         const id = location.state.id
-        const {name,phone,email} =user
-        if(name && phone && email){
-            axios.put(`admin_panel/user_management/edit_user/${id}`,user)
-            .then((res)=>{
-                const message = res.data.message;
-                Toast.fire({
-                    icon: 'success',
-                    title: message
+        const { name, phone, email } = user
+        if (name && phone && email) {
+            axios.put(`admin_panel/user_management/edit_user/${id}`, user)
+                .then((res) => {
+                    const message = res.data.message;
+                    Toast.fire({
+                        icon: 'success',
+                        title: message
+                    })
+                    navigate('/userpage')
                 })
-                navigate('/userpage')
-            })
-        }else{
+        } else {
             Toast.fire({
                 icon: 'error',
                 title: 'Invalid Credetials'
             })
         }
-        
     }
+
+    const goBack = () => {
+        navigate('/userpage')
+    }
+
     let paperStyle
     if (isMatch) {
         paperStyle = {
@@ -77,7 +82,7 @@ function Userupdate() {
             height: 'auto',
             width: 280,
             margin: "50px auto",
-            borderRadius: '15px'
+            borderRadius: '2px'
         }
     } else {
         paperStyle = {
@@ -85,33 +90,43 @@ function Userupdate() {
             height: 'auto',
             width: 500,
             margin: "50px auto",
-            borderRadius: '15px'
+            borderRadius: '2px',
+            backgroundColor: 'rgba(255, 255, 255, 0.8)'
         }
     }
 
     const avatarStyle = { backgroundColor: '#DD0404', margin: 15 }
     const textStyle = { margin: '6px auto' }
-  return (
-    <Grid container>
-    <Grid item xs={12}>
-        <Box>
-            <Paper elevation={10} style={paperStyle}>
+    return (
+        <Grid container width='100%'>
+            <Grid>
+                <IconButton
+                    variant='text'
+                    onClick={goBack}
+                    sx={{
+                        marginTop: '10%',
+                        color: 'white'
+                    }}>
+                    <ArrowBackIcon /> Go Back
+                </IconButton>
+            </Grid>
+            <Paper style={paperStyle}>
                 <Grid align='center'>
                     <Avatar style={avatarStyle}><EditIcon /></Avatar>
-                    <h2 style={{ marginBottom: '10px' }}>Edit User</h2>
+                    <h2 style={{ marginBottom: '10px', fontFamily: 'Atkinson Hyperlegible, sans-serif' }}>Edit User</h2>
                     <form onSubmit={handleSubmit(Edit)}>
                         <TextField
-                        {...register('name', {
-                            required: 'This field is required',
-                            minLength: {
-                                value: 4,
-                                message: 'Please enter atleast 4 characters'
-                            },
-                            pattern: {
-                                value: /^[a-zA-Z][a-zA-Z][a-zA-Z ]*$/,
-                                message: 'Please enter a valid name'
-                            }
-                        })}
+                            {...register('name', {
+                                required: 'This field is required',
+                                minLength: {
+                                    value: 4,
+                                    message: 'Please enter atleast 4 characters'
+                                },
+                                pattern: {
+                                    value: /^[a-zA-Z][a-zA-Z][a-zA-Z ]*$/,
+                                    message: 'Please enter a valid name'
+                                }
+                            })}
                             style={textStyle}
                             name='name'
                             type='string'
@@ -124,13 +139,13 @@ function Userupdate() {
                             fullWidth
                         />
                         <TextField
-                        {...register('phone', {
-                            required: 'This field is required',
-                            pattern: {
-                                value: /^\d{10}$/,
-                                message: 'Please enter a valid phone number'
-                            }
-                        })}
+                            {...register('phone', {
+                                required: 'This field is required',
+                                pattern: {
+                                    value: /^\d{10}$/,
+                                    message: 'Please enter a valid phone number'
+                                }
+                            })}
                             style={textStyle}
                             name='phone'
                             type='string'
@@ -143,13 +158,13 @@ function Userupdate() {
                             fullWidth
                         />
                         <TextField
-                        {...register('email', {
-                            required: 'This field is required',
-                            pattern: {
-                                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                message: 'Please enter a valid email'
-                            }
-                        })}
+                            {...register('email', {
+                                required: 'This field is required',
+                                pattern: {
+                                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                    message: 'Please enter a valid email'
+                                }
+                            })}
                             style={textStyle}
                             name='email'
                             type='email'
@@ -161,17 +176,15 @@ function Userupdate() {
                             placeholder='Enter Email'
                             fullWidth />
                         <Button
-                            sx={{ marginTop: 1, marginBottom:6}}
+                            sx={{ marginTop: 1, marginBottom: 6 }}
                             type='submit'
                             variant="contained"
                             fullWidth>Update</Button>
                     </form>
                 </Grid>
             </Paper>
-        </Box>
-    </Grid>
-</Grid >
-  )
+        </Grid >
+    )
 }
 
 export default Userupdate

@@ -1,17 +1,22 @@
 const UserModel = require('../model/userschema');
 const AdminModel = require('../model/adminschema');
-const TurfModel = require('../model/turfschema')
-const CategoryModel = require('../model/categoryschema')
+const TurfModel = require('../model/turfschema');
+const CategoryModel = require('../model/categoryschema');
+const config = require('../../config')
+const multer = require("multer");
+const { OAuth2Client } = require('google-auth-library');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 const cloudinary = require('cloudinary').v2
 
-cloudinary.config({ 
-    cloud_name: 'dubmms1ur', 
-    api_key: '836684132162993', 
-    api_secret: 'U3_4xmtBm9pw88heylhiGP5LNqE',
+const client = new OAuth2Client(config.GOOGLE_CLIENT_ID)
+
+cloudinary.config({
+    cloud_name: config.CLOUD_NAME,
+    api_key: config.API_KEY,
+    api_secret: config.API_SECRET,
     secure: true
-  });
+});
 
 
 //home
@@ -65,6 +70,38 @@ exports.login = async (req, res) => {
         }
     } catch (error) {
         res.send({ message: "Invalid Credentials", err: error })
+    }
+}
+
+//user google login
+exports.googleLogin = async (req, res) => {
+    try {
+        const { tokenId } = req.body;
+        client.verifyIdToken({ idToken: tokenId, audience: config.GOOGLE_CLIENT_ID })
+            .then(response => {
+                const { email_verified, name, email } = response.payload;
+                if (email_verified) {
+                    UserModel.findOne({ email }).exec((err, user) => {
+                        if (err) {
+                            return res.status(400).json({ message: "Something went wrong..." })
+                        } else {
+                            if (user) {
+                                const token = user.generateAuthToken();
+                                res.cookie("jwtoken", token, {
+                                    expiresIn: '1h',
+                                    httpOnly: true
+                                });
+                                res.send({ message: "Login Successfull", user: user })
+                            } else {
+                                return res.status(400).json({ message: "Something went wrong..." })
+                            }
+                        }
+                    })
+                }
+
+            })
+    } catch (error) {
+
     }
 }
 
@@ -130,27 +167,27 @@ exports.updateUserData = async (req, res) => {
 }
 
 //admin user management update user status
-exports.updateUserStatus = async (req,res) =>{
+exports.updateUserStatus = async (req, res) => {
     try {
         const data = await UserModel.findById({ _id: req.params.id })
         const email = data.email;
         const isActive = data.isActive;
-        if(!data){
-            res.send({message:"User not found"})
-        }else{
-            if (data.isActive){
-                const status=!isActive
-                const user = await UserModel.updateOne({email:email},{isActive:status})
-            }else{
-                const status=!isActive
-                const user = await UserModel.updateOne({email:email},{isActive:status})
+        if (!data) {
+            res.send({ message: "User not found" })
+        } else {
+            if (data.isActive) {
+                const status = !isActive
+                const user = await UserModel.updateOne({ email: email }, { isActive: status })
+            } else {
+                const status = !isActive
+                const user = await UserModel.updateOne({ email: email }, { isActive: status })
 
             }
         }
         const user = await UserModel.find({})
-        res.send({message:'user updated successfully',user:user})
+        res.send({ message: 'user updated successfully', user: user })
     } catch (error) {
-        
+
     }
 }
 
@@ -165,17 +202,21 @@ exports.deleteUserData = async (req, res) => {
             res.send({ message: "Some error in deleting the data" })
         }
     } catch (error) {
-        res.send({messsage:"Error", error:error})
+        res.send({ messsage: "Error", error: error })
     }
 }
 
 //admin turf management 
 exports.turfManagement = async (req, res) => {
-    const turf = await TurfModel.find({})
-    if (turf) {
-        res.send({ message: "Request successfull", turf: turf });
-    } else {
-        res.send('Unauthorize Access');
+    try {
+        const turf = await TurfModel.find({})
+        if (turf) {
+            res.send({ message: "Request successfull", turf: turf });
+        } else {
+            res.send('Unauthorize Access');
+        }
+    } catch (error) {
+        res.send('error');
     }
 }
 
@@ -183,6 +224,14 @@ exports.turfManagement = async (req, res) => {
 exports.addTurf = async (req, res) => {
     try {
         const { centername, phone, location, category, price } = req.body;
+
+        const urls=[];
+        const files = req.files;
+        for(const file of files){
+            const {path} = file
+            urls.push(path)
+        }
+     
         const turf = await TurfModel.findOne({ centername: centername });
         if (turf) {
             res.send({ message: "Turf already exists" });
@@ -191,17 +240,17 @@ exports.addTurf = async (req, res) => {
                 centername: req.body.centername,
                 phone: req.body.phone,
                 location: req.body.location,
-                price: req.body.price
+                category:req.body.category,
+                price: req.body.price, 
+                turfPictures: urls
             });
             const turf = await addNewTurf.save();
-            await TurfModel.find().populate('categories')
-            .then(result=>{
-            })
-            
-            res.send({ message: "Turf deatils added Successfully", turf: turf });
+
+            res.send({ message: "Turf details added Successfully", turf: turf });
         }
     } catch (error) {
         res.send(error);
+        console.log(error) 
     }
 }
 
@@ -240,12 +289,12 @@ exports.deleteTurfData = async (req, res) => {
             res.send({ message: "Some error in deleting the data" })
         }
     } catch (error) {
-        res.send({messsage:"Error", error:error})
+        res.send({ messsage: "Error", error: error })
     }
 }
 
 //admin category management
-exports.categoryManagement = async (req, res) =>{
+exports.categoryManagement = async (req, res) => {
     try {
         const category = await CategoryModel.find({})
         if (category) {
@@ -261,18 +310,16 @@ exports.categoryManagement = async (req, res) =>{
 //admin category management add category
 exports.addCategory = async (req, res) => {
     try {
-        const { centername, location, category } = req.body;
-        const turfCategory = await CategoryModel.findOne({ centername: centername });
+        const { category } = req.body;
+        const turfCategory = await CategoryModel.findOne({ category: category });
         if (turfCategory) {
             res.send({ message: "Category already exists" });
         } else {
             const addNewCategory = new CategoryModel({
-                centername: req.body.centername,
-                location: req.body.location,
                 category: req.body.category
             });
             const turfCategory = await addNewCategory.save();
-            res.send({ message: "Category deatils added Successfully", turf: turfCategory });
+            res.send({ message: "Category details added Successfully", turf: turfCategory });
         }
     } catch (error) {
         res.send(error);
@@ -314,7 +361,7 @@ exports.deleteCategoryData = async (req, res) => {
             res.send({ message: "Some error in deleting the data" })
         }
     } catch (error) {
-        res.send({messsage:"Error", error:error})
+        res.send({ messsage: "Error", error: error })
     }
 }
 

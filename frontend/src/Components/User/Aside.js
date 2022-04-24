@@ -1,22 +1,65 @@
-import { Box, Grid, Paper, Button, Typography, ListItemButton, ListItemIcon, ListItemText, Collapse, List, } from '@mui/material'
-import React, { useState } from 'react'
+import { Box, Grid, Paper, Typography, FormControlLabel, Checkbox } from '@mui/material'
+import React, { useState, useContext, useEffect } from 'react'
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
+import { TurfContext } from '../../Store/turfcontext'
+import { FilterContext } from '../../Store/filtercontext';
+import axios from '../../axiosinstance';
+import { FilterCategoryContext } from '../../Store/filtercategorycontrext';
+import { FilterPriceContext } from '../../Store/filterpricecontext';
 
 function Aside() {
-  const [openArea, setOpenArea] = useState(false);
-  const [openCategory, setOpenCategory] = useState(false);
+  const { turf } = useContext(TurfContext)
+  const { setFilters } = useContext(FilterContext)
+  const { setFilterCategory } = useContext(FilterCategoryContext)
+  const { setFilterPrice } = useContext(FilterPriceContext)
 
-  const handleClickArea = () => {
-    setOpenArea(!openArea);
-  };
-  const handleClickCategory = () => {
-    setOpenCategory(!openCategory);
-  };
+  const [category, setCategory] = useState([])
+
+  const area = turf.map((data) => (data.location))
+  const uniqueArea = [...new Set(area)]
+
+  const getCategoryData = async () => {
+    try {
+      const data = await axios.get("admin_panel/category")
+      setCategory(data.data.category)
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+
+  const handleChangeArea = (e) => {
+    if (e.target.checked) {
+      setFilters(e.target.value)
+    } else {
+      setFilters('')
+    }
+  }
+
+  const handleChangeCategory = (e) => {
+    if (e.target.checked) {
+      setFilterCategory(e.target.value)
+    } else {
+      setFilterCategory('')
+    }
+  }
+
+  const handleChangePrice = (e) => {
+    console.log(e.target.value)
+    if (e.target.checked) {
+      setFilterPrice(e.target.value)
+    } else {
+      setFilterPrice('')
+    }
+  }
+
+  useEffect(() => {
+    getCategoryData();
+  }, [])
+
   return (
     <Grid container>
-      <Paper sx={{ height: 600, width: 275, margin: 1.5, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
+      <Paper sx={{ height: 600, width: 275, margin: 1.5, backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: '2px' }}>
         <Box
           sx={{
             display: 'flex',
@@ -37,63 +80,87 @@ function Aside() {
               Filter
             </Typography>
           </Box>
-          <Box sx={{ margin: '5px 0' }}>
-            <List>
-              <ListItemButton onClick={handleClickArea}>
-                <ListItemText
-                  sx={{
-                    color: 'black',
-                    fontWeight: 600,
-                    fontSize: '1.1rem',
-                    fontFamily: 'Open Sans,sans-serif'
-                  }}>
-                  Area
-                </ListItemText>
-                {openArea ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
-              <Collapse in={openArea} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <ListItemButton sx={{ pl: 4 }}>
-                    <ListItemText onClick={handleClickArea} primary="Ernakulam" />
-                  </ListItemButton>
-                  <ListItemButton sx={{ pl: 4 }}>
-                    <ListItemText onClick={handleClickArea} primary="Palakkad" />
-                  </ListItemButton>
-                </List>
-              </Collapse>
-            </List>
+          <Box>
+            <Typography
+              marginTop={3}
+              fontWeight={600}
+              fontSize={20}>
+              Area
+            </Typography>
+            {
+              uniqueArea.map((data, index) => (
+                <Box>
+                  <FormControlLabel
+                    label={data}
+                    control={
+                      <Checkbox
+                        value={data}
+                        onChange={(e) => handleChangeArea(e)}
+                      />
+                    } />
+                </Box>
+              ))
+            }
           </Box>
-          <Box sx={{ margin: '5px 0' }}>
-            <List>
-              <ListItemButton onClick={handleClickCategory}>
-                <ListItemText
-                  sx={{
-                    color: 'black',
-                    fontWeight: 600,
-                    fontSize: '1.1rem',
-                    fontFamily: 'Open Sans,sans-serif'
-                  }}>
-                  Category
-                </ListItemText>
-                {openCategory ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
-              <Collapse in={openCategory} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <ListItemButton sx={{ pl: 4 }}>
-                    <ListItemText onClick={handleClickCategory} primary="Football" />
-                  </ListItemButton>
-                  <ListItemButton sx={{ pl: 4 }}>
-                    <ListItemText onClick={handleClickCategory} primary="Cricket" />
-                  </ListItemButton>
-                </List>
-              </Collapse>
-            </List>
+          <Box>
+            <Typography
+              marginTop={3}
+              fontWeight={600}
+              fontSize={20}>
+              Category
+            </Typography>
+            {
+              category.map((data, index) => (
+                <Box>
+                  <FormControlLabel
+                    label={data.category}
+                    control={
+                      <Checkbox
+                        value={data.category}
+                        onChange={(e) => handleChangeCategory(e)}
+                      />
+                    } />
+                </Box>
+              ))
+            }
           </Box>
-          <Box sx={{ margin: '5px 0' }}>
-            <Button sx={{ color: 'black', fontWeight: 600, fontSize: '1.1rem', fontFamily: 'Open Sans,sans-serif' }}>
-
-
-            </Button>
+          <Box>
+            <Typography
+              marginTop={3}
+              fontWeight={600}
+              fontSize={20}>
+              Price
+            </Typography>
+            <Box>
+              <FormControlLabel
+                label='< 1500'
+                control={
+                  <Checkbox
+                    value={1499}
+                    onChange={(e) => handleChangePrice(e)}
+                  />
+                } />
+            </Box>
+            <Box>
+              <FormControlLabel
+                label='< 1750'
+                control={
+                  <Checkbox
+                    value={1749}
+                    onChange={(e) => handleChangePrice(e)}
+                  />
+                } />
+            </Box>
+            <Box>
+              <FormControlLabel
+                label='< 2000'
+                control={
+                  <Checkbox
+                    value={1999}
+                    onChange={(e) => handleChangePrice(e)}
+                  />
+                } />
+            </Box>
           </Box>
         </Box>
       </Paper>

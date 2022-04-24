@@ -29,11 +29,12 @@ function AdminAside() {
             {
                 !isMatch &&
                 <Grid continer item xs='none' p={1}  >
-                <Paper elevation={15}
+                <Paper elevation={1}
                     sx={{
-                        height: 575,
+                        height: 577,
                         width: 275,
-                        backgroundColor:'rgba(255, 255, 255, 0.8)'
+                        backgroundColor:'rgba(255, 255, 255, 0.8)',
+                        borderRadius: '2px'
                     }}>
                     <Box
                     sx={{

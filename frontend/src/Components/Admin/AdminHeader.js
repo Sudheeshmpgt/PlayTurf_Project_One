@@ -1,9 +1,10 @@
 import React, { useContext, useState } from 'react'
-import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Tooltip, MenuItem, TextField, useTheme, useMediaQuery } from '@mui/material'
+import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Tooltip, MenuItem, useTheme, useMediaQuery, InputBase} from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useNavigate } from 'react-router-dom';
 import { SearchContext } from '../../Store/searchcontext';
+import SearchIcon from '@mui/icons-material/Search';
 
 function AdminHeader() {
     const { search, setSearch } = useContext(SearchContext)
@@ -11,6 +12,7 @@ function AdminHeader() {
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
     const theme = useTheme()
+    const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
     const isMatch = useMediaQuery(theme.breakpoints.down('md'))
 
     const handleOpenNavMenu = (event) => {
@@ -36,6 +38,7 @@ function AdminHeader() {
     const searchChange = (data) => {
         setSearch(data.target.value)
     }
+
 
     return (
         <AppBar position="static" sx={{ backgroundColor: '#393939' }}>
@@ -117,20 +120,55 @@ function AdminHeader() {
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                     </Box>
                     {
-                        isMatch ?
-                            '' :
-                            <TextField
-                                // color='error'
-                                size='small'
-                                variant='standard'
-                                value={search}
-                                onChange={searchChange}
-                                placeholder='search here...'
-                                sx={{
-                                    marginRight: 2,
-                                }}>
-                            </TextField>
+                        isSmall ?
+                            <Box sx={{ backgroundColor: 'rgba(255, 255, 255, 0.25)', borderRadius: 0.8, width: 100, marginRight: 2, display: 'flex' }}>
+                                <Box m={1.1}>
+                                    <SearchIcon />
+                                </Box>
+                                <InputBase
+                                    color='secondary'
+                                    variant='outlined'
+                                    value={search}
+                                    onChange={searchChange}
+                                    placeholder='Search...'
+                                    sx={{
+                                        marginRight: 2,
+                                    }}>
+                                </InputBase>
+                            </Box>
+                            :
+                            isMatch ?
+                                <Box sx={{ backgroundColor: 'rgba(255, 255, 255, 0.25)', borderRadius: 0.8, width: 150, marginRight: 2, display: 'flex' }}>
+                                    <Box m={1.1}>
+                                        <SearchIcon />
+                                    </Box>
+                                    <InputBase
+                                        color='secondary'
+                                        variant='outlined'
+                                        value={search}
+                                        onChange={searchChange}
+                                        placeholder='Search...'
+                                        sx={{
+                                            marginRight: 2,
+                                        }}>
+                                    </InputBase>
+                                </Box> :
+                                <Box sx={{ backgroundColor: 'rgba(255, 255, 255, 0.25)', borderRadius: 0.8, width: 300, marginRight: 2, display: 'flex' }}>
+                                    <Box m={1.1}>
+                                        <SearchIcon />
+                                    </Box>
+                                    <InputBase
+                                        variant='outlined'
+                                        value={search}
+                                        onChange={searchChange}
+                                        placeholder='Search here...'
+                                        sx={{
+                                            marginRight: 2,
+                                        }}>
+                                    </InputBase>
+                                </Box>
                     }
+
 
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">

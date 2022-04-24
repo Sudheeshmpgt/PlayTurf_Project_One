@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from '../../axiosinstance';
 import { SearchContext } from '../../Store/searchcontext';
 import Swal from 'sweetalert2';
+import './User.css'
 
 function User() {
     const [user, setUser] = useState([])
@@ -15,8 +16,8 @@ function User() {
     const { search } = useContext(SearchContext)
     const navigate = useNavigate()
     const theme = useTheme()
-    const isMatch = useMediaQuery(theme.breakpoints.down('md'))
-    const tableStyle = { width:'95%', margin: '15px auto', }
+    const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
+    const isMedium = useMediaQuery(theme.breakpoints.down('md'))
 
     //user management get request
     const getUserData = async () => {
@@ -80,133 +81,223 @@ function User() {
             }
         })
     }
-  return (
-    <Paper elevation={10} 
-                sx={{
-                    height: 575,
-                    marginTop: 1,
-                    width: 1065,
-                    backgroundColor:'rgba(255, 255, 255, 0.8)'
-                }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 5 }}>
-                        <Typography variant='h6' component={Box} sx={{
-                            fontWeight: 700
+    return (
+        <Box sx={{ marginTop: '1px' }}>
+            {
+                isSmall ? (
+                    <Paper elevation={3} sx={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        height: 577,
+                        margin: 1.5,
+                        width: 350,
+                        borderRadius: '1px',
+                    }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 5 }}>
+                            <Typography variant='h6' component={Box} sx={{
+                                fontWeight: 700
+                            }}>
+                                USER DETAILS
+                            </Typography>
+                        </Box>
+                        <TableContainer className='scrollbar-hidden' component={Paper} style={{ width: '95%', margin: '-20px auto', height: 450, overflow: 'scroll' }}>
+                            <Table sx={{ width: 300 }} aria-label="simple table">
+                                <TableHead sx={{ backgroundColor: '#0037ff6e' }}>
+                                    <TableRow>
+                                        <TableCell align="center" >Id</TableCell>
+                                        <TableCell align="center" >Name</TableCell>
+                                        <TableCell align="center" >Phone</TableCell>
+                                        <TableCell align="center" >Email</TableCell>
+                                        <TableCell align="center" >Block</TableCell>
+                                        <TableCell align="center" colSpan={2}>
+                                            Actions
+                                        </TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {user.filter((data) => {
+                                        if (search === "") {
+                                            return data
+                                        } else if (data.name.toLowerCase().includes(search.toLowerCase())) {
+                                            return data
+                                        }
+                                    })
+                                        .map((data, index) => (
+                                            <TableRow
+                                                key={data._id}
+                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                            >
+                                                <TableCell component="th" scope="row">
+                                                    {index + 1}
+                                                </TableCell>
+                                                <TableCell align="center" >{data.name}</TableCell>
+                                                <TableCell align="center" >{data.phone}</TableCell>
+                                                <TableCell align="center" >{data.email}</TableCell>
+                                                <TableCell align="center">
+                                                    <Switch
+                                                        color='error'
+                                                        onClick={(e) => block(data._id)} />
+                                                </TableCell>
+                                                <TableCell >
+                                                    <Fab color='primary' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
+                                                        <EditIcon onClick={() => edit(data._id)} />
+                                                    </Fab>
+                                                </TableCell>
+                                                <TableCell >
+                                                    <Fab color='error' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
+                                                        <DeleteIcon onClick={() => deleteUser(data._id)} />
+                                                    </Fab>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Paper>
+                ) : (
+                    isMedium ? (
+                        <Paper elevation={3} sx={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                            height: 577,
+                            margin: 1,
+                            width: 880,
+                            borderRadius: '1px',
                         }}>
-                            USER DETAILS
-                        </Typography>
-                    </Box>
-                    <Grid Conatiner sx={{ marginTop: '-40px' }}>
-                        {
-                            isMatch ? (
-                                <TableContainer component={Paper} sx={{ width: 330, marginTop: '50px', marginLeft: '7%' }}>
-                                    <Table sx={{ width: 900 }} aria-label="simple table">
-                                        <TableHead sx={{ backgroundColor: '#0037ff6e' }}>
-                                            <TableRow>
-                                                <TableCell>Id</TableCell>
-                                                <TableCell >Name</TableCell>
-                                                <TableCell >Phone</TableCell>
-                                                <TableCell >Email</TableCell>
-                                                <TableCell align="center" colSpan={2}>
-                                                    Actions
-                                                </TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {user.filter((data) => {
-                                                if (search === "") {
-                                                    return data
-                                                } else if (data.name.toLowerCase().includes(search.toLowerCase())) {
-                                                    return data
-                                                }
-                                            })
-                                                .map((data, index) => (
-                                                    <TableRow
-                                                        key={data._id}
-                                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                    >
-                                                        <TableCell component="th" scope="row">
-                                                            {index + 1}
-                                                        </TableCell>
-                                                        <TableCell >{data.name}</TableCell>
-                                                        <TableCell >{data.phone}</TableCell>
-                                                        <TableCell >{data.email}</TableCell>
-                                                        <TableCell >Block</TableCell>
-                                                        <TableCell colSpan={2}>Actions</TableCell>
-                                                        <TableCell align="center">  <Switch color='error' onClick={() => block(data._id)} /></TableCell>
-                                                        <TableCell >
-                                                            <Fab color='primary' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
-                                                                <EditIcon onClick={() => edit(data._id)} />
-                                                            </Fab>
-                                                        </TableCell>
-                                                        <TableCell >
-                                                            <Fab color='error' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
-                                                                <DeleteIcon onClick={() => deleteUser(data._id)} />
-                                                            </Fab>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                ))}
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-                            ) : (
-                                <TableContainer component={Paper} style={tableStyle}>
-                                    <Table sx={{ width: 1011 }} aria-label="simple table">
-                                        <TableHead sx={{ backgroundColor: '#0037ff6e' }}>
-                                            <TableRow>
-                                                <TableCell align="center" >Id</TableCell>
-                                                <TableCell align="center" >Name</TableCell>
-                                                <TableCell align="center" >Phone</TableCell>
-                                                <TableCell align="center" >Email</TableCell>
-                                                <TableCell align="center" >Block</TableCell>
-                                                <TableCell align="center" colSpan={2}>
-                                                    Actions
-                                                </TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {user.filter((data) => {
-                                                if (search === "") {
-                                                    return data
-                                                } else if (data.name.toLowerCase().includes(search.toLowerCase())) {
-                                                    return data
-                                                }
-                                            })
-                                                .map((data, index) => (
-                                                    <TableRow
-                                                        key={data._id}
-                                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                    >
-                                                        <TableCell component="th" scope="row">
-                                                            {index + 1}
-                                                        </TableCell>
-                                                        <TableCell align="center" >{data.name}</TableCell>
-                                                        <TableCell align="center" >{data.phone}</TableCell>
-                                                        <TableCell align="center" >{data.email}</TableCell>
-                                                        <TableCell align="center">
-                                                            <Switch
-                                                                color='error'   
-                                                                onClick={(e) => block(data._id)} />
-                                                        </TableCell>
-                                                        <TableCell >
-                                                            <Fab color='primary' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
-                                                                <EditIcon onClick={() => edit(data._id)} />
-                                                            </Fab>
-                                                        </TableCell>
-                                                        <TableCell >
-                                                            <Fab color='error' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
-                                                                <DeleteIcon onClick={() => deleteUser(data._id)} />
-                                                            </Fab>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                ))}
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-                            )
-                        }
-                    </Grid>
-                </Paper>
-  )
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 5 }}>
+                                <Typography variant='h6' component={Box} sx={{
+                                    fontWeight: 700
+                                }}>
+                                    USER DETAILS
+                                </Typography>
+                            </Box>
+                            <TableContainer className='scrollbar-hidden' component={Paper} style={{ width: '95%', margin: '-20px auto', height: 450, overflow:'scroll' }}>
+                                <Table sx={{ width: 1011 }} aria-label="simple table">
+                                    <TableHead sx={{ backgroundColor: '#0037ff6e' }}>
+                                        <TableRow>
+                                            <TableCell align="center" >Id</TableCell>
+                                            <TableCell align="center" >Name</TableCell>
+                                            <TableCell align="center" >Phone</TableCell>
+                                            <TableCell align="center" >Email</TableCell>
+                                            <TableCell align="center" >Block</TableCell>
+                                            <TableCell align="center" colSpan={2}>
+                                                Actions
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {user.filter((data) => {
+                                            if (search === "") {
+                                                return data
+                                            } else if (data.name.toLowerCase().includes(search.toLowerCase())) {
+                                                return data
+                                            }
+                                        })
+                                            .map((data, index) => (
+                                                <TableRow
+                                                    key={data._id}
+                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                >
+                                                    <TableCell component="th" scope="row">
+                                                        {index + 1}
+                                                    </TableCell>
+                                                    <TableCell align="center" >{data.name}</TableCell>
+                                                    <TableCell align="center" >{data.phone}</TableCell>
+                                                    <TableCell align="center" >{data.email}</TableCell>
+                                                    <TableCell align="center">
+                                                        <Switch
+                                                            color='error'
+                                                            onClick={(e) => block(data._id)} />
+                                                    </TableCell>
+                                                    <TableCell >
+                                                        <Fab color='primary' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
+                                                            <EditIcon onClick={() => edit(data._id)} />
+                                                        </Fab>
+                                                    </TableCell>
+                                                    <TableCell >
+                                                        <Fab color='error' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
+                                                            <DeleteIcon onClick={() => deleteUser(data._id)} />
+                                                        </Fab>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </Paper>
+
+                    ) : (
+                        <Paper elevation={3} sx={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                            height: 577,
+                            marginTop: 1,
+                            width: 1065,
+                            borderRadius: '1px',
+                        }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 5 }}>
+                                <Typography variant='h6' component={Box} sx={{
+                                    fontWeight: 700
+                                }}>
+                                    USER DETAILS
+                                </Typography>
+                            </Box>
+                            <TableContainer className='scrollbar-hidden' component={Paper} style={{ width: '95%', margin: '-20px auto', height: 450, overflow: 'scroll' }}>  
+                                <Table sx={{ width: 1011 }} aria-label="simple table">
+                                    <TableHead sx={{ backgroundColor: '#0037ff6e' }}>
+                                        <TableRow>
+                                            <TableCell align="center" >Id</TableCell>
+                                            <TableCell align="center" >Name</TableCell>
+                                            <TableCell align="center" >Phone</TableCell>
+                                            <TableCell align="center" >Email</TableCell>
+                                            <TableCell align="center" >Block</TableCell>
+                                            <TableCell align="center" colSpan={2}>
+                                                Actions
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {user.filter((data) => {
+                                            if (search === "") {
+                                                return data
+                                            } else if (data.name.toLowerCase().includes(search.toLowerCase())) {
+                                                return data
+                                            }
+                                        })
+                                            .map((data, index) => (
+                                                <TableRow
+                                                    key={data._id}
+                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                >
+                                                    <TableCell component="th" scope="row">
+                                                        {index + 1}
+                                                    </TableCell>
+                                                    <TableCell align="center" >{data.name}</TableCell>
+                                                    <TableCell align="center" >{data.phone}</TableCell>
+                                                    <TableCell align="center" >{data.email}</TableCell>
+                                                    <TableCell align="center">
+                                                        <Switch
+                                                            color='error'
+                                                            onClick={(e) => block(data._id)} />
+                                                    </TableCell>
+                                                    <TableCell >
+                                                        <Fab color='primary' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
+                                                            <EditIcon onClick={() => edit(data._id)} />
+                                                        </Fab>
+                                                    </TableCell>
+                                                    <TableCell >
+                                                        <Fab color='error' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
+                                                            <DeleteIcon onClick={() => deleteUser(data._id)} />
+                                                        </Fab>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </Paper>
+                    )
+                )
+            }
+        </Box>
+    )
 }
 
 export default User

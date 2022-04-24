@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { Grid, AppBar, Toolbar, Box, IconButton, Typography, Menu, Container, Button, Tooltip, MenuItem } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -53,6 +53,15 @@ function Header() {
         navigate('/')
     }
 
+    useEffect(()=>{
+        const token = localStorage.getItem("usertoken")
+        if(!token){
+        navigate('/login')
+        }
+      },[navigate])
+
+      const token = localStorage.getItem("usertoken")
+
     return (
         <>
             <Grid container>
@@ -61,10 +70,11 @@ function Header() {
                         <Container maxWidth="xl">
                             <Toolbar disableGutters>
                                 <Typography
+                                  onClick={onClickHome}
                                     variant=''
                                     noWrap
                                     component="div"
-                                    sx={{ mr: 5, display: { xs: 'none', md: 'flex' } }}
+                                    sx={{ mr: 5, display: { xs: 'none', md: 'flex' }, cursor:'pointer' }}
                                     fontFamily='Homemade Apple, cursive;'
                                     fontSize={18}
                                     color='#FF5A09'
@@ -115,6 +125,7 @@ function Header() {
                                     </Menu>
                                 </Box>
                                 <Typography
+                                    onClick={onClickHome}
                                     variant=""
                                     noWrap
                                     component="div"
@@ -122,17 +133,12 @@ function Header() {
                                     fontFamily='Homemade Apple, cursive;'
                                     fontSize={18}
                                     color='#FF5A09'
+                                    
                                 >
                                     Play Turf
                                 </Typography>
                                 <Box sx={{ display: 'flex' }}>
                                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                                        <Button
-                                            onClick={onClickHome}
-                                            sx={{ my: 1, color: 'white', display: 'block', fontWeight: 500, fontSize: '1rem' }}
-                                        >
-                                            Home
-                                        </Button>
                                         <Button
                                             onClick={onClickTurf}
                                             sx={{ my: 1, color: 'white', display: 'block', fontWeight: 500, fontSize: '1rem' }}
@@ -140,22 +146,28 @@ function Header() {
                                             Turfs
                                         </Button>
                                         <Button
+                                            
+                                            sx={{ my: 1, color: 'white', display: 'block', fontWeight: 500, fontSize: '1rem' }}
+                                        >
+                                            {user? 'My Bookings':'Bookings'}
+                                        </Button>
+                                        {/* <Button
                                             onClick={handleCloseNavMenu}
                                             sx={{ my: 1, color: 'white', display: 'block', fontWeight: 500, fontSize: '1rem' }}
                                         >
                                             Book Now
-                                        </Button>
+                                        </Button> */}
                                     </Box >
                                     <Box sx={{ marginTop: '1%' }}>
                                         <Search />
                                     </Box>
                                 </Box>
                                 {
-                                    user ? <Box sx={{ flexGrow: 1, display:'flex', justifyContent: 'flex-end' }}>
+                                   token ? <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
                                         <Tooltip title="Open settings">
                                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, color: 'white' }}>
                                                 <Typography>
-                                                    {`Hi, ${user.name}`}
+                                                  {user ?  `Hi, ${user.name}` : ''}
                                                 </Typography>
                                                 <ArrowDropDownIcon sx={{ marginLeft: "2px" }} />
                                             </IconButton>
@@ -191,13 +203,18 @@ function Header() {
                                         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
                                             <Button
                                                 onClick={signIn}
-                                                sx={{ my: 1, color: 'white', display: 'block', fontWeight: 500, fontSize: '1rem' }}
+                                                variant='outlined'
+                                                color='secondary'
+                                                size='small'
+                                                sx={{ m: 1, color: 'white', display: 'block', p: -1 }}
                                             >
                                                 Sign In
                                             </Button>
                                             <Button
                                                 onClick={signUp}
-                                                sx={{ my: 1, color: 'white', display: 'block', fontWeight: 500, fontSize: '1rem' }}
+                                                variant='outlined'
+                                                color='secondary'
+                                                sx={{ m: 1, color: 'white', display: 'block', p: -1 }}
                                             >
                                                 Sign Up
                                             </Button>
