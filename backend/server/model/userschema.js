@@ -26,6 +26,12 @@ const userSchema = new mongoose.Schema({
         type:Boolean,
         default:true
     },
+    address:{
+        type:String
+    },
+    userImg:{
+        type:String
+    },
     tokens: [
         {
             token:{

@@ -155,7 +155,14 @@ exports.getUserData = async (req, res) => {
 //admin user management get updated
 exports.updateUserData = async (req, res) => {
     try {
-        const data = await UserModel.findByIdAndUpdate({ _id: req.params.id }, req.body)
+           const values={
+                name:req.body.name,
+                phone:req.body.phone,
+                email:req.body.email,
+                address:req.body.address,
+                userImg: req.file ? req.file.path : ''
+            }
+        const data = await UserModel.findByIdAndUpdate({ _id: req.params.id }, values)
         if (data) {
             res.send({ message: "User Updated Successfully", user: data })
         } else {
@@ -163,6 +170,7 @@ exports.updateUserData = async (req, res) => {
         }
     } catch (error) {
         res.send({ message: "Bad request", err: error })
+        console.log(error)
     }
 }
 
@@ -173,7 +181,7 @@ exports.updateUserStatus = async (req, res) => {
         const email = data.email;
         const isActive = data.isActive;
         if (!data) {
-            res.send({ message: "User not found" })
+            res.send({ message: "User not found" })     
         } else {
             if (data.isActive) {
                 const status = !isActive

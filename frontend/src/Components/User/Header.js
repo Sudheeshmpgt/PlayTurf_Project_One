@@ -53,14 +53,18 @@ function Header() {
         navigate('/')
     }
 
-    useEffect(()=>{
-        const token = localStorage.getItem("usertoken")
-        if(!token){
-        navigate('/login')
-        }
-      },[navigate])
+    const onClickAccount = () =>{
+        navigate('/useraccount')
+    }
 
-      const token = localStorage.getItem("usertoken")
+    useEffect(() => {
+        const token = localStorage.getItem("usertoken")
+        if (!token) {
+            navigate('/login')
+        }
+    }, [navigate])
+
+    const token = localStorage.getItem("usertoken")
 
     return (
         <>
@@ -70,11 +74,11 @@ function Header() {
                         <Container maxWidth="xl">
                             <Toolbar disableGutters>
                                 <Typography
-                                  onClick={onClickHome}
+                                    onClick={onClickHome}
                                     variant=''
                                     noWrap
                                     component="div"
-                                    sx={{ mr: 5, display: { xs: 'none', md: 'flex' }, cursor:'pointer' }}
+                                    sx={{ mr: 5, display: { xs: 'none', md: 'flex' }, cursor: 'pointer' }}
                                     fontFamily='Homemade Apple, cursive;'
                                     fontSize={18}
                                     color='#FF5A09'
@@ -133,7 +137,7 @@ function Header() {
                                     fontFamily='Homemade Apple, cursive;'
                                     fontSize={18}
                                     color='#FF5A09'
-                                    
+
                                 >
                                     Play Turf
                                 </Typography>
@@ -146,10 +150,10 @@ function Header() {
                                             Turfs
                                         </Button>
                                         <Button
-                                            
+
                                             sx={{ my: 1, color: 'white', display: 'block', fontWeight: 500, fontSize: '1rem' }}
                                         >
-                                            {user? 'My Bookings':'Bookings'}
+                                            {user ? 'My Bookings' : 'Bookings'}
                                         </Button>
                                         {/* <Button
                                             onClick={handleCloseNavMenu}
@@ -163,11 +167,11 @@ function Header() {
                                     </Box>
                                 </Box>
                                 {
-                                   token ? <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
+                                    token ? <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
                                         <Tooltip title="Open settings">
                                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, color: 'white' }}>
                                                 <Typography>
-                                                  {user ?  `Hi, ${user.name}` : ''}
+                                                    {user ? `Hi, ${user.name}` : ''}
                                                 </Typography>
                                                 <ArrowDropDownIcon sx={{ marginLeft: "2px" }} />
                                             </IconButton>
@@ -188,12 +192,13 @@ function Header() {
                                             open={Boolean(anchorElUser)}
                                             onClose={handleCloseUserMenu}
                                         >
-                                            <MenuItem onClick={handleCloseUserMenu}>
-                                                <Typography textAlign="center">Account</Typography>
-                                            </MenuItem>
-                                            <MenuItem onClick={handleCloseUserMenu}>
-                                                <Typography textAlign="center">Bookings</Typography>
-                                            </MenuItem>
+                                            {
+                                                // user ?
+                                                <MenuItem onClick={handleCloseUserMenu}>
+                                                    <Typography textAlign="center" onClick={onClickAccount}>Account</Typography>
+                                                </MenuItem>
+                                                // : ''
+                                            }
                                             <MenuItem onClick={handleCloseUserMenu}>
                                                 <Typography textAlign="center" onClick={logout}>Logout</Typography>
                                             </MenuItem>

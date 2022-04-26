@@ -44,7 +44,7 @@ route.get('/admin_panel/user_management', controller.userManagement)
 route.get('/admin_panel/user_management/update/:id', controller.getUserData)
 
 //admin user management get update
-route.put('/admin_panel/user_management/edit_user/:id', controller.updateUserData)
+route.put('/admin_panel/user_management/edit_user/:id',upload.single("picture"), controller.updateUserData)
 
 //admin user management update user status
 route.put('/admin_panel/user_management/edit_user_status/:id', controller.updateUserStatus)

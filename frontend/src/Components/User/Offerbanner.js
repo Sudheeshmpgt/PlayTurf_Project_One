@@ -9,7 +9,7 @@ function Offerbanner() {
                 <Paper
                     elevation={3}
                     sx={{
-                        width: '96.5%',
+                        width: '83%',
                         height: 100,
                         marginLeft: 'auto',
                         marginRight: 'auto',

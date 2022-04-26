@@ -68,7 +68,6 @@ function Turfadd() {
     const addTurfOnSubmit = async (data) => {
         const { centername, phone, location, price, category } = data
         let values = new FormData();
-        console.log('2',data.picture)
         if (data) {
 
             _.forEach(data.picture, file =>{

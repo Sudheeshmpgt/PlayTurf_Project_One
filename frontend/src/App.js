@@ -16,6 +16,8 @@ import Turfaddpage from './Pages/Turfaddpage';
 import Turfupdatepage from './Pages/Turfupdatepage';
 import Categoryaddpage from './Pages/Categoryaddpage';
 import Categoryupdatepage from './Pages/Categoryupdatepage';
+import UserAccountPage from './Pages/UserAccountPage';
+import UserEditPage from './Pages/UserEditPage';
 
 
 
@@ -38,6 +40,8 @@ function App() {
      <Route path='/categorypage' element={ <Categorypage/>}/>
      <Route path='/categoryadd' element={ <Categoryaddpage/>}/>
      <Route path='/categoryupdate' element={ <Categoryupdatepage/>}/>
+     <Route path='/useraccount' element={ <UserAccountPage/>}/>
+     <Route path='/useredit' element={ <UserEditPage/>}/>
    </Routes>
   );
 }
