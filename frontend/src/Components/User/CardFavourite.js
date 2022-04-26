@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Grid, CardContent, CardActions, Button, Typography } from '@mui/material'
+import { Card, Grid, CardContent, CardActions, Button, Typography, CardMedia } from '@mui/material'
 import { Box } from '@mui/system'
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Pagination } from "swiper";
@@ -32,11 +32,11 @@ function CardFavourite() {
                     <SwiperSlide>
                     <Box>
                         <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 325 }}>
-                            <CardContent sx={{ textAlign: 'center' }}>
-                                <img style={{ height: '98%', width: '98%', margin: '3px auto', borderRadius: 1 }}
+                            <CardMedia sx={{ textAlign: 'center' }}>
+                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
                                     alt='football court'
                                     src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
-                            </CardContent>
+                            </CardMedia>
                             <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
                              Sports Grounds
                             </Typography>
@@ -58,11 +58,11 @@ function CardFavourite() {
                     <SwiperSlide>
                     <Box>
                         <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 325 }}>
-                            <CardContent sx={{ textAlign: 'center' }}>
-                                <img style={{ height: '98%', width: '98%', margin: '3px auto', borderRadius: 1 }}
+                            <CardMedia sx={{ textAlign: 'center' }}>
+                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
                                     alt='football court'
                                     src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
-                            </CardContent>
+                            </CardMedia>
                             <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
                              Sports Grounds
                             </Typography>
@@ -84,11 +84,11 @@ function CardFavourite() {
                     <SwiperSlide>
                     <Box>
                         <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 325 }}>
-                            <CardContent sx={{ textAlign: 'center' }}>
-                                <img style={{ height: '98%', width: '98%', margin: '3px auto', borderRadius: 1 }}
+                            <CardMedia sx={{ textAlign: 'center' }}>
+                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
                                     alt='football court'
                                     src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
-                            </CardContent>
+                            </CardMedia>
                             <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
                              Sports Grounds
                             </Typography>
@@ -110,11 +110,11 @@ function CardFavourite() {
                     <SwiperSlide>
                     <Box>
                         <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 325 }}>
-                            <CardContent sx={{ textAlign: 'center' }}>
-                                <img style={{ height: '98%', width: '98%', margin: '3px auto', borderRadius: 1 }}
+                            <CardMedia sx={{ textAlign: 'center' }}>
+                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
                                     alt='football court'
                                     src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
-                            </CardContent>
+                            </CardMedia>
                             <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
                              Sports Grounds
                             </Typography>
@@ -136,11 +136,37 @@ function CardFavourite() {
                     <SwiperSlide>
                     <Box>
                         <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 325 }}>
-                            <CardContent sx={{ textAlign: 'center' }}>
-                                <img style={{ height: '98%', width: '98%', margin: '3px auto', borderRadius: 1 }}
+                            <CardMedia sx={{ textAlign: 'center' }}>
+                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
                                     alt='football court'
                                     src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
-                            </CardContent>
+                            </CardMedia>
+                            <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
+                             Sports Grounds
+                            </Typography>
+                            <CardActions>
+                                <Grid container sx={{ display: 'flex',justifyContent: 'center' }}>
+                                    <Grid item >
+                                       <Typography textAlign= 'center' >
+                                           20% OFF on Cricket Grounds
+                                       </Typography>
+                                    </Grid>
+                                    <Grid item>
+                                        <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop:1 }}>Book</Button>
+                                    </Grid>
+                                </Grid>
+                            </CardActions>
+                        </Card>
+                    </Box>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                    <Box>
+                        <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 325 }}>
+                            <CardMedia sx={{ textAlign: 'center' }}>
+                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
+                                    alt='football court'
+                                    src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
+                            </CardMedia>
                             <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
                              Sports Grounds
                             </Typography>

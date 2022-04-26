@@ -2,6 +2,7 @@ const UserModel = require('../model/userschema');
 const AdminModel = require('../model/adminschema');
 const TurfModel = require('../model/turfschema');
 const CategoryModel = require('../model/categoryschema');
+const BannerModel = require('../model/bannerschema');
 const config = require('../../config')
 const multer = require("multer");
 const { OAuth2Client } = require('google-auth-library');
@@ -155,13 +156,13 @@ exports.getUserData = async (req, res) => {
 //admin user management get updated
 exports.updateUserData = async (req, res) => {
     try {
-           const values={
-                name:req.body.name,
-                phone:req.body.phone,
-                email:req.body.email,
-                address:req.body.address,
-                userImg: req.file ? req.file.path : ''
-            }
+        const values = {
+            name: req.body.name,
+            phone: req.body.phone,
+            email: req.body.email,
+            address: req.body.address,
+            userImg: req.file ? req.file.path : ''
+        }
         const data = await UserModel.findByIdAndUpdate({ _id: req.params.id }, values)
         if (data) {
             res.send({ message: "User Updated Successfully", user: data })
@@ -181,7 +182,7 @@ exports.updateUserStatus = async (req, res) => {
         const email = data.email;
         const isActive = data.isActive;
         if (!data) {
-            res.send({ message: "User not found" })     
+            res.send({ message: "User not found" })
         } else {
             if (data.isActive) {
                 const status = !isActive
@@ -233,13 +234,13 @@ exports.addTurf = async (req, res) => {
     try {
         const { centername, phone, location, category, price } = req.body;
 
-        const urls=[];
+        const urls = [];
         const files = req.files;
-        for(const file of files){
-            const {path} = file
+        for (const file of files) {
+            const { path } = file
             urls.push(path)
         }
-     
+
         const turf = await TurfModel.findOne({ centername: centername });
         if (turf) {
             res.send({ message: "Turf already exists" });
@@ -248,8 +249,8 @@ exports.addTurf = async (req, res) => {
                 centername: req.body.centername,
                 phone: req.body.phone,
                 location: req.body.location,
-                category:req.body.category,
-                price: req.body.price, 
+                category: req.body.category,
+                price: req.body.price,
                 turfPictures: urls
             });
             const turf = await addNewTurf.save();
@@ -258,7 +259,7 @@ exports.addTurf = async (req, res) => {
         }
     } catch (error) {
         res.send(error);
-        console.log(error) 
+        console.log(error)
     }
 }
 
@@ -275,7 +276,15 @@ exports.getTurfData = async (req, res) => {
 //admin turf management get updated
 exports.updateTurfData = async (req, res) => {
     try {
-        const data = await TurfModel.findByIdAndUpdate({ _id: req.params.id }, req.body)
+        const values = {
+            centername: req.body.centername,
+            phone: req.body.phone,
+            location: req.body.location,
+            category: req.body.category,
+            price: req.body.price,
+            turfPictures: req.file && req.file.path
+        }
+        const data = await TurfModel.findByIdAndUpdate({ _id: req.params.id }, values)
         if (data) {
             res.send({ message: "Turf details Updated Successfully", turf: data })
         } else {
@@ -292,7 +301,7 @@ exports.deleteTurfData = async (req, res) => {
         const data = await TurfModel.findByIdAndDelete({ _id: req.params.id })
         const turf = await TurfModel.find({})
         if (data) {
-            res.send({ message: "User Deleted Successfully", turf: turf })
+            res.send({ message: "Deleted Successfully", turf: turf })
         } else {
             res.send({ message: "Some error in deleting the data" })
         }
@@ -373,3 +382,85 @@ exports.deleteCategoryData = async (req, res) => {
     }
 }
 
+//admin banner management
+exports.bannerManagement = async (req, res) => {
+    try {
+        const banner = await BannerModel.find({})
+        if (banner) {
+            res.send({ message: "Request successfull", banner: banner });
+        } else {
+            res.send('Unauthorize Access');
+        }
+    } catch (error) {
+        res.send({ message: "Bad request", error: error })
+    }
+}
+
+//admin banner management add banner
+exports.addBanner = async (req, res) => {
+    try {
+        const { description } = req.body;
+        const url = req.file.path
+        if (url) {
+            const newBanner = new BannerModel({
+                bannerImage: url,
+                description: description
+            });
+            const banner = await newBanner.save();
+            res.send({ message: "Banner details added Successfully", banner: banner });
+        } else {
+            res.send({ error: "Invalid credentials" })
+        }
+    } catch (error) {
+        res.send({ message: "Invalid details", error: error })
+        console.log(error)
+    }
+}
+
+//admin turf management update request
+exports.getBannerData = async (req, res) => {
+    try {
+        const data = await BannerModel.find({ _id: req.params.id })
+        if (data) {
+            res.send({ message: "Successful", banner: data })
+        } else {
+            res.send({ message: "Error" })
+        }
+    } catch (error) {
+        console.log(error)
+    }
+
+}
+
+//admin turf management get updated
+exports.updateBannerData = async (req, res) => {
+    try {
+        const values = {
+            description: req.body.description,
+            bannerImage: req.file && req.file.path
+        }
+        const data = await BannerModel.findByIdAndUpdate({ _id: req.params.id }, values)
+        if (data) {
+            res.send({ message: "Banner details Updated Successfully", banner: data })
+        } else {
+            res.send({ message: "Request failed" })
+        }
+    } catch (error) {
+        res.send({ message: "Bad request", err: error })
+    }
+}
+
+//admin banner mangement delete
+exports.deleteBannerData = async (req, res) => {
+    try {
+        const data = await BannerModel.findByIdAndDelete({ _id: req.params.id })
+        const banner = await BannerModel.find({})
+        if (data) {
+            res.send({ message: "Deleted Successfully", banner:banner })
+        } else {
+            res.send({ message: "Some error in deleting the data" })
+        }
+    } catch (error) {
+        res.send({ messsage: "Error", error: error })
+    }
+}

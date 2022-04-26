@@ -18,6 +18,9 @@ import Categoryaddpage from './Pages/Categoryaddpage';
 import Categoryupdatepage from './Pages/Categoryupdatepage';
 import UserAccountPage from './Pages/UserAccountPage';
 import UserEditPage from './Pages/UserEditPage';
+import Bannerpage from './Pages/Bannerpage';
+import Banneraddpage from './Pages/Banneraddpage';
+import Bannerupdatepage from './Pages/Bannerupdatepage'
 
 
 
@@ -42,6 +45,9 @@ function App() {
      <Route path='/categoryupdate' element={ <Categoryupdatepage/>}/>
      <Route path='/useraccount' element={ <UserAccountPage/>}/>
      <Route path='/useredit' element={ <UserEditPage/>}/>
+     <Route path='/bannerpage' element={ <Bannerpage/>}/>
+     <Route path='/banneradd' element={ <Banneraddpage/>}/> 
+     <Route path='/bannerupdate' element={ <Bannerupdatepage/>}/> 
    </Routes>
   );
 }

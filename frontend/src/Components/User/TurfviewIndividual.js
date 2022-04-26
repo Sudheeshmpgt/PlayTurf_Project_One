@@ -1,7 +1,5 @@
 import { Card, CardActions, CardContent, CardMedia, Grid, Typography, Button, Box, Paper, Fab, TextField } from '@mui/material'
-import React, { useState } from 'react'
-import imageOne from '../../Images/Court5.jpg'
-import imageTwo from '../../Images/Court7.jpg'
+import React, { useContext, useState } from 'react'
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -10,21 +8,23 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { useNavigate } from 'react-router-dom';
 import './TurfList.css'
+import { TurfViewContext } from '../../Store/turfviewcontext';
 
 function TurfviewIndividual() {
     const [date, setDate] = useState(null);
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
     const navigate = useNavigate()
+    const { turfView } = useContext(TurfViewContext)
 
-    const goBack = () =>{
+    const goBack = () => {
         navigate('/turf')
     }
     return (
-        <Paper sx={{ m: 2, backgroundColor: 'rgba(255, 255, 255, 0.2)', borderRadius:'1px'}}>
+        <Paper sx={{ m: 2, backgroundColor: 'rgba(255, 255, 255, 0.2)', borderRadius: '1px' }}>
             <Grid container p={2}>
                 <Grid item xs={12} md={6}>
-                    <Card sx={{ height: 525, m: 1, px: 1, display: 'flex', flexDirection: 'column', backgroundColor: 'rgba(255, 255, 255, 0.87)', borderRadius:'2px'}}>
+                    <Card sx={{ height: 525, m: 1, px: 1, display: 'flex', flexDirection: 'column', backgroundColor: 'rgba(255, 255, 255, 0.87)', borderRadius: '2px' }}>
                         <CardContent>
                             <Typography
                                 variant="h1"
@@ -32,12 +32,12 @@ function TurfviewIndividual() {
                                 color='text.secondary'
                                 fontFamily='Atkinson Hyperlegible, sans-serif'
                                 fontWeight={600}>
-                                Tiger Sports
+                                {turfView.centername}
                             </Typography>
                         </CardContent>
                         <Box sx={{ display: 'flex' }}>
                             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                <CardMedia
+                                {/* <CardMedia
                                     component="img"
                                     sx={{ width: '85%', height: '25%', m: '5px 10px' }}
                                     image={imageTwo}
@@ -51,31 +51,30 @@ function TurfviewIndividual() {
                                     component="img"
                                     sx={{ width: '85%', height: '25%', m: '5px 10px' }}
                                     image={imageOne}
-                                    alt="Live from space album cover" />
+                                    alt="Live from space album cover" /> */}
                             </Box>
                             <Box>
                                 <CardMedia
                                     component="img"
-                                    sx={{ width: '95%', height: '80%', m: .5 }}
-                                    image={imageTwo}
+                                    sx={{ width:600, height:300, m: .5 }}
+                                    image={turfView.turfPictures}
                                     alt="Live from space album cover" />
                             </Box>
                         </Box>
-                        <CardContent sx={{ marginTop: '-45px' }}>
+                        <CardContent sx={{ marginTop: '15px' }}>
                             <Typography variant="subtitle1" color="text.secondary" component="div" fontWeight={600}>
-                                Contact: 9089786756
+                                Contact: {turfView.phone}
                             </Typography>
                             <Typography variant="subtitle1" color="text.secondary" component="div" fontWeight={600}>
-                                Email : tigersports@gmail.com
+                                Location: {turfView.location}
                             </Typography>
                             <Typography variant="subtitle1" color="text.secondary" component="div" fontWeight={600}>
-                                Location: Kakkanad
                             </Typography>
                         </CardContent>
                     </Card>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Card sx={{ height: 525, m: 1, backgroundColor: 'rgba(255, 255, 255, 0.87)', borderRadius:'2px' }}>
+                    <Card sx={{ height: 525, m: 1, backgroundColor: 'rgba(255, 255, 255, 0.87)', borderRadius: '2px' }}>
                         <CardContent>
                             <Typography
                                 variant="h1"
@@ -94,21 +93,21 @@ function TurfviewIndividual() {
                             </Fab>
                         </CardActions>
                         <CardContent>
-                            <Paper  className='scrollbar-hidden'>
-                                <Button variant='contained' size='small' sx={{margin:1}}>9:00</Button>
-                                <Button variant='contained' size='small' sx={{margin:1}}>10:00</Button>
-                                <Button variant='contained' size='small' sx={{margin:1}}>11:00</Button>
-                                <Button variant='contained' size='small' sx={{margin:1}}>12:00</Button>
-                                <Button variant='contained' size='small' sx={{margin:1}}>1:00</Button>
-                                <Button variant='contained' size='small' sx={{margin:1}}>2:00</Button>
-                                <Button variant='contained' size='small' sx={{margin:1}}>3:00</Button>
-                                <Button variant='contained' size='small' sx={{margin:1}}>4:00</Button>
-                                <Button variant='contained' size='small' sx={{margin:1}}>5:00</Button>
-                                <Button variant='contained' size='small' sx={{margin:1}}>6:00</Button>
-                                <Button variant='contained' size='small' sx={{margin:1}}>7:00</Button>
-                                <Button variant='contained' size='small' sx={{margin:1}}>8:00</Button>
-                                <Button variant='contained' size='small' sx={{margin:1}}>9:00</Button>
-                                <Button variant='contained' size='small' sx={{margin:1}}>10:00</Button>
+                            <Paper className='scrollbar-hidden'>
+                                <Button variant='contained' size='small' sx={{ margin: 1 }}>9:00</Button>
+                                <Button variant='contained' size='small' sx={{ margin: 1 }}>10:00</Button>
+                                <Button variant='contained' size='small' sx={{ margin: 1 }}>11:00</Button>
+                                <Button variant='contained' size='small' sx={{ margin: 1 }}>12:00</Button>
+                                <Button variant='contained' size='small' sx={{ margin: 1 }}>1:00</Button>
+                                <Button variant='contained' size='small' sx={{ margin: 1 }}>2:00</Button>
+                                <Button variant='contained' size='small' sx={{ margin: 1 }}>3:00</Button>
+                                <Button variant='contained' size='small' sx={{ margin: 1 }}>4:00</Button>
+                                <Button variant='contained' size='small' sx={{ margin: 1 }}>5:00</Button>
+                                <Button variant='contained' size='small' sx={{ margin: 1 }}>6:00</Button>
+                                <Button variant='contained' size='small' sx={{ margin: 1 }}>7:00</Button>
+                                <Button variant='contained' size='small' sx={{ margin: 1 }}>8:00</Button>
+                                <Button variant='contained' size='small' sx={{ margin: 1 }}>9:00</Button>
+                                <Button variant='contained' size='small' sx={{ margin: 1 }}>10:00</Button>
                             </Paper>
                         </CardContent>
                         <CardContent>
@@ -124,7 +123,7 @@ function TurfviewIndividual() {
                                     />
                                 </LocalizationProvider>
                             </CardActions>
-                            <CardActions sx={{display:'flex', justifyContent:'space-between'}}>
+                            <CardActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <TimePicker
                                         label="Start Time"
@@ -144,18 +143,18 @@ function TurfviewIndividual() {
                                     />
                                 </LocalizationProvider>
                             </CardActions>
-                            <CardActions sx={{display:'flex', justifyContent:'space-between'}}>
+                            <CardActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Button variant='contained'
                                     color='secondary'
                                     onClick={goBack}
-                                    // sx={{ marginLeft: 'auto', marginRight: 'auto' }}
-                                    >
+                                // sx={{ marginLeft: 'auto', marginRight: 'auto' }}
+                                >
                                     Back
                                 </Button>
                                 <Button variant='contained'
                                     color='secondary'
-                                    // sx={{ marginLeft: 'auto', marginRight: 'auto' }}
-                                    >
+                                // sx={{ marginLeft: 'auto', marginRight: 'auto' }}
+                                >
                                     Book Now
                                 </Button>
                             </CardActions>

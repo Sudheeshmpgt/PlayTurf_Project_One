@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Grid, Paper, TextField, useTheme, useMediaQuery, Avatar, IconButton } from '@mui/material'
+import { Button, Grid, Paper, TextField, useTheme, useMediaQuery, Avatar, IconButton, Box, Input } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import EditIcon from '@mui/icons-material/Edit';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -10,10 +10,11 @@ import Swal from 'sweetalert2'
 function Turfupdate() {
 
     const location = useLocation()
+    const [image, setImage] = useState('')
     const Toast = Swal.mixin({
         toast: true,
         position: 'bottom-right',
-        width:'400px',
+        width: '400px',
         showConfirmButton: false,
         timer: 5000,
         didOpen: (toast) => {
@@ -32,9 +33,10 @@ function Turfupdate() {
         phone: '',
         location: '',
         category: '',
-        price: ''
+        price: '',
+        picture: ''
     })
-    const [turfid,setTurfId]=useState('')
+    const [turfid, setTurfId] = useState('')
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -55,29 +57,40 @@ function Turfupdate() {
         })
     }
 
-    const Edit = () => {
+    const Edit = (data) => {
         const id = turfid
         const { centername, phone, location, category, price } = turf
-        if (centername && phone && location && category && price) {
-            axios.put(`admin_panel/turfs/edit_turfs/${id}`, turf)
-                .then((res) => {
-                    const message = res.data.message;
-                    Toast.fire({
-                        icon: 'success',
-                        title: message
-                    })
-                    navigate('/turfpage')
-                })
-        } else {
-            Toast.fire({
-                icon: 'error',
-                title: 'Invalid Credetials'
-            })
+        let values = new FormData();
+        if (data) {
+            values.append('picture', image)
+            values.append('centername', centername)
+            values.append('phone', phone)
+            values.append('location', location)
+            values.append('category', category)
+            values.append('price', price)
         }
+        axios.put(`admin_panel/turfs/edit_turfs/${id}`, values, { "Content-Type": "multipart/form-data" })
+            .then((res) => {
+                const message = res.data.message;
+                Toast.fire({
+                    icon: 'success',
+                    title: message
+                })
+                navigate('/turfpage')
+            }).catch(e => {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Invalid Credetials'
+                })
+            })
     }
-    
-    const goBack = () =>{
+
+    const goBack = () => {
         navigate('/turfpage')
+    }
+
+    const changeImage = (e)=>{
+        setImage(e.target.files[0])
     }
 
     let paperStyle
@@ -87,7 +100,7 @@ function Turfupdate() {
             height: 'auto',
             width: 280,
             margin: "10px auto",
-            backgroundColor:'rgba(255, 255, 255, 0.8)',
+            backgroundColor: 'rgba(255, 255, 255, 0.8)',
             borderRadius: '1px'
         }
     } else {
@@ -96,7 +109,7 @@ function Turfupdate() {
             height: 'auto',
             width: 500,
             margin: "10px auto",
-            backgroundColor:'rgba(255, 255, 255, 0.8)',
+            backgroundColor: 'rgba(255, 255, 255, 0.8)',
             borderRadius: '1px'
         }
     }
@@ -105,125 +118,145 @@ function Turfupdate() {
     const textStyle = { margin: '6px auto' }
     return (
         <Grid container>
-             <Grid>
-            <IconButton 
-            variant='text' 
-            onClick={goBack}
-            sx={{marginTop:'10%', 
-            color:'white'}}>
-                <ArrowBackIcon/> Go Back
-            </IconButton>
+            <Grid>
+                <IconButton
+                    variant='text'
+                    onClick={goBack}
+                    sx={{
+                        marginTop: '10%',
+                        color: 'white'
+                    }}>
+                    <ArrowBackIcon /> Go Back
+                </IconButton>
             </Grid>
-                    <Paper elevation={3} style={paperStyle}>
-                        <Grid align='center'>
-                            <Avatar style={avatarStyle}><EditIcon /></Avatar>
-                            <h2 style={{ marginBottom: '10px', fontFamily: 'Atkinson Hyperlegible, sans-serif' }}>Edit Turf Details</h2>
-                            <form onSubmit={handleSubmit(Edit)} autoComplete='off'>
-                                <TextField
-                                    {...register('centername', {
-                                        required: 'This field is required',
-                                        minLength: {
-                                            value: 4,
-                                            message: 'Please enter atleast 4 characters'
-                                        },
-                                        pattern: {
-                                            value: /^[a-zA-Z][a-zA-Z][a-zA-Z ]*$/,
-                                            message: 'Please enter a valid center name'
-                                        }
-                                    })}
-                                    style={textStyle}
-                                    name='centername'
-                                    type='string'
-                                    onChange={handleChange}
-                                    value={turf.centername}
-                                    error={!!errors?.centername}
-                                    helperText={errors?.centername ? errors.centername.message : null}
-                                    label='Center Name'
-                                    placeholder='Enter center name'
-                                    fullWidth
-                                />
-                                <TextField
-                                    {...register('phone', {
-                                        required: 'This field is required',
-                                        pattern: {
-                                            value: /^\d{10}$/,
-                                            message: 'Please enter a valid phone number'
-                                        }
-                                    })}
-                                    style={textStyle}
-                                    name='phone'
-                                    type='string'
-                                    onChange={handleChange}
-                                    value={turf.phone}
-                                    error={!!errors?.phone}
-                                    helperText={errors?.phone ? errors.phone.message : null}
-                                    label='Phone'
-                                    placeholder='Enter contact number'
-                                    fullWidth
-                                />
-                                <TextField
-                                    {...register('location', {
-                                        required: 'This field is required',
-                                        pattern: {
-                                            value: /^[a-zA-Z][a-zA-Z][a-zA-Z ]*$/,
-                                            message: 'Please enter a valid location'
-                                        }
-                                    })}
-                                    style={textStyle}
-                                    name='location'
-                                    type='string'
-                                    onChange={handleChange}
-                                    value={turf.location}
-                                    error={!!errors?.location}
-                                    helperText={errors?.location ? errors.location.message : null}
-                                    label='Location'
-                                    placeholder='Enter center location'
-                                    fullWidth />
-                                <TextField
-                                    style={textStyle}
-                                    name='category'
-                                    type='string'
-                                    {...register('category', {
-                                        required: 'This field is required',
-                                        pattern: {
-                                            value: /^[a-zA-Z][a-zA-Z][a-zA-Z ]*$/,
-                                            message: 'Please enter a valid category'
-                                        }
+            <Paper elevation={3} style={paperStyle}>
+                <Grid align='center'>
+                    <Avatar style={avatarStyle}><EditIcon /></Avatar>
+                    <h2 style={{ marginBottom: '10px', fontFamily: 'Atkinson Hyperlegible, sans-serif' }}>Edit Turf Details</h2>
+                    <form onSubmit={handleSubmit(Edit)} autoComplete='off'>
+                        <TextField
+                            {...register('centername', {
+                                required: 'This field is required',
+                                minLength: {
+                                    value: 4,
+                                    message: 'Please enter atleast 4 characters'
+                                },
+                                pattern: {
+                                    value: /^[a-zA-Z][a-zA-Z][a-zA-Z ]*$/,
+                                    message: 'Please enter a valid center name'
+                                }
+                            })}
+                            style={textStyle}
+                            name='centername'
+                            type='string'
+                            onChange={handleChange}
+                            value={turf.centername}
+                            error={!!errors?.centername}
+                            helperText={errors?.centername ? errors.centername.message : null}
+                            label='Center Name'
+                            placeholder='Enter center name'
+                            fullWidth
+                        />
+                        <TextField
+                            {...register('phone', {
+                                required: 'This field is required',
+                                pattern: {
+                                    value: /^\d{10}$/,
+                                    message: 'Please enter a valid phone number'
+                                }
+                            })}
+                            style={textStyle}
+                            name='phone'
+                            type='string'
+                            onChange={handleChange}
+                            value={turf.phone}
+                            error={!!errors?.phone}
+                            helperText={errors?.phone ? errors.phone.message : null}
+                            label='Phone'
+                            placeholder='Enter contact number'
+                            fullWidth
+                        />
+                        <TextField
+                            {...register('location', {
+                                required: 'This field is required',
+                                pattern: {
+                                    value: /^[a-zA-Z][a-zA-Z][a-zA-Z ]*$/,
+                                    message: 'Please enter a valid location'
+                                }
+                            })}
+                            style={textStyle}
+                            name='location'
+                            type='string'
+                            onChange={handleChange}
+                            value={turf.location}
+                            error={!!errors?.location}
+                            helperText={errors?.location ? errors.location.message : null}
+                            label='Location'
+                            placeholder='Enter center location'
+                            fullWidth />
+                        <TextField
+                            style={textStyle}
+                            name='category'
+                            type='string'
+                            {...register('category', {
+                                required: 'This field is required',
+                                pattern: {
+                                    value: /^[a-zA-Z][a-zA-Z][a-zA-Z ]*$/,
+                                    message: 'Please enter a valid category'
+                                }
 
-                                    })}
-                                    onChange={handleChange}
-                                    value={turf.category}
-                                    error={!!errors?.category}
-                                    helperText={errors?.category ? errors.category.message : null}
-                                    label='Category'
-                                    placeholder='Enter category'
-                                    fullWidth />
-                                <TextField
-                                    {...register('price', {
-                                        required: 'This field is required',
-                                        pattern: {
-                                            value: /^[0-9]*$/,
-                                            message: 'Please enter only number'
-                                        }
-                                    })}
-                                    style={textStyle}
-                                    name='price'
-                                    type='string'
-                                    onChange={handleChange}
-                                    value={turf.price}
-                                    error={!!errors?.price}
-                                    helperText={errors?.price ? errors.price.message : null}
-                                    label='Price'
-                                    placeholder='Enter price per hour'
-                                    fullWidth />
-                                <Button
-                                    sx={{ marginTop: 1, marginBottom: 5 }}
-                                    type='submit'
-                                    variant="contained"
-                                    fullWidth>Submit</Button>
-                            </form>
-                        </Grid>
-                    </Paper>
+                            })}
+                            onChange={handleChange}
+                            value={turf.category}
+                            error={!!errors?.category}
+                            helperText={errors?.category ? errors.category.message : null}
+                            label='Category'
+                            placeholder='Enter category'
+                            fullWidth />
+                        <TextField
+                            {...register('price', {
+                                required: 'This field is required',
+                                pattern: {
+                                    value: /^[0-9]*$/,
+                                    message: 'Please enter only number'
+                                }
+                            })}
+                            style={textStyle}
+                            name='price'
+                            type='string'
+                            onChange={handleChange}
+                            value={turf.price}
+                            error={!!errors?.price}
+                            helperText={errors?.price ? errors.price.message : null}
+                            label='Price'
+                            placeholder='Enter price per hour'
+                            fullWidth />
+                        <Box display='flex' flexDirection='column' alignItems='flex-start'>
+                            <Box height={100} width={150} border={1} marginTop={1}>
+                                <img height={100} width={150} src={image ? URL.createObjectURL(image) : turf.turfPictures }></img>
+                            </Box>
+                            <label htmlFor="contained-button-file">
+                                <Input
+                                    {...register('picture')}
+                                    accept="image/*"
+                                    id="contained-button-file"
+                                    multiple type="file"
+                                    style={{ display: 'none' }}
+                                    onChange={changeImage}
+                                />
+                                <Button variant="contained" component="span" sx={{ marginTop: 1 }} >
+                                    Upload
+                                </Button>
+                            </label>
+                        </Box>
+                        <Button
+                            sx={{ marginTop: 1, marginBottom: 5 }}
+                            type='submit'
+                            variant="contained"
+                            fullWidth>Submit</Button>
+                    </form>
+                </Grid>
+            </Paper>
         </Grid >
     )
 }

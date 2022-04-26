@@ -6,6 +6,7 @@ import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import CategoryIcon from '@mui/icons-material/Category';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from 'react-router-dom';
 
@@ -23,6 +24,9 @@ function AdminAside() {
     }
     const categorySubmit = ()=>{
         navigate('/categorypage')
+    }
+    const bannerSubmit = ()=>{
+        navigate('/bannerpage')
     }
     return (
         <Grid container>
@@ -78,6 +82,12 @@ function AdminAside() {
                             <Button onClick={userSubmit} sx={{color:'black', fontWeight:600, fontSize:'1.1em', fontFamily:'Open Sans,sans-serif'}}>
                             <AccountCircleIcon sx={{marginRight:2}}/>
                             Users
+                            </Button>
+                        </Box>
+                        <Box  sx={{margin:'5px 0'}}>
+                            <Button onClick={bannerSubmit} sx={{color:'black', fontWeight:600, fontSize:'1.1rem',fontFamily:'Open Sans,sans-serif'}}>
+                            <ViewCarouselIcon sx={{marginRight:2}}/>
+                            Banners
                             </Button>
                         </Box>
                     </Box>

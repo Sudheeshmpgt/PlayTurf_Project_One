@@ -1,14 +1,33 @@
 import { Grid, Paper } from '@mui/material'
 import {Swiper, SwiperSlide} from 'swiper/react'
-import React from 'react'
+import React,{useEffect, useState} from 'react'
+import axios from '../../axiosinstance'
 import './Banner.css'
-import 'swiper/css'
-import 'swiper/css/navigation'
-import {Navigation} from 'swiper'
-import imageOne from '../../Images/Court1.jpg'
+import { Autoplay, EffectFade, Navigation, Pagination } from "swiper";
+import "swiper/css";
+import "swiper/css/effect-fade";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/autoplay";
 
 
 function Banner() {
+  const [banner, setBanner] = useState([])
+  const getBannerData = async () => {
+    try {
+        const data = await axios.get("admin_panel/banner")
+        setBanner(data.data.banner)
+    } catch (error) {
+        alert(error)
+    }
+}
+
+useEffect(() => {
+    getBannerData();
+    return () => {
+    }
+}, [])
+
   return (
     <Grid container>
       <Grid item xs={12} md={12}>
@@ -24,16 +43,22 @@ function Banner() {
           }}
           // className='banner_img'
         >
-        <Swiper navigation={true} modules={[Navigation]}>
-        <SwiperSlide><img height='350' width='100%' alt='slide-1' src={imageOne}></img></SwiperSlide>
-        <SwiperSlide>Slide 2</SwiperSlide>
-        <SwiperSlide>Slide 3</SwiperSlide>
-        <SwiperSlide>Slide 4</SwiperSlide>
-        <SwiperSlide>Slide 5</SwiperSlide>
-        <SwiperSlide>Slide 6</SwiperSlide>
-        <SwiperSlide>Slide 7</SwiperSlide>
-        <SwiperSlide>Slide 8</SwiperSlide>
-        <SwiperSlide>Slide 9</SwiperSlide>
+        <Swiper
+        spaceBetween={30}
+        effect={"fade"}
+        navigation={true}
+        pagination={{
+          clickable: true,
+        }}
+        modules={[EffectFade, Navigation, Pagination, Autoplay]}
+        autoplay={{ delay:6000}}
+        className="mySwiper"
+      >
+        {
+          banner.map((data,index)=>(
+             <SwiperSlide ><img height='350' width='100%' alt='slide-1' src={data.bannerImage}></img></SwiperSlide>
+          ))
+        }
       </Swiper>
         </Paper>
       </Grid>

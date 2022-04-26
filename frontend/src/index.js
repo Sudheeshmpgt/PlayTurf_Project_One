@@ -11,26 +11,29 @@ import Turf from './Store/turfcontext';
 import Filter from './Store/filtercontext';
 import FilterCategory from './Store/filtercategorycontrext';
 import FilterPrice from './Store/filterpricecontext';
+import TurfView from './Store/turfviewcontext';
 
 
 ReactDOM.render(
   <React.StrictMode>
     <Search>
-      <FilterPrice>
-        <FilterCategory>
-          <Filter>
-            <Turf>
-              <User>
-                <BrowserRouter>
-                  <ThemeProvider theme={Theme}>
-                    <App />
-                  </ThemeProvider>
-                </BrowserRouter>
-              </User>
-            </Turf>
-          </Filter>
-        </FilterCategory>
-      </FilterPrice>
+      <TurfView>
+        <FilterPrice>
+          <FilterCategory>
+            <Filter>
+              <Turf>
+                <User>
+                  <BrowserRouter>
+                    <ThemeProvider theme={Theme}>
+                      <App />
+                    </ThemeProvider>
+                  </BrowserRouter>
+                </User>
+              </Turf>
+            </Filter>
+          </FilterCategory>
+        </FilterPrice>
+      </TurfView>
     </Search>
   </React.StrictMode>,
   document.getElementById('root')

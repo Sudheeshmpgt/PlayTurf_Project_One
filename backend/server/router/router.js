@@ -62,7 +62,7 @@ route.post('/admin_panel/turfs/add_turfs',upload.array("pictures"), controller.a
 route.get('/admin_panel/turfs/edit_turfs/:id', controller.getTurfData)
 
 //admin turf management get updated
-route.put('/admin_panel/turfs/edit_turfs/:id', controller.updateTurfData)
+route.put('/admin_panel/turfs/edit_turfs/:id', upload.single("picture"), controller.updateTurfData) 
 
 //admin turf management delete turf details
 route.delete('/admin_panel/turfs/delete_turfs/:id', controller.deleteTurfData)
@@ -81,6 +81,21 @@ route.put('/admin_panel/category/edit_category/:id', controller.updateCategoryDa
 
 //admin turf management delete turf details
 route.delete('/admin_panel/category/delete_category/:id', controller.deleteCategoryData)
+
+//admin banner management
+route.get('/admin_panel/banner', controller.bannerManagement)
+
+//admin banner management add new banner
+route.post('/admin_panel/banner/add_banner', upload.single("picture"), controller.addBanner) 
+
+//admin banner management update request
+route.get('/admin_panel/banner/edit_banner/:id', controller.getBannerData)
+
+//admin banner management get updated
+route.put('/admin_panel/banner/edit_banner/:id', upload.single("picture"), controller.updateBannerData) 
+
+//admin banner management delete banner details
+route.delete('/admin_panel/banner/delete_banner/:id', controller.deleteBannerData)
 
 
 module.exports=route;

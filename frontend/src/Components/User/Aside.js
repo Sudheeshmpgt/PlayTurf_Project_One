@@ -45,7 +45,6 @@ function Aside() {
   }
 
   const handleChangePrice = (e) => {
-    console.log(e.target.value)
     if (e.target.checked) {
       setFilterPrice(e.target.value)
     } else {
