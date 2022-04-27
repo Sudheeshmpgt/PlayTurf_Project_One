@@ -14,6 +14,7 @@ import { FilterContext } from '../../Store/filtercontext'
 import { FilterCategoryContext } from '../../Store/filtercategorycontrext'
 import { FilterPriceContext } from '../../Store/filterpricecontext';
 import { TurfViewContext } from '../../Store/turfviewcontext';
+import { SearchContext } from '../../Store/searchcontext';
 
 function TurfList() {
     const { turf } = useContext(TurfContext)
@@ -21,6 +22,7 @@ function TurfList() {
     const { filterCategory } = useContext(FilterCategoryContext)
     const { filterPrice } = useContext(FilterPriceContext)
     const {setTurfView} = useContext(TurfViewContext)
+    const {search} = useContext(SearchContext)
     const navigate = useNavigate();
     
     const handleClick = (id) => {
@@ -75,6 +77,12 @@ function TurfList() {
                             return data
                         }
                         else if (data.price < filterPrice) {
+                            return data
+                        }
+                    }).filter((data) => {
+                        if (search === "") {
+                            return data
+                        } else if (data.centername.toLowerCase().includes(search.toLowerCase())) {
                             return data
                         }
                     })

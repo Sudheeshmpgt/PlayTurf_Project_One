@@ -3,6 +3,7 @@ const AdminModel = require('../model/adminschema');
 const TurfModel = require('../model/turfschema');
 const CategoryModel = require('../model/categoryschema');
 const BannerModel = require('../model/bannerschema');
+const BookingModel = require('../model/bookingschema')
 const config = require('../../config')
 const multer = require("multer");
 const { OAuth2Client } = require('google-auth-library');
@@ -449,18 +450,43 @@ exports.updateBannerData = async (req, res) => {
         res.send({ message: "Bad request", err: error })
     }
 }
-
+      
 //admin banner mangement delete
 exports.deleteBannerData = async (req, res) => {
     try {
         const data = await BannerModel.findByIdAndDelete({ _id: req.params.id })
         const banner = await BannerModel.find({})
         if (data) {
-            res.send({ message: "Deleted Successfully", banner:banner })
+            res.send({ message: "Deleted Successfully", banner: banner })
         } else {
             res.send({ message: "Some error in deleting the data" })
         }
     } catch (error) {
         res.send({ messsage: "Error", error: error })
+    }
+}           
+
+//admin or use booking management
+exports.addBooking = async (req, res) => {
+    try {
+        const { centerId, createdBy, date, startTime, endTime } = req.body
+        const prevBooking = await BookingModel.find({ centerId: centerId, date: date, startTime: startTime});
+    console.log(prevBooking)
+        if (prevBooking.length <= 0) {   
+            const newBooking = new BookingModel({
+                centerId: centerId ,
+                createdBy: createdBy,
+                date: date,
+                startTime: startTime, 
+                endTime: endTime
+            });
+            const booking = await newBooking.save();
+            res.send({ message: "Booked Successfully", booking: booking });
+        } else {
+            console.log('hello in prevbooking')
+            res.send({ message: "The slot is already booked" });
+        }
+    } catch (error) {
+        console.log(error)
     }
 }

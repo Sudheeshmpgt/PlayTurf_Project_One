@@ -1,35 +1,101 @@
-import { Card, CardActions, CardContent, CardMedia, Grid, Typography, Button, Box, Paper, Fab, TextField } from '@mui/material'
-import React, { useContext, useState } from 'react'
-import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
-import SportsCricketIcon from '@mui/icons-material/SportsCricket';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { Card, CardActions, CardContent, CardMedia, Grid, Typography, Button, Box, Paper, TextField, RadioGroup, FormControl, FormLabel, FormControlLabel, Radio } from '@mui/material'
+import React, { useContext, useEffect, useState } from 'react';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { useNavigate } from 'react-router-dom';
 import './TurfList.css'
 import { TurfViewContext } from '../../Store/turfviewcontext';
+import { UserContext } from '../../Store/usercontext'
+import axios from '../../axiosinstance'
+import moment from 'moment'
 
 function TurfviewIndividual() {
     const [date, setDate] = useState(null);
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
+    const [morningTimeslots, setMorningTimeslots] = useState([])
+    const [eveningTimeslots, setEveningTimeslots] = useState([])
+    const [value, setValue] = useState('')
     const navigate = useNavigate()
     const { turfView } = useContext(TurfViewContext)
+    const { user } = useContext(UserContext)
+
+    const createMorningTimeSlots = (fromTime, toTime) => {
+        let startingTime = moment(fromTime, 'hh:mm ')
+        let endingTime = moment(toTime, 'hh:mm ')
+        if (endingTime.isBefore(startingTime)) {
+            endingTime.add(1, 'day')
+        }
+        let arrM = [];
+        while (startingTime <= endingTime) {
+            arrM.push(new moment(startingTime).format('hh:mm '));
+            startingTime.add(60, 'minutes');
+        }
+        return arrM;
+    }
+
+    const createEveningTimeSlots = (fromTime, toTime) => {
+        let startingTime = moment(fromTime, 'hh:mm ')
+        let endingTime = moment(toTime, 'hh:mm ')
+        if (endingTime.isBefore(startingTime)) {
+            endingTime.add(1, 'day')
+        }
+        let arrE = [];
+        while (startingTime <= endingTime) {
+            arrE.push(new moment(startingTime).format('hh:mm '));
+            startingTime.add(60, 'minutes');
+        }
+        return arrE;
+    }
+
+    useEffect(() => {
+        let arrM = createMorningTimeSlots('05:00 ', '11:00 ')
+        setMorningTimeslots(arrM)
+        let arrE = createEveningTimeSlots('16:00 ', '22:00 ')
+        setEveningTimeslots(arrE)
+    }, [])
+
+    const handleClick = () => {
+        const fdate = moment(date).toISOString()
+        const fstartTime = moment(startTime).toISOString()
+        const fendTime = moment(endTime).toISOString()
+
+        const values = {
+             centerId: turfView._id, 
+            createdBy: user._id,
+            date: fdate[0],
+            startTime: fstartTime[1], 
+            endTime: fendTime[1]
+        }
+        // const val = moment(fendTime).format('DD-MM-YY HH:MM:SS').split(' ');
+        axios.post("admin_panel/booking/add_booking", values)
+        .then((res)=>{
+            alert(res.data.message)
+        })
+
+    }
+
+    const handleChange = (e) => {
+        setValue(e.target.value)
+    }
 
     const goBack = () => {
         navigate('/turf')
     }
+
+    //className='scrollbar-hidden'
     return (
         <Paper sx={{ m: 2, backgroundColor: 'rgba(255, 255, 255, 0.2)', borderRadius: '1px' }}>
             <Grid container p={2}>
                 <Grid item xs={12} md={6}>
-                    <Card sx={{ height: 525, m: 1, px: 1, display: 'flex', flexDirection: 'column', backgroundColor: 'rgba(255, 255, 255, 0.87)', borderRadius: '2px' }}>
+                    <Card sx={{ height: 560, m: 1, px: 1, display: 'flex', flexDirection: 'column', backgroundColor: 'rgba(255, 255, 255, 0.87)', borderRadius: '2px' }}>
                         <CardContent>
                             <Typography
                                 variant="h1"
                                 textAlign='center'
-                                color='text.secondary'
+                                color='secondary'
                                 fontFamily='Atkinson Hyperlegible, sans-serif'
                                 fontWeight={600}>
                                 {turfView.centername}
@@ -56,7 +122,7 @@ function TurfviewIndividual() {
                             <Box>
                                 <CardMedia
                                     component="img"
-                                    sx={{ width:600, height:300, m: .5 }}
+                                    sx={{ width: 600, height: 300, m: .5 }}
                                     image={turfView.turfPictures}
                                     alt="Live from space album cover" />
                             </Box>
@@ -74,57 +140,119 @@ function TurfviewIndividual() {
                     </Card>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Card sx={{ height: 525, m: 1, backgroundColor: 'rgba(255, 255, 255, 0.87)', borderRadius: '2px' }}>
+                    <Card sx={{ height: 560, m: 1, backgroundColor: 'rgba(255, 255, 255, 0.87)' }}>
                         <CardContent>
                             <Typography
                                 variant="h1"
-                                color='text.secondary'
+                                color='secondary'
                                 textAlign='center'
                                 fontFamily='Atkinson Hyperlegible, sans-serif'>
                                 Booking
                             </Typography>
                         </CardContent>
-                        <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <Fab sx={{ marginRight: 3 }}>
-                                <SportsSoccerIcon sx={{ fontSize: 32 }} />
-                            </Fab>
-                            <Fab>
-                                <SportsCricketIcon sx={{ fontSize: 32 }} />
-                            </Fab>
-                        </CardActions>
                         <CardContent>
-                            <Paper className='scrollbar-hidden'>
-                                <Button variant='contained' size='small' sx={{ margin: 1 }}>9:00</Button>
-                                <Button variant='contained' size='small' sx={{ margin: 1 }}>10:00</Button>
-                                <Button variant='contained' size='small' sx={{ margin: 1 }}>11:00</Button>
-                                <Button variant='contained' size='small' sx={{ margin: 1 }}>12:00</Button>
-                                <Button variant='contained' size='small' sx={{ margin: 1 }}>1:00</Button>
-                                <Button variant='contained' size='small' sx={{ margin: 1 }}>2:00</Button>
-                                <Button variant='contained' size='small' sx={{ margin: 1 }}>3:00</Button>
-                                <Button variant='contained' size='small' sx={{ margin: 1 }}>4:00</Button>
-                                <Button variant='contained' size='small' sx={{ margin: 1 }}>5:00</Button>
-                                <Button variant='contained' size='small' sx={{ margin: 1 }}>6:00</Button>
-                                <Button variant='contained' size='small' sx={{ margin: 1 }}>7:00</Button>
-                                <Button variant='contained' size='small' sx={{ margin: 1 }}>8:00</Button>
-                                <Button variant='contained' size='small' sx={{ margin: 1 }}>9:00</Button>
-                                <Button variant='contained' size='small' sx={{ margin: 1 }}>10:00</Button>
-                            </Paper>
-                        </CardContent>
-                        <CardContent>
-                            <CardActions>
-                                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                    <DatePicker
-                                        label="Select Date"
-                                        value={date}
-                                        onChange={(newValue) => {
-                                            setDate(newValue);
+                            <CardContent sx={{ display: 'flex', flexDirection: 'column', marginTop: -3 }}>
+                                <Typography
+                                    sx={{ marginBottom: 0.5 }}
+                                    fontSize={15}
+                                    fontWeight={600}
+                                >
+                                    Date
+                                </Typography>
+                                <CardActions>
+                                    <LocalizationProvider dateAdapter={AdapterMoment} >
+                                        <DatePicker
+                                            sx={{ marginTop: -3 }}
+                                            label="Select Date"
+                                            value={date}
+                                            onChange={(newValue) => {
+                                                setDate(newValue);
+                                            }}
+                                            renderInput={(params) => <TextField {...params} />}
+                                        />
+                                    </LocalizationProvider>
+                                </CardActions>
+                            </CardContent>
+                            <CardActions sx={{ display: 'flex', justifyContent: 'flex-start', marginTop: -2 }}>
+                                <FormControl>
+                                    <FormLabel id='section-group-label'
+                                        sx={{
+                                            color: 'black',
+                                            marginBottom: 1,
+                                            fontSize: 15,
+                                            fontWeight: 600,
+                                            marginLeft: 1
                                         }}
-                                        renderInput={(params) => <TextField {...params} />}
-                                    />
-                                </LocalizationProvider>
+                                    >
+                                        Sections
+                                    </FormLabel>
+                                    <RadioGroup
+                                        name='sections-group'
+                                        aria-labelledby='section-group-label'
+                                        value={value}
+                                        onChange={handleChange}
+                                        row
+                                        sx={{ marginLeft: 3 }}
+                                    >
+                                        <FormControlLabel control={<Radio color='secondary' />} label='Morning' value='Morning' />
+                                        <FormControlLabel control={<Radio color='secondary' />} label='Evening' value='Evening' />
+                                    </RadioGroup>
+                                </FormControl>
                             </CardActions>
-                            <CardActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            {/* </CardContent> */}
+                            <CardContent sx={{ marginTop: -4 }}>
+                                <Typography
+                                    fontSize={15}
+                                    fontWeight={600}
+                                    margin='15px 0'>
+                                    Available Time Slots
+                                </Typography>
+                                <Paper sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                                    {
+                                        value === 'Morning' ? (
+                                            morningTimeslots.map((data, index) => (
+                                                <Paper
+                                                    component="span"
+                                                    sx={{ margin: 1, backgroundColor: 'secondary.light', p: 1, fontFamily: 'sans-serif' }}>
+                                                    {data}
+                                                </Paper>
+                                            ))) : (
+                                            value === 'Evening' ? (
+                                                eveningTimeslots.map((data, index) => (
+                                                    <Paper
+                                                        component="span"
+                                                        sx={{ margin: 1, backgroundColor: 'secondary.light', p: 1, fontFamily: 'sans-serif' }}>
+                                                        {data}
+                                                    </Paper>
+                                                ))) :
+                                                (
+                                                    <Typography>No available time slots</Typography>
+                                                )
+                                        )
+                                    }
+
+                                </Paper>
+                            </CardContent>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-around', marginTop: 1 }} >
+                                <Box>
+                                    <Typography
+                                        fontSize={15}
+                                        fontWeight={600}
+                                    >
+                                        From
+                                    </Typography>
+                                </Box>
+                                <Box>
+                                    <Typography
+                                        fontSize={15}
+                                        fontWeight={600}
+                                    >
+                                        To
+                                    </Typography>
+                                </Box>
+                            </Box>
+                            <CardActions sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                                <LocalizationProvider dateAdapter={AdapterMoment}>
                                     <TimePicker
                                         label="Start Time"
                                         value={startTime}
@@ -153,6 +281,7 @@ function TurfviewIndividual() {
                                 </Button>
                                 <Button variant='contained'
                                     color='secondary'
+                                    onClick={handleClick}
                                 // sx={{ marginLeft: 'auto', marginRight: 'auto' }}
                                 >
                                     Book Now

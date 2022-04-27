@@ -97,5 +97,8 @@ route.put('/admin_panel/banner/edit_banner/:id', upload.single("picture"), contr
 //admin banner management delete banner details
 route.delete('/admin_panel/banner/delete_banner/:id', controller.deleteBannerData)
 
+//admin-user booking management
+route.post('/admin_panel/booking/add_booking', controller.addBooking) 
+
 
 module.exports=route;

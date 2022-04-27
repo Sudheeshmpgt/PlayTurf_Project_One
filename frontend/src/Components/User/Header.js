@@ -1,18 +1,24 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { Grid, AppBar, Toolbar, Box, IconButton, Typography, Menu, Container, Button, Tooltip, MenuItem } from '@mui/material'
+import { Grid, AppBar, Toolbar, Box, IconButton, Typography, Menu, Container, Button, Tooltip, MenuItem, InputBase } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { UserContext } from '../../Store/usercontext'
+import { SearchContext } from '../../Store/searchcontext'
 import { useNavigate } from 'react-router-dom';
-import Search from './Search';
+import SearchIcon from '@mui/icons-material/Search';
 
 
 function Header() {
 
     const navigate = useNavigate();
     const { user, setUser } = useContext(UserContext)
+    const { search, setSearch } = useContext(SearchContext)
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
+
+    const searchChange = (data) => {
+        setSearch(data.target.value)
+    }
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -53,8 +59,12 @@ function Header() {
         navigate('/')
     }
 
-    const onClickAccount = () =>{
+    const onClickAccount = () => {
         navigate('/useraccount')
+    }
+
+    const handleClick = () =>{
+        navigate('/turf')
     }
 
     useEffect(() => {
@@ -162,9 +172,22 @@ function Header() {
                                             Book Now
                                         </Button> */}
                                     </Box >
-                                    <Box sx={{ marginTop: '1%' }}>
-                                        <Search />
-                                    </Box>
+                                        <Box sx={{ backgroundColor: 'rgba(255, 255, 255, 0.25)', borderRadius: 0.8, width: 300, height:30, marginLeft: 2, display: 'flex', marginTop:1.5 }}>
+                                            <Box m={1.1} color='text.secondary'>
+                                            </Box>
+                                            <InputBase
+                                                variant='outlined'
+                                                value={search}
+                                                onChange={searchChange}
+                                                placeholder='Search here...'
+                                                sx={{
+                                                    marginRight: 4,
+                                                }}>
+                                            </InputBase>
+                                            <Button variant='contained' color='secondary' onClick={handleClick}> 
+                                            <SearchIcon sx={{fontSize:20}} />
+                                            </Button>
+                                        </Box>
                                 </Box>
                                 {
                                     token ? <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
