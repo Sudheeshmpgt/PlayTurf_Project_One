@@ -23,7 +23,11 @@ function Turf() {
     //tur management get request
     const getTurfData = async () => {
         try {
-            const data = await axios.get("admin_panel/turfs")
+            const data = await axios.get("admin_panel/turfs", {
+                headers: {
+                    'authToken': localStorage.getItem("admintoken"),
+                }
+            })
             setTurf(data.data.turf)
         } catch (error) {
             alert(error)
@@ -58,7 +62,11 @@ function Turf() {
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`admin_panel/turfs/delete_turfs/${id}`)
+                axios.delete(`admin_panel/turfs/delete_turfs/${id}`, {
+                    headers: {
+                        'authToken': localStorage.getItem("admintoken"),
+                    }
+                })
                     .then((res) => {
                         setTurf(res.data.turf)
                     })

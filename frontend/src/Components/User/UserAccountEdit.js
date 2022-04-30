@@ -12,6 +12,7 @@ import { UserContext } from '../../Store/usercontext';
 function UserAccountEdit() {
     const location = useLocation()
     const {setUser} = useContext(UserContext)
+    const [image, setImage] = useState('')
     const Toast = Swal.mixin({
         toast: true,
         position: 'bottom-right',
@@ -39,7 +40,11 @@ function UserAccountEdit() {
 
     useEffect(() => {
         const id = location.state.id
-        axios.get(`admin_panel/user_management/update/${id}`)
+        axios.get(`admin_panel/user_management/update/${id}`, {
+            headers: {
+                'authToken': localStorage.getItem("usertoken"),
+            }
+        })
             .then((res) => {
                 setUsers(res.data.user[0])
             })
@@ -59,15 +64,21 @@ function UserAccountEdit() {
         const { name, phone, email, address } = users
         let values = new FormData();
         if (data) {
-            values.append('picture', data.picture[0])
+            values.append('picture', image)
             values.append('name', name)
             values.append('phone', phone)
             values.append('email', email)
             values.append('address', address)
         }
         if (name && phone && email) {
-            axios.put(`admin_panel/user_management/edit_user/${id}`,values,{ "Content-Type": "multipart/form-data" })
+            axios.put(`admin_panel/user_management/edit_user/${id}`,values, {
+                headers: {
+                    'authToken': localStorage.getItem("usertoken"),
+                    "Content-Type": "multipart/form-data"
+                }
+            })
                 .then((res) => {
+                    console.log(res.data.user)
                     setUser(res.data.user)
                     const message = res.data.message;
                     Toast.fire({
@@ -86,6 +97,11 @@ function UserAccountEdit() {
 
     const goBack = () => {
         navigate('/useraccount')
+    }
+
+    const changeImage = (e)=>{
+        setImage(e.target.files[0])
+        console.log(e.target.files[0])
     }
 
     const Input = styled('input')({
@@ -129,12 +145,13 @@ function UserAccountEdit() {
             </Grid>
             <Paper style={paperStyle}>
                 <Grid align='center'>
-                    <Avatar style={avatarStyle}><img alt='profile' src={users.userImg}></img></Avatar> 
+                    <Avatar style={avatarStyle}><img alt='profile' src={image ? URL.createObjectURL(image) : users.userImg }></img></Avatar> 
                     <label htmlFor="icon-button-file" >
                         <Input accept="image/*" 
                         id="icon-button-file" 
                         type="file"
                             {...register('picture')}
+                            onChange={changeImage}
                          />
                         <IconButton color="primary" aria-label="upload picture" component="span">
                             <PhotoCamera style={{marginLeft:'60px', marginTop:'-65px', fontSize:30}}/>

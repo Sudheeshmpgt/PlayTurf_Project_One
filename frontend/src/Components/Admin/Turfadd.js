@@ -35,7 +35,11 @@ function Turfadd() {
 
     const getCategoryData = async () => {
         try {
-            const data = await axios.get("admin_panel/category")
+            const data = await axios.get("admin_panel/category",{
+                headers: {
+                    'authToken': localStorage.getItem("admintoken"),
+                }
+            })
             setCategories(data.data.category)
         } catch (error) {
             alert(error)
@@ -87,7 +91,9 @@ function Turfadd() {
                 method: 'post',
                 url: "admin_panel/turfs/add_turfs",
                 data: values,
-                headers: { "Content-Type": "multipart/form-data" }
+                headers: {
+                'authToken': localStorage.getItem("admintoken"),
+                "Content-Type": "multipart/form-data" }
             })
                 .then((res) => {
                     const message = res.data.message
@@ -97,7 +103,6 @@ function Turfadd() {
                     })
                     navigate('/turfpage')
                 }).catch(e => {
-                    console.log(e)
                     Toast.fire({
                         icon: 'error',
                         title: 'Something went wrong'

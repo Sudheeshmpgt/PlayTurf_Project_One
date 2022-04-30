@@ -48,7 +48,11 @@ function Categoryupdate() {
     useEffect(() => {
         const id = location.state.id
         setCategoryId(id)
-        axios.get(`admin_panel/category/edit_category/${id}`)
+        axios.get(`admin_panel/category/edit_category/${id}`, {
+            headers: {
+                'authToken': localStorage.getItem("admintoken"),
+            }
+        })
             .then((res) => {
                 setCategories(res.data.category[0])
             })
@@ -61,7 +65,11 @@ function Categoryupdate() {
         const { centername, location, category } = categories
 
         if (centername && location && category) {
-            axios.put(`admin_panel/category/edit_category/${id}`, categories)
+            axios.put(`admin_panel/category/edit_category/${id}`, categories, {
+                headers: {
+                    'authToken': localStorage.getItem("admintoken"),
+                }
+            })
                 .then((res) => {
                     const message = res.data.message;
                     Toast.fire({

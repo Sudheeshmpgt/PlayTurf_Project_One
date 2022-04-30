@@ -22,7 +22,11 @@ function Banner() {
     //category management get request
     const getBannerData = async () => {
         try {
-            const data = await axios.get("admin_panel/banner")
+            const data = await axios.get("admin_panel/banner", {
+                headers: {
+                    'authToken': localStorage.getItem("admintoken"),
+                }
+            })
             setBanner(data.data.banner)
         } catch (error) {
             alert(error)
@@ -57,7 +61,11 @@ function Banner() {
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`admin_panel/banner/delete_banner/${id}`)
+                axios.delete(`admin_panel/banner/delete_banner/${id}`, {
+                    headers: {
+                        'authToken': localStorage.getItem("admintoken"),
+                    }
+                })
                     .then((res) => {
                         setBanner(res.data.banner)
                     })

@@ -42,7 +42,11 @@ function Turfupdate() {
     useEffect(() => {
         const id = location.state.id
         setTurfId(id)
-        axios.get(`admin_panel/turfs/edit_turfs/${id}`)
+        axios.get(`admin_panel/turfs/edit_turfs/${id}`,{
+            headers: {
+                'authToken': localStorage.getItem("admintoken"),
+            }
+        })
             .then((res) => {
                 setTurf(res.data.turf[0])
             })
@@ -69,7 +73,12 @@ function Turfupdate() {
             values.append('category', category)
             values.append('price', price)
         }
-        axios.put(`admin_panel/turfs/edit_turfs/${id}`, values, { "Content-Type": "multipart/form-data" })
+        axios.put(`admin_panel/turfs/edit_turfs/${id}`, values,{
+            headers: {
+                'authToken': localStorage.getItem("admintoken"),
+                "Content-Type": "multipart/form-data"
+            }
+        })
             .then((res) => {
                 const message = res.data.message;
                 Toast.fire({
@@ -235,10 +244,10 @@ function Turfupdate() {
                             <Box height={100} width={150} border={1} marginTop={1}>
                                 <img height={100} width={150} src={image ? URL.createObjectURL(image) : turf.turfPictures }></img>
                             </Box>
-                            <label htmlFor="contained-button-file">
+                            <label htmlFor="contained-button-file"> 
                                 <Input
                                     {...register('picture')}
-                                    accept="image/*"
+                                    accept="image/*" 
                                     id="contained-button-file"
                                     multiple type="file"
                                     style={{ display: 'none' }}

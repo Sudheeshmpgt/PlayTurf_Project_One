@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Grid, CardContent, CardActions, Button, Typography, CardMedia } from '@mui/material'
+import { Card, Grid, CardActions, Button, Typography, CardMedia, useTheme, useMediaQuery } from '@mui/material'
 import { Box } from '@mui/system'
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Pagination } from "swiper";
@@ -9,183 +9,399 @@ import "swiper/css/free-mode";
 import "swiper/css/pagination";
 
 function CardFavourite() {
+    const theme = useTheme()
+    const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
+    const isMedium = useMediaQuery(theme.breakpoints.down('md'))
+
     return (
         <Grid container>
             <Grid item width='83%' height={380} margin='35px auto'>
-            <Typography fomtFamily='Atkinson Hyperlegible, sans-serif' 
-            fontSize={27}
-            fontWeight={900}
-            color='secondary'
-            marginBottom={1}> 
-            OFFERS
-            </Typography>
-                <Swiper
-                    slidesPerView={4}
-                    spaceBetween={30}
-                    freeMode={true}
-                    pagination={{
-                        clickable: true,
-                    }}
-                    modules={[FreeMode, Pagination]}
-                    className="mySwiper"
-                >
-                    <SwiperSlide>
-                    <Box>
-                        <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 325 }}>
-                            <CardMedia sx={{ textAlign: 'center' }}>
-                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
-                                    alt='football court'
-                                    src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
-                            </CardMedia>
-                            <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
-                             Sports Grounds
-                            </Typography>
-                            <CardActions>
-                                <Grid container sx={{ display: 'flex',justifyContent: 'center' }}>
-                                    <Grid item >
-                                       <Typography textAlign= 'center' >
-                                           20% OFF on Cricket Grounds
-                                       </Typography>
-                                    </Grid>
-                                    <Grid item>
-                                        <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop:1 }}>Book</Button>
-                                    </Grid>
-                                </Grid>
-                            </CardActions>
-                        </Card>
-                    </Box>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                    <Box>
-                        <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 325 }}>
-                            <CardMedia sx={{ textAlign: 'center' }}>
-                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
-                                    alt='football court'
-                                    src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
-                            </CardMedia>
-                            <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
-                             Sports Grounds
-                            </Typography>
-                            <CardActions>
-                                <Grid container sx={{ display: 'flex',justifyContent: 'center' }}>
-                                    <Grid item >
-                                       <Typography textAlign= 'center' >
-                                           20% OFF on Cricket Grounds
-                                       </Typography>
-                                    </Grid>
-                                    <Grid item>
-                                        <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop:1 }}>Book</Button>
-                                    </Grid>
-                                </Grid>
-                            </CardActions>
-                        </Card>
-                    </Box>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                    <Box>
-                        <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 325 }}>
-                            <CardMedia sx={{ textAlign: 'center' }}>
-                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
-                                    alt='football court'
-                                    src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
-                            </CardMedia>
-                            <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
-                             Sports Grounds
-                            </Typography>
-                            <CardActions>
-                                <Grid container sx={{ display: 'flex',justifyContent: 'center' }}>
-                                    <Grid item >
-                                       <Typography textAlign= 'center' >
-                                           20% OFF on Cricket Grounds
-                                       </Typography>
-                                    </Grid>
-                                    <Grid item>
-                                        <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop:1 }}>Book</Button>
-                                    </Grid>
-                                </Grid>
-                            </CardActions>
-                        </Card>
-                    </Box>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                    <Box>
-                        <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 325 }}>
-                            <CardMedia sx={{ textAlign: 'center' }}>
-                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
-                                    alt='football court'
-                                    src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
-                            </CardMedia>
-                            <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
-                             Sports Grounds
-                            </Typography>
-                            <CardActions>
-                                <Grid container sx={{ display: 'flex',justifyContent: 'center' }}>
-                                    <Grid item >
-                                       <Typography textAlign= 'center' >
-                                           20% OFF on Cricket Grounds
-                                       </Typography>
-                                    </Grid>
-                                    <Grid item>
-                                        <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop:1 }}>Book</Button>
-                                    </Grid>
-                                </Grid>
-                            </CardActions>
-                        </Card>
-                    </Box>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                    <Box>
-                        <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 325 }}>
-                            <CardMedia sx={{ textAlign: 'center' }}>
-                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
-                                    alt='football court'
-                                    src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
-                            </CardMedia>
-                            <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
-                             Sports Grounds
-                            </Typography>
-                            <CardActions>
-                                <Grid container sx={{ display: 'flex',justifyContent: 'center' }}>
-                                    <Grid item >
-                                       <Typography textAlign= 'center' >
-                                           20% OFF on Cricket Grounds
-                                       </Typography>
-                                    </Grid>
-                                    <Grid item>
-                                        <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop:1 }}>Book</Button>
-                                    </Grid>
-                                </Grid>
-                            </CardActions>
-                        </Card>
-                    </Box>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                    <Box>
-                        <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 325 }}>
-                            <CardMedia sx={{ textAlign: 'center' }}>
-                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
-                                    alt='football court'
-                                    src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
-                            </CardMedia>
-                            <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
-                             Sports Grounds
-                            </Typography>
-                            <CardActions>
-                                <Grid container sx={{ display: 'flex',justifyContent: 'center' }}>
-                                    <Grid item >
-                                       <Typography textAlign= 'center' >
-                                           20% OFF on Cricket Grounds
-                                       </Typography>
-                                    </Grid>
-                                    <Grid item>
-                                        <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop:1 }}>Book</Button>
-                                    </Grid>
-                                </Grid>
-                            </CardActions>
-                        </Card>
-                    </Box>
-                    </SwiperSlide>
-                </Swiper>
+                <Typography fomtFamily='Atkinson Hyperlegible, sans-serif'
+                    fontSize={27}
+                    fontWeight={900}
+                    color='secondary'
+                    marginBottom={1}>
+                    OFFERS
+                </Typography>
+                {
+                    isSmall ? (
+                        <Swiper
+                            slidesPerView={1}
+                            spaceBetween={30}
+                            freeMode={true}
+                            pagination={{
+                                clickable: true,
+                            }}
+                            modules={[FreeMode, Pagination]}
+                            className="mySwiper"
+                        >
+                            <SwiperSlide>
+                                <Box>
+                                    <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 370 }}>
+                                        <CardMedia sx={{ textAlign: 'center' }}>
+                                            <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
+                                                alt='football court'
+                                                src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
+                                        </CardMedia>
+                                        <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
+                                            Sports Grounds
+                                        </Typography>
+                                        <CardActions>
+                                            <Grid container sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                                                <Grid item >
+                                                    <Typography textAlign='center' >
+                                                        20% OFF on Cricket Grounds
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item>
+                                                    <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop: 1 }}>Book</Button>
+                                                </Grid>
+                                            </Grid>
+                                        </CardActions>
+                                    </Card>
+                                </Box>
+                            </SwiperSlide>
+                            <SwiperSlide>
+                                <Box>
+                                    <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 370 }}>
+                                        <CardMedia sx={{ textAlign: 'center' }}>
+                                            <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
+                                                alt='football court'
+                                                src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
+                                        </CardMedia>
+                                        <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
+                                            Sports Grounds
+                                        </Typography>
+                                        <CardActions>
+                                            <Grid container sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                                                <Grid item >
+                                                    <Typography textAlign='center' >
+                                                        20% OFF on Cricket Grounds
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item>
+                                                    <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop: 1 }}>Book</Button>
+                                                </Grid>
+                                            </Grid>
+                                        </CardActions>
+                                    </Card>
+                                </Box>
+                            </SwiperSlide>
+                            <SwiperSlide>
+                                <Box>
+                                    <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 370 }}>
+                                        <CardMedia sx={{ textAlign: 'center' }}>
+                                            <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
+                                                alt='football court'
+                                                src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
+                                        </CardMedia>
+                                        <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
+                                            Sports Grounds
+                                        </Typography>
+                                        <CardActions>
+                                            <Grid container sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                                                <Grid item >
+                                                    <Typography textAlign='center' >
+                                                        20% OFF on Cricket Grounds
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item>
+                                                    <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop: 1 }}>Book</Button>
+                                                </Grid>
+                                            </Grid>
+                                        </CardActions>
+                                    </Card>
+                                </Box>
+                            </SwiperSlide>
+                        </Swiper>
+                    ) : (
+                        isMedium ? (
+                            <Swiper
+                                slidesPerView={3}
+                                spaceBetween={30}
+                                freeMode={true}
+                                pagination={{
+                                    clickable: true,
+                                }}
+                                modules={[FreeMode, Pagination]}
+                                className="mySwiper"
+                            >
+                                <SwiperSlide>
+                                    <Box>
+                                        <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 300 }}>
+                                            <CardMedia sx={{ textAlign: 'center' }}>
+                                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
+                                                    alt='football court'
+                                                    src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
+                                            </CardMedia>
+                                            <Typography variant='h3' fontSize={18} sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
+                                                Sports Grounds
+                                            </Typography>
+                                            <CardActions>
+                                                <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+                                                    <Grid item >
+                                                        <Typography textAlign='center' fontSize={15} >
+                                                            20% OFF on Cricket Grounds
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item>
+                                                        <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop: 1 }}>Book</Button>
+                                                    </Grid>
+                                                </Grid>
+                                            </CardActions>
+                                        </Card>
+                                    </Box>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Box>
+                                        <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 300 }}>
+                                            <CardMedia sx={{ textAlign: 'center' }}>
+                                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
+                                                    alt='football court'
+                                                    src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
+                                            </CardMedia>
+                                            <Typography variant='h3' fontSize={18} sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
+                                                Sports Grounds
+                                            </Typography>
+                                            <CardActions>
+                                                <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+                                                    <Grid item >
+                                                        <Typography textAlign='center' fontSize={15} >
+                                                            20% OFF on Cricket Grounds
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item>
+                                                        <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop: 1 }}>Book</Button>
+                                                    </Grid>
+                                                </Grid>
+                                            </CardActions>
+                                        </Card>
+                                    </Box>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Box>
+                                        <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 300 }}>
+                                            <CardMedia sx={{ textAlign: 'center' }}>
+                                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
+                                                    alt='football court'
+                                                    src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
+                                            </CardMedia>
+                                            <Typography variant='h3' fontSize={18} sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
+                                                Sports Grounds
+                                            </Typography>
+                                            <CardActions>
+                                                <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+                                                    <Grid item >
+                                                        <Typography textAlign='center' fontSize={15} >
+                                                            20% OFF on Cricket Grounds
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item>
+                                                        <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop: 1 }}>Book</Button>
+                                                    </Grid>
+                                                </Grid>
+                                            </CardActions>
+                                        </Card>
+                                    </Box>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Box>
+                                        <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 300 }}>
+                                            <CardMedia sx={{ textAlign: 'center' }}>
+                                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
+                                                    alt='football court'
+                                                    src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
+                                            </CardMedia>
+                                            <Typography variant='h3' fontSize={18} sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
+                                                Sports Grounds
+                                            </Typography>
+                                            <CardActions>
+                                                <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+                                                    <Grid item >
+                                                        <Typography textAlign='center' fontSize={15} >
+                                                            20% OFF on Cricket Grounds
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item>
+                                                        <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop: 1 }}>Book</Button>
+                                                    </Grid>
+                                                </Grid>
+                                            </CardActions>
+                                        </Card>
+                                    </Box>
+                                </SwiperSlide>
+                            </Swiper>
+                        ) : (
+                            <Swiper
+                                slidesPerView={4}
+                                spaceBetween={30}
+                                freeMode={true}
+                                pagination={{
+                                    clickable: true,
+                                }}
+                                modules={[FreeMode, Pagination]}
+                                className="mySwiper"
+                            >
+                                <SwiperSlide>
+                                    <Box>
+                                        <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 325 }}>
+                                            <CardMedia sx={{ textAlign: 'center' }}>
+                                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
+                                                    alt='football court'
+                                                    src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
+                                            </CardMedia>
+                                            <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
+                                                Sports Grounds
+                                            </Typography>
+                                            <CardActions>
+                                                <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+                                                    <Grid item >
+                                                        <Typography textAlign='center' >
+                                                            20% OFF on Cricket Grounds
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item>
+                                                        <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop: 1 }}>Book</Button>
+                                                    </Grid>
+                                                </Grid>
+                                            </CardActions>
+                                        </Card>
+                                    </Box>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Box>
+                                        <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 325 }}>
+                                            <CardMedia sx={{ textAlign: 'center' }}>
+                                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
+                                                    alt='football court'
+                                                    src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
+                                            </CardMedia>
+                                            <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
+                                                Sports Grounds
+                                            </Typography>
+                                            <CardActions>
+                                                <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+                                                    <Grid item >
+                                                        <Typography textAlign='center' >
+                                                            20% OFF on Cricket Grounds
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item>
+                                                        <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop: 1 }}>Book</Button>
+                                                    </Grid>
+                                                </Grid>
+                                            </CardActions>
+                                        </Card>
+                                    </Box>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Box>
+                                        <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 325 }}>
+                                            <CardMedia sx={{ textAlign: 'center' }}>
+                                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
+                                                    alt='football court'
+                                                    src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
+                                            </CardMedia>
+                                            <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
+                                                Sports Grounds
+                                            </Typography>
+                                            <CardActions>
+                                                <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+                                                    <Grid item >
+                                                        <Typography textAlign='center' >
+                                                            20% OFF on Cricket Grounds
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item>
+                                                        <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop: 1 }}>Book</Button>
+                                                    </Grid>
+                                                </Grid>
+                                            </CardActions>
+                                        </Card>
+                                    </Box>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Box>
+                                        <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 325 }}>
+                                            <CardMedia sx={{ textAlign: 'center' }}>
+                                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
+                                                    alt='football court'
+                                                    src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
+                                            </CardMedia>
+                                            <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
+                                                Sports Grounds
+                                            </Typography>
+                                            <CardActions>
+                                                <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+                                                    <Grid item >
+                                                        <Typography textAlign='center' >
+                                                            20% OFF on Cricket Grounds
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item>
+                                                        <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop: 1 }}>Book</Button>
+                                                    </Grid>
+                                                </Grid>
+                                            </CardActions>
+                                        </Card>
+                                    </Box>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Box>
+                                        <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 325 }}>
+                                            <CardMedia sx={{ textAlign: 'center' }}>
+                                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
+                                                    alt='football court'
+                                                    src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
+                                            </CardMedia>
+                                            <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
+                                                Sports Grounds
+                                            </Typography>
+                                            <CardActions>
+                                                <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+                                                    <Grid item >
+                                                        <Typography textAlign='center' >
+                                                            20% OFF on Cricket Grounds
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item>
+                                                        <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop: 1 }}>Book</Button>
+                                                    </Grid>
+                                                </Grid>
+                                            </CardActions>
+                                        </Card>
+                                    </Box>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Box>
+                                        <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 325 }}>
+                                            <CardMedia sx={{ textAlign: 'center' }}>
+                                                <img style={{ height: '100%', width: '100%', borderRadius: 1 }}
+                                                    alt='football court'
+                                                    src='https://cdn.arturf.com/wp-content/uploads/2019/02/Non-Infill-Football-Grass-Field-France-1.jpg'></img>
+                                            </CardMedia>
+                                            <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
+                                                Sports Grounds
+                                            </Typography>
+                                            <CardActions>
+                                                <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+                                                    <Grid item >
+                                                        <Typography textAlign='center' >
+                                                            20% OFF on Cricket Grounds
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item>
+                                                        <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop: 1 }}>Book</Button>
+                                                    </Grid>
+                                                </Grid>
+                                            </CardActions>
+                                        </Card>
+                                    </Box>
+                                </SwiperSlide>
+                            </Swiper>
+                        )
+                    )
+                }
             </Grid>
 
 

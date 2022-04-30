@@ -38,7 +38,11 @@ function Bannerupdate() {
     useEffect(() => {
         const id = location.state.id
         setBannerId(id)
-        axios.get(`admin_panel/banner/edit_banner/${id}`)
+        axios.get(`admin_panel/banner/edit_banner/${id}`, {
+            headers: {
+                'authToken': localStorage.getItem("admintoken"),
+            }
+        })
             .then((res) => {
                 setBanner(res.data.banner[0])
             })
@@ -61,7 +65,12 @@ function Bannerupdate() {
             values.append('picture', image)
             values.append('description', description)
         }
-        axios.put(`admin_panel/banner/edit_banner/${id}`, values, { "Content-Type": "multipart/form-data" })
+        axios.put(`admin_panel/banner/edit_banner/${id}`, values,{
+            headers: {
+                'authToken': localStorage.getItem("admintoken"),
+                "Content-Type": "multipart/form-data"
+            }
+        })
             .then((res) => {
                 const message = res.data.message;
                 Toast.fire({

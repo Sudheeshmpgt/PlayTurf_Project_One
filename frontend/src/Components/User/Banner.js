@@ -55,7 +55,7 @@ useEffect(() => {
         className="mySwiper"
       >
         {
-          banner.map((data,index)=>(
+          banner && banner.map((data,index)=>(
              <SwiperSlide ><img height='350' width='100%' alt='slide-1' src={data.bannerImage}></img></SwiperSlide>
           ))
         }

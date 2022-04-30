@@ -11,23 +11,13 @@ const adminSchema = new mongoose.Schema({
     password:{
         type:String,
         required:true
-    },
-    tokens: [
-        {
-            token:{
-                type:String,
-                required:true
-            }
-        }
-    ]
+    }
 })
 
 //generating token
 adminSchema.methods.generateAuthToken = async function(){
     try {
-        let token = jwt.sign({_id:this._id},config.SECRET_KEY)
-        this.tokens = this.tokens.concat({token:token})
-        await this.save();
+        let token = jwt.sign({_id:this._id, role:'admin'},config.SECRET_KEY)
         return token;
     } catch (error) {
         console.log(error)

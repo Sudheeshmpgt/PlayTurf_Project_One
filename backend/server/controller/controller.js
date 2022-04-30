@@ -5,11 +5,13 @@ const CategoryModel = require('../model/categoryschema');
 const BannerModel = require('../model/bannerschema');
 const BookingModel = require('../model/bookingschema')
 const config = require('../../config')
+const ObjectId = require('mongoose').Types.ObjectId;
 const multer = require("multer");
 const { OAuth2Client } = require('google-auth-library');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 const cloudinary = require('cloudinary').v2
+
 
 const client = new OAuth2Client(config.GOOGLE_CLIENT_ID)
 
@@ -464,14 +466,29 @@ exports.deleteBannerData = async (req, res) => {
     } catch (error) {
         res.send({ messsage: "Error", error: error })
     }
-}           
+}               
+
+
+//user Booking check
+exports.checkBooking = async (req, res) =>{
+    try {
+        const { centerId, createdBy, date, startTime, endTime } = req.body
+        const prevBooking = await BookingModel.find({ centerId: ObjectId(centerId), date:date, startTime:startTime});
+        if (prevBooking.length > 0) {
+            res.send({error:"The slot is already booked"})
+        } else {
+            res.send({message:"Success"})
+        }
+    } catch (error) {
+        
+    }
+}
 
 //admin or use booking management
 exports.addBooking = async (req, res) => {
     try {
         const { centerId, createdBy, date, startTime, endTime } = req.body
         const prevBooking = await BookingModel.find({ centerId: centerId, date: date, startTime: startTime});
-    console.log(prevBooking)
         if (prevBooking.length <= 0) {   
             const newBooking = new BookingModel({
                 centerId: centerId ,
@@ -483,10 +500,32 @@ exports.addBooking = async (req, res) => {
             const booking = await newBooking.save();
             res.send({ message: "Booked Successfully", booking: booking });
         } else {
-            console.log('hello in prevbooking')
             res.send({ message: "The slot is already booked" });
         }
     } catch (error) {
         console.log(error)
+    }
+}
+
+//user booking get request
+exports.getBookingDetails = async (req, res) => {
+    const userId = req.params.id 
+    const data = await BookingModel.aggregate([
+        {
+            $match:{createdBy:ObjectId(userId)}
+        },
+        {
+            $lookup:{
+                from:'turves',
+                localField:'centerId',
+                foreignField:'_id',
+                as:'turfDetails'
+            }
+        }
+    ])
+    if (data) {
+        res.send({ message: "Successful", turf: data })
+    } else {
+        res.send({ message: "Error" })
     }
 }

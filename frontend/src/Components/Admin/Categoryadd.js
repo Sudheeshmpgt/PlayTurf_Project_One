@@ -39,7 +39,11 @@ function Categoryadd() {
     const addCategoryOnSubmit = (data) => {
         const { category } = data
         if (category) {
-            axios.post("admin_panel/category/add_category", data)
+            axios.post("admin_panel/category/add_category", data, {
+                headers: {
+                    'authToken': localStorage.getItem("admintoken"),
+                }
+            })
                 .then((res) => {
                     const message = res.data.message
                     Toast.fire({

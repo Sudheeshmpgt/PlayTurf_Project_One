@@ -21,6 +21,8 @@ import UserEditPage from './Pages/UserEditPage';
 import Bannerpage from './Pages/Bannerpage';
 import Banneraddpage from './Pages/Banneraddpage';
 import Bannerupdatepage from './Pages/Bannerupdatepage'
+import Bookingconfirmationpage from './Pages/Bookingconfirmationpage';
+import Mybookingpage from './Pages/Mybookingpage';
 
 
 
@@ -48,6 +50,8 @@ function App() {
      <Route path='/bannerpage' element={ <Bannerpage/>}/>
      <Route path='/banneradd' element={ <Banneraddpage/>}/> 
      <Route path='/bannerupdate' element={ <Bannerupdatepage/>}/> 
+     <Route path='/bookingpage' element={ <Bookingconfirmationpage/>}/> 
+     <Route path='/mybooking' element={ <Mybookingpage/>}/> 
    </Routes>
   );
 }

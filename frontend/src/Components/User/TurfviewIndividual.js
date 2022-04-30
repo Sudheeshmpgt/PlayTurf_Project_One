@@ -10,6 +10,8 @@ import { TurfViewContext } from '../../Store/turfviewcontext';
 import { UserContext } from '../../Store/usercontext'
 import axios from '../../axiosinstance'
 import moment from 'moment'
+import { BookingContext } from '../../Store/bookingcontext';
+import Swal from 'sweetalert2';
 
 function TurfviewIndividual() {
     const [date, setDate] = useState(null);
@@ -17,10 +19,23 @@ function TurfviewIndividual() {
     const [endTime, setEndTime] = useState(null);
     const [morningTimeslots, setMorningTimeslots] = useState([])
     const [eveningTimeslots, setEveningTimeslots] = useState([])
-    const [value, setValue] = useState('')
+    const [value, setValue] = useState('Morning')
     const navigate = useNavigate()
     const { turfView } = useContext(TurfViewContext)
     const { user } = useContext(UserContext)
+    const {setBooking} = useContext(BookingContext)
+
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'bottom-right',
+        width: '400px',
+        showConfirmButton: false,
+        timer: 5000,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
 
     const createMorningTimeSlots = (fromTime, toTime) => {
         let startingTime = moment(fromTime, 'hh:mm ')
@@ -58,22 +73,48 @@ function TurfviewIndividual() {
     }, [])
 
     const handleClick = () => {
-        const fdate = moment(date).toISOString()
-        const fstartTime = moment(startTime).toISOString()
-        const fendTime = moment(endTime).toISOString()
+
+        const fdate = moment(date).format('DD-MM-YYYY HH:MM:SS').split(' ');
+        const fstartTime = moment(startTime).format('DD-MM-YYYY HH:MM').split(' ');
+        const fendTime = moment(endTime).format('DD-MM-YYYY HH:MM').split(' ');
+        const nowdate = moment().format('DD-MM-YYYY')
+        // console.log('fst,fet', fstartTime[1],fendTime[1])
+        // console.log(fendTime[1] == fstartTime[1])
+
+
+        if(fdate[0] < nowdate){
+            Toast.fire({
+                icon: 'error',
+                title: 'Please choose valid date'
+            })
+        }else if((fendTime[1] == fstartTime[1])){
+            Toast.fire({
+                icon: 'error',
+                title: 'Please choose valid time'
+            })
+        }
 
         const values = {
-             centerId: turfView._id, 
+            centerId: turfView._id,
             createdBy: user._id,
             date: fdate[0],
-            startTime: fstartTime[1], 
+            startTime: fstartTime[1],
             endTime: fendTime[1]
-        }
-        // const val = moment(fendTime).format('DD-MM-YY HH:MM:SS').split(' ');
-        axios.post("admin_panel/booking/add_booking", values)
-        .then((res)=>{
-            alert(res.data.message)
+        } 
+        axios.post("admin_panel/booking/check", values, {
+            headers: {
+                'authToken': localStorage.getItem("usertoken"),
+            }
         })
+            .then((res) => {
+                if(res.data.message){
+                    console.log(values)
+                    setBooking(values)
+                    navigate('/bookingpage')
+                }else{
+                    alert(res.data.error)
+                }
+            })
 
     }
 
@@ -90,7 +131,7 @@ function TurfviewIndividual() {
         <Paper sx={{ m: 2, backgroundColor: 'rgba(255, 255, 255, 0.2)', borderRadius: '1px' }}>
             <Grid container p={2}>
                 <Grid item xs={12} md={6}>
-                    <Card sx={{ height: 560, m: 1, px: 1, display: 'flex', flexDirection: 'column', backgroundColor: 'rgba(255, 255, 255, 0.87)', borderRadius: '2px' }}>
+                    <Card sx={{ height: 515, m: 1, px: 1, display: 'flex', flexDirection: 'column', backgroundColor: 'rgba(255, 255, 255, 0.87)', borderRadius: '2px' }}>
                         <CardContent>
                             <Typography
                                 variant="h1"
@@ -140,7 +181,7 @@ function TurfviewIndividual() {
                     </Card>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Card sx={{ height: 560, m: 1, backgroundColor: 'rgba(255, 255, 255, 0.87)' }}>
+                    <Card sx={{ height: 515, m: 1, backgroundColor: 'rgba(255, 255, 255, 0.87)' }}>
                         <CardContent>
                             <Typography
                                 variant="h1"
@@ -168,7 +209,7 @@ function TurfviewIndividual() {
                                             onChange={(newValue) => {
                                                 setDate(newValue);
                                             }}
-                                            renderInput={(params) => <TextField {...params} />}
+                                            renderInput={(params) => <TextField  {...params} />}
                                         />
                                     </LocalizationProvider>
                                 </CardActions>
@@ -260,6 +301,12 @@ function TurfviewIndividual() {
                                             setStartTime(newValue);
                                         }}
                                         renderInput={(params) => <TextField {...params} />}
+                                        shouldDisableTime={(timeValue, clockType) => {
+                                            if (clockType === 'minutes' && timeValue % 30) {
+                                                return true;
+                                            }
+                                            return false;
+                                        }} 
                                     />
                                     <TimePicker
                                         label="End Time"
@@ -268,6 +315,12 @@ function TurfviewIndividual() {
                                             setEndTime(newValue);
                                         }}
                                         renderInput={(params) => <TextField {...params} />}
+                                        shouldDisableTime={(timeValue, clockType) => {
+                                            if (clockType === 'minutes' && timeValue % 30) {
+                                                return true;
+                                            }
+                                            return false;
+                                        }} 
                                     />
                                 </LocalizationProvider>
                             </CardActions>

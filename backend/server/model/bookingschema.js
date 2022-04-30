@@ -9,18 +9,18 @@ const bookingSchema = new mongoose.Schema({
     createdBy:{
         type: mongoose.Schema.Types.ObjectId,
         ref:'user',
-        required:true
+        required:true 
     },
     date:{
-       type:Date,
+       type:String,
        required:true
     },
     startTime:{
-        type: Date,
+        type: String,
         required:true
     },
     endTime:{
-        type: Date,
+        type: String,
         required:true
     },
     cancelStatus:{

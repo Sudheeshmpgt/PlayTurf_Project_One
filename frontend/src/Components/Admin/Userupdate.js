@@ -35,7 +35,11 @@ function Userupdate() {
 
     useEffect(() => {
         const id = location.state.id
-        axios.get(`admin_panel/user_management/update/${id}`)
+        axios.get(`admin_panel/user_management/update/${id}`,{
+            headers: {
+                'authToken': localStorage.getItem("admintoken")
+            }
+        })
             .then((res) => {
                 setUser(res.data.user[0])
             })
@@ -54,7 +58,11 @@ function Userupdate() {
         const id = location.state.id
         const { name, phone, email } = user
         if (name && phone && email) {
-            axios.put(`admin_panel/user_management/edit_user/${id}`, user)
+            axios.put(`admin_panel/user_management/edit_user/${id}`, user,{
+                headers: {
+                    'authToken': localStorage.getItem("admintoken")
+                }
+            })
                 .then((res) => {
                     const message = res.data.message;
                     Toast.fire({

@@ -67,6 +67,10 @@ function Header() {
         navigate('/turf')
     }
 
+    const handleClickBooking = () => {
+        navigate('/mybooking')
+    }
+
     useEffect(() => {
         const token = localStorage.getItem("usertoken")
         if (!token) {
@@ -160,7 +164,7 @@ function Header() {
                                             Turfs
                                         </Button>
                                         <Button
-
+                                            onClick={handleClickBooking}
                                             sx={{ my: 1, color: 'white', display: 'block', fontWeight: 500, fontSize: '1rem' }}
                                         >
                                             {user ? 'My Bookings' : 'Bookings'}

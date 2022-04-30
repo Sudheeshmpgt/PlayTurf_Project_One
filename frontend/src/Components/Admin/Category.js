@@ -22,7 +22,11 @@ function Category() {
     //category management get request
     const getCategoryData = async () => {
         try {
-            const data = await axios.get("admin_panel/category")
+            const data = await axios.get("admin_panel/category", {
+                headers: {
+                    'authToken': localStorage.getItem("admintoken"),
+                }
+            })
             setCategory(data.data.category)
         } catch (error) {
             alert(error)
@@ -57,7 +61,11 @@ function Category() {
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`admin_panel/category/delete_category/${id}`)
+                axios.delete(`admin_panel/category/delete_category/${id}`, {
+                    headers: {
+                        'authToken': localStorage.getItem("admintoken"),
+                    }
+                })
                     .then((res) => {
                         setCategory(res.data.category)
                     })

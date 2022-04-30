@@ -22,7 +22,12 @@ function User() {
     //user management get request
     const getUserData = async () => {
         try {
-            const data = await axios.get("admin_panel/user_management")
+            const data = await axios.get("admin_panel/user_management",
+                {
+                    headers: {
+                        'authToken': localStorage.getItem("admintoken")
+                    }
+                })
             setUser(data.data.user)
         } catch (error) {
             alert(error)
@@ -169,7 +174,7 @@ function User() {
                                     USER DETAILS
                                 </Typography>
                             </Box>
-                            <TableContainer className='scrollbar-hidden' component={Paper} style={{ width: '95%', margin: '-20px auto', height: 450, overflow:'scroll' }}>
+                            <TableContainer className='scrollbar-hidden' component={Paper} style={{ width: '95%', margin: '-20px auto', height: 450, overflow: 'scroll' }}>
                                 <Table sx={{ width: 1011 }} aria-label="simple table">
                                     <TableHead sx={{ backgroundColor: '#0037ff6e' }}>
                                         <TableRow>
@@ -239,7 +244,7 @@ function User() {
                                     USER DETAILS
                                 </Typography>
                             </Box>
-                            <TableContainer className='scrollbar-hidden' component={Paper} style={{ width: '95%', margin: '-20px auto', height: 450, overflow: 'scroll' }}>  
+                            <TableContainer className='scrollbar-hidden' component={Paper} style={{ width: '95%', margin: '-20px auto', height: 450, overflow: 'scroll' }}>
                                 <Table sx={{ width: 1011 }} aria-label="simple table">
                                     <TableHead sx={{ backgroundColor: '#0037ff6e' }}>
                                         <TableRow>

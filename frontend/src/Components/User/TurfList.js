@@ -26,7 +26,11 @@ function TurfList() {
     const navigate = useNavigate();
     
     const handleClick = (id) => {
-        axios.get(`admin_panel/turfs/edit_turfs/${id}`)
+        axios.get(`admin_panel/turfs/edit_turfs/${id}`, {
+            headers: {
+                'authToken': localStorage.getItem("usertoken"),
+            }
+        })
         .then((res)=>{
             setTurfView(res.data.turf[0])
         })

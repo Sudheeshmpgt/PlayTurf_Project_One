@@ -47,7 +47,12 @@ function Banneradd() {
             values.append('description', description)
         }
         if (data) {
-            axios.post("admin_panel/banner/add_banner", values, { "Content-Type": "multipart/form-data" })
+            axios.post("admin_panel/banner/add_banner", values, {
+                headers: {
+                    'authToken': localStorage.getItem("admintoken"),
+                    "Content-Type": "multipart/form-data"
+                }
+            })
                 .then((res) => {
                     const message = res.data.message
                     Toast.fire({

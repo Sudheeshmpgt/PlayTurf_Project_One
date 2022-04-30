@@ -20,7 +20,11 @@ function Aside() {
 
   const getCategoryData = async () => {
     try {
-      const data = await axios.get("admin_panel/category")
+      const data = await axios.get("admin_panel/category", {
+        headers: {
+            'authToken': localStorage.getItem("usertoken"),
+        }
+    })
       setCategory(data.data.category)
     } catch (error) {
       alert(error)
