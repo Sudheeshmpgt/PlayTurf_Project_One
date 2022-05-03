@@ -28,6 +28,10 @@ function AdminAside() {
     const bannerSubmit = ()=>{
         navigate('/bannerpage')
     }
+    const BookingSubmit = ()=>{
+        navigate('/adminbookingpage')
+    }
+
     return (
         <Grid container>
             {
@@ -61,7 +65,7 @@ function AdminAside() {
                                 </Button>
                         </Box>
                         <Box  sx={{margin:'5px 0'}}>
-                            <Button sx={{color:'black', fontWeight:600, fontSize:'1.1rem',fontFamily:'Open Sans,sans-serif'}}>
+                            <Button onClick={BookingSubmit} sx={{color:'black', fontWeight:600, fontSize:'1.1rem',fontFamily:'Open Sans,sans-serif'}}>
                             <DateRangeIcon sx={{marginRight:2}}/>
                             Bookings
                             </Button>

@@ -133,7 +133,7 @@ function Bannerupdate() {
     <Paper elevation={3} style={paperStyle}>
         <Grid align='center'>
             <Avatar style={avatarStyle}><EditIcon /></Avatar>
-            <h2 style={{ marginBottom: '10px', fontFamily: 'Atkinson Hyperlegible, sans-serif' }}>Edit Turf Details</h2>
+            <h2 style={{ marginBottom: '10px', fontFamily: 'Atkinson Hyperlegible, sans-serif' }}>Edit Banner Details</h2>
             <form onSubmit={handleSubmit(Edit)} autoComplete='off'>
                 <TextField
                     {...register('description', {

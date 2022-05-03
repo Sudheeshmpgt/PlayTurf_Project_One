@@ -28,7 +28,7 @@ const turfSchema = new mongoose.Schema({
     turfPictures:[
             {
                 type:String,
-            }
+            }       
     ]
 })  
 

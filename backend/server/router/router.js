@@ -69,7 +69,7 @@ route.put('/admin_panel/turfs/edit_turfs/:id', upload.single("picture"), verifyA
 route.delete('/admin_panel/turfs/delete_turfs/:id', verifyAuth, controller.deleteTurfData)
 
 //admin category management
-route.get('/admin_panel/category', verifyAuth, controller.categoryManagement)
+route.get('/admin_panel/category', controller.categoryManagement)  
 
 //admin category management add new category
 route.post('/admin_panel/category/add_category', verifyAuth, controller.addCategory)
@@ -102,10 +102,39 @@ route.delete('/admin_panel/banner/delete_banner/:id', verifyAuth, controller.del
 route.post('/admin_panel/booking/add_booking', verifyAuth, controller.addBooking)
 
 //user booking check
-route.post('/admin_panel/booking/check', verifyAuth, controller.checkBooking)
+route.get('/admin_panel/booking/check/', verifyAuth, controller.checkBooking)
 
 //user booking details request
 route.get('/booking_details/:id', verifyAuth, controller.getBookingDetails)
 
+//admin booking management
+route.get('/admin_panel/booking', verifyAuth, controller.bookingManagement) 
+
+//admin booking management status update
+route.put('/admin_panel/booking_management/edit_status/:id', verifyAuth, controller.changeBookingStatus) 
+
+//admin booking management delete booking details
+route.delete('/admin_panel/booking_management/delete_booking/:id', verifyAuth, controller.deleteBookingData)
+
+//admin booking management delete booking details
+route.put('/booking/edit_status/:id', verifyAuth, controller.cancelBooking)
+
+//user add to favourites
+route.post('/addfavourites', verifyAuth, controller.addToFavourites)
+
+//user favourites get request
+route.get('/get_favourites/:id', verifyAuth, controller.getFavourites)
+
+//razorpay get key
+route.get('/get_key', verifyAuth, controller.getRazorpayKey)
+
+//razorpay create order
+route.post('/create_order', verifyAuth, controller.createOrder)
+
+//razorpay pay order
+route.post('/pay_order', verifyAuth, controller.payOrder)
+
+//razoypay list orders
+route.get('/list_orders', verifyAuth, controller.listOrder)
 
 module.exports = route;

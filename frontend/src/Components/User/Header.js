@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { Grid, AppBar, Toolbar, Box, IconButton, Typography, Menu, Container, Button, Tooltip, MenuItem, InputBase } from '@mui/material'
+import { Grid, AppBar, Toolbar, Box, IconButton, Typography, Menu, Container, Button, Tooltip, MenuItem, InputBase, useTheme, useMediaQuery } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { UserContext } from '../../Store/usercontext'
@@ -15,6 +15,9 @@ function Header() {
     const { search, setSearch } = useContext(SearchContext)
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
+    const theme = useTheme()
+    const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
+    const isMedium = useMediaQuery(theme.breakpoints.down('md'))
 
     const searchChange = (data) => {
         setSearch(data.target.value)
@@ -38,6 +41,12 @@ function Header() {
     const logout = () => {
         setUser('')
         localStorage.removeItem("usertoken")
+        localStorage.removeItem("userId")
+        localStorage.removeItem("userName")
+        localStorage.removeItem("userPhone")
+        localStorage.removeItem("userEmail")
+        localStorage.removeItem("userImage")
+        localStorage.removeItem("userAddress")
         navigate('/')
     }
 
@@ -63,12 +72,16 @@ function Header() {
         navigate('/useraccount')
     }
 
-    const handleClick = () =>{
+    const handleClick = () => {
         navigate('/turf')
     }
 
     const handleClickBooking = () => {
         navigate('/mybooking')
+    }
+
+    const handleClickFavourites = () => {
+        navigate('/myfavouritespage')
     }
 
     useEffect(() => {
@@ -79,6 +92,7 @@ function Header() {
     }, [navigate])
 
     const token = localStorage.getItem("usertoken")
+    const userName = localStorage.getItem("userName")
 
     return (
         <>
@@ -130,16 +144,38 @@ function Header() {
                                             display: { xs: 'block', md: 'none' },
                                         }}
                                     >
+                                        <MenuItem onClick={handleCloseNavMenu}>
+                                            <Typography onClick={onClickTurf} textAlign="center">Turfs</Typography>
+                                        </MenuItem>
+                                        <MenuItem onClick={handleCloseNavMenu}>
+                                            <Typography onClick={handleClickBooking} textAlign="center">{user ? 'My Bookings' : 'Book Now'}</Typography>
+                                        </MenuItem>
+                                        {
+                                            token ? (
+                                                <>
+                                                    <MenuItem onClick={handleCloseNavMenu}>
+                                                        <Typography  onClick={handleClickFavourites} textAlign="center">My Favourites</Typography>
+                                                    </MenuItem>
+                                                    <MenuItem onClick={handleCloseNavMenu}>
+                                                        <Typography onClick={onClickAccount} textAlign="center">My Account</Typography>
+                                                    </MenuItem>
+                                                    <MenuItem onClick={handleCloseNavMenu}>
+                                                        <Typography onClick={logout} textAlign="center">Logout</Typography>
+                                                    </MenuItem>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <MenuItem onClick={handleCloseNavMenu}>
+                                                        <Typography onClick={signIn} textAlign="center">Sign In</Typography>
+                                                    </MenuItem>
+                                                    <MenuItem onClick={handleCloseNavMenu}>
+                                                        <Typography onClick={signUp} textAlign="center">Sign Up</Typography>
+                                                    </MenuItem>
+                                                </>
+                                            )
+                                        }
 
-                                        <MenuItem onClick={handleCloseNavMenu}>
-                                            <Typography textAlign="center" fontWeight={600}>Home</Typography>
-                                        </MenuItem>
-                                        <MenuItem onClick={handleCloseNavMenu}>
-                                            <Typography textAlign="center">Turfs</Typography>
-                                        </MenuItem>
-                                        <MenuItem onClick={handleCloseNavMenu}>
-                                            <Typography textAlign="center">Book Now</Typography>
-                                        </MenuItem>
+
                                     </Menu>
                                 </Box>
                                 <Typography
@@ -167,38 +203,64 @@ function Header() {
                                             onClick={handleClickBooking}
                                             sx={{ my: 1, color: 'white', display: 'block', fontWeight: 500, fontSize: '1rem' }}
                                         >
-                                            {user ? 'My Bookings' : 'Bookings'}
+                                            {token ? 'My Bookings' : 'Bookings'}
                                         </Button>
-                                        {/* <Button
-                                            onClick={handleCloseNavMenu}
-                                            sx={{ my: 1, color: 'white', display: 'block', fontWeight: 500, fontSize: '1rem' }}
-                                        >
-                                            Book Now
-                                        </Button> */}
+                                        {
+                                            token ?
+                                                <Button
+                                                    onClick={handleClickFavourites}
+                                                    sx={{ my: 1, color: 'white', display: 'block', fontWeight: 500, fontSize: '1rem' }}
+                                                >
+                                                    My Favourites
+                                                </Button>
+                                                : ' '
+                                       }
                                     </Box >
-                                        <Box sx={{ backgroundColor: 'rgba(255, 255, 255, 0.25)', borderRadius: 0.8, width: 300, height:30, marginLeft: 2, display: 'flex', marginTop:1.5 }}>
-                                            <Box m={1.1} color='text.secondary'>
+                                    {
+                                        isSmall ? (
+                                            <Box sx={{ backgroundColor: 'rgba(255, 255, 255, 0.25)', borderRadius: 0.8, width: 130, height: 30, display: 'flex', marginTop: 0.7 }}>
+                                                <Box m={1.1} color='text.secondary'>
+                                                </Box>
+                                                <InputBase
+                                                    variant='outlined'
+                                                    value={search}
+                                                    onChange={searchChange}
+                                                    placeholder='Search...'
+                                                    sx={{
+                                                        marginRight: 1,
+                                                    }}>
+                                                </InputBase>
+                                                <IconButton component='span' color='secondary' onClick={handleClick}>
+                                                    <SearchIcon sx={{ fontSize: 20 }} />
+                                                </IconButton>
                                             </Box>
-                                            <InputBase
-                                                variant='outlined'
-                                                value={search}
-                                                onChange={searchChange}
-                                                placeholder='Search here...'
-                                                sx={{
-                                                    marginRight: 4,
-                                                }}>
-                                            </InputBase>
-                                            <Button variant='contained' color='secondary' onClick={handleClick}> 
-                                            <SearchIcon sx={{fontSize:20}} />
-                                            </Button>
-                                        </Box>
+                                        ) : (
+                                            <Box sx={{ backgroundColor: 'rgba(255, 255, 255, 0.25)', borderRadius: 0.8, width: 300, height: 30, marginLeft: 2, display: 'flex', marginTop: 1.5 }}>
+                                                <Box m={1.1} color='text.secondary'>
+                                                </Box>
+                                                <InputBase
+                                                    variant='outlined'
+                                                    value={search}
+                                                    onChange={searchChange}
+                                                    placeholder='Search here...'
+                                                    sx={{
+                                                        marginRight: 4,
+                                                    }}>
+                                                </InputBase>
+                                                <Button variant='contained' color='secondary' onClick={handleClick}>
+                                                    <SearchIcon sx={{ fontSize: 20 }} />
+                                                </Button>
+                                            </Box>
+                                        )
+                                    }
+
                                 </Box>
                                 {
                                     token ? <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
                                         <Tooltip title="Open settings">
                                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, color: 'white' }}>
                                                 <Typography>
-                                                    {user ? `Hi, ${user.name}` : ''}
+                                                    {`Hi, ${userName}`}
                                                 </Typography>
                                                 <ArrowDropDownIcon sx={{ marginLeft: "2px" }} />
                                             </IconButton>

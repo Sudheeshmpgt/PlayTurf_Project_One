@@ -17,15 +17,19 @@ const bookingSchema = new mongoose.Schema({
     },
     startTime:{
         type: String,
-        required:true
+        required:true       
     },
     endTime:{
         type: String,
         required:true
     },
-    cancelStatus:{
-        type:Boolean,
-        default:false
+    status:{
+        type:String,
+        default:'Booked'
+    },
+    totalPrice:{
+        type:Number,
+        required:true
     }
 })  
 

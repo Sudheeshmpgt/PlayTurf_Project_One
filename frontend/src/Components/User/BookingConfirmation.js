@@ -1,12 +1,11 @@
 import { Card, CardActions, CardContent, Grid, Typography, Button, Box } from '@mui/material'
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './TurfList.css'
 import { TurfViewContext } from '../../Store/turfviewcontext';
 import { UserContext } from '../../Store/usercontext';
 import {BookingContext} from '../../Store/bookingcontext'
 import axios from '../../axiosinstance'
-import moment from 'moment'
 import Swal from 'sweetalert2';
 
 function BookingConfirmation() {
@@ -15,6 +14,12 @@ function BookingConfirmation() {
     const { turfView } = useContext(TurfViewContext)
     const { user } = useContext(UserContext)
     const {booking} = useContext(BookingContext)
+    const [loading, setLoading] = useState(false)
+
+
+    const userName = localStorage.getItem('userName')
+    const userPhone = localStorage.getItem('userPhone')
+    const userEmail = localStorage.getItem('userEmail')
 
     const Toast = Swal.mixin({
         toast: true,
@@ -28,9 +33,70 @@ function BookingConfirmation() {
         }
     })
 
-    // const date = moment(booking.date).format('DD-MM-YYYY HH:MM:SS').split(' ');
-    // const startTime = moment(booking.startTime).format('DD-MM-YY hh:mm A').split(' ');
-    // const endTime = moment(booking.endTime).format('DD-MM-YY hh:mm A').split(' ');
+    function loadRazorpay(){
+        const script = document.createElement('script')
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js' 
+        script.onerror = () => {
+            console.log('Razorpay SDK failed to load. Are you online?');
+        }
+        script.onload = async ()=>{
+            try {
+                setLoading(true)
+                const result = await axios.post('create_order',{
+                    amount:booking.totalPrice + '00',
+                },{
+                    headers: {
+                        'authToken': localStorage.getItem("usertoken"),
+                    }
+                })
+                const {amount, id: order_id, currency} = result.data
+                const {
+                    data:{key:razorpayKey}
+                } = await axios.get('get_key',{
+                    headers: {
+                        'authToken': localStorage.getItem("usertoken"),
+                    }
+                })
+                const options = {
+                    key:razorpayKey,
+                    amount:amount.toString(),
+                    currency:currency,
+                    name:'example name',
+                    description:'example transaction',
+                    order_id: order_id,
+                    handler: async function(response){
+                        const result = await axios.post('pay_order',{
+                            amount: amount,
+                            razorpayPaymentId:response.razorpay_payment_id,
+                            razorpayOrderId:response.razorpay_order_id,
+                            razorpaySignature:response.razorpay_Signature,
+                        },{
+                            headers: {
+                                'authToken': localStorage.getItem("usertoken"),
+                            }
+                        })
+                        console.log(result.data.message)
+                    },
+                    prefill: {
+                        name: 'example name',
+                        email: 'email@example.com',
+                        contact: '1111111111',
+                    }, notes:{
+                        address:'example address'
+                    }, theme:{
+                        color:'#FF5A09'
+                    }
+                }
+                setLoading(false)
+                const paymentObject = new window.Razorpay(options) 
+                paymentObject.open() 
+            } catch (error) {
+                console.log(error)
+                setLoading(false)
+            }
+        }
+        document.body.appendChild(script);
+    }
 
     const handleClick = () => {
         const {centerId, createdBy, date, startTime} = booking
@@ -197,7 +263,7 @@ function BookingConfirmation() {
                                         Date
                                     </Box>
                                     <Box marginLeft={10.2}>
-                                        :{booking.date[0]}
+                                        :{booking.date}
                                     </Box>
                                 </Typography>
                                 <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{display:'flex'}}>
@@ -205,7 +271,7 @@ function BookingConfirmation() {
                                         Time
                                     </Box>
                                     <Box marginLeft={10}>
-                                        :{`${booking.startTime[1]} to ${booking.endTime[1]}`}
+                                        :{`${booking.startTime} to ${booking.endTime}`}
                                     </Box>
                                 </Typography>
                                 <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{display:'flex'}}>
@@ -221,7 +287,7 @@ function BookingConfirmation() {
                                         Total Amount
                                     </Box>
                                     <Box marginLeft={2}>
-                                        :{turfView.price}
+                                        :{booking.totalPrice}
                                     </Box>
                                 </Typography>
                             </Box>
@@ -250,7 +316,7 @@ function BookingConfirmation() {
                                         Name
                                     </Box>
                                     <Box  marginLeft={9.1}>
-                                        :{user.name}
+                                        :{user ? user.name : userName}
                                     </Box>
                                 </Typography>
                                 <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{display:'flex'}}>
@@ -258,7 +324,7 @@ function BookingConfirmation() {
                                         Phone
                                     </Box>
                                     <Box marginLeft={8.8}>
-                                    :{user.phone}
+                                    :{user ? user.phone : userPhone}
                                     </Box>
                                 </Typography>
                                 <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{display:'flex'}}>
@@ -266,13 +332,13 @@ function BookingConfirmation() {
                                         E-mail
                                     </Box>
                                     <Box marginLeft={8.9}>
-                                        :{user.email}
+                                        :{user ? user.email : userEmail}
                                     </Box>
                                 </Typography>
                             </Box>
                             <Box marginTop={3}>
                                 <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600}>
-                                    Total Amount (Pay at Venue) 
+                                    Total Amount (Pay at Venue): {booking.totalPrice}
                                 </Typography>
                             </Box>
                         </CardContent>
@@ -282,11 +348,11 @@ function BookingConfirmation() {
                                     <Button variant='contained' onClick={goBack}>Back</Button>
                                 </Box>
                                 <Box>
-                                    <Button color='secondary' variant='contained' onClick={handleClick}>Confirm</Button>
+                                    <Button color='secondary' variant='contained' onClick={loadRazorpay}>Confirm</Button>
                                 </Box>
                             </Box>
                         </CardActions>
-                    </CardContent>
+                    </CardContent> 
                 </Card>
             </Grid>
         </Grid>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Card, Grid, CardActions, Button, Typography, Checkbox, Fab, CardMedia, useTheme, useMediaQuery } from '@mui/material'
 import { Box } from '@mui/system'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -7,16 +7,21 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Pagination } from "swiper";
 import { TurfContext } from '../../Store/turfcontext';
 import axios from '../../axiosinstance'
-
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
+import { useNavigate } from 'react-router-dom';
 
 function Cards() {
     const { turf, setTurf } = useContext(TurfContext)
+    const [status, setStatus] = useState(false)
+    const [favourite, setFavourite] = useState([])
+    console.log(favourite)
+    const navigate = useNavigate()
     const theme = useTheme()
     const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
     const isMedium = useMediaQuery(theme.breakpoints.down('md'))
+    const userId = localStorage.getItem("userId")
 
     const getTurfData = async () => {
         try {
@@ -32,6 +37,29 @@ function Cards() {
         return () => {
         }
     }, [])
+
+    const handleClick = (id) => {
+        navigate('/turfview', { state: { id: id } })
+    }
+
+    const handleCheck =(id) =>{
+       const value= !status; 
+        setStatus(value)
+
+        const data = {
+            value: value,
+            turfId: id,
+            userId: userId
+        }
+        axios.post(`addfavourites`, data, {
+            headers: {
+                'authToken': localStorage.getItem("usertoken"),
+            }
+        })
+        .then((res)=>{
+            setFavourite(res.data.turf)
+        })
+    }
 
     return (
         <Grid container>
@@ -73,11 +101,11 @@ function Cards() {
                                                     <Grid container sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                                         <Grid item >
                                                             <Fab size='small' sx={{ marginTop: '-6px', marginLeft: 1 }}>
-                                                                <Checkbox size='large' icon={<FavoriteBorderIcon fontSize="large" />} checkedIcon={<FavoriteIcon color='error' />} />
+                                                                <Checkbox onClick={()=>handleCheck(data._id)} size='large' icon={<FavoriteBorderIcon fontSize="large" />} checkedIcon={<FavoriteIcon checked={status} color='error' />} />
                                                             </Fab>
                                                         </Grid>
                                                         <Grid item>
-                                                            <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5 }}>Book</Button>
+                                                            <Button onClick={() => handleClick(data._id)} size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5 }}>Book</Button>
                                                         </Grid>
                                                     </Grid>
                                                 </CardActions>
@@ -117,11 +145,11 @@ function Cards() {
                                                         <Grid container sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                                             <Grid item >
                                                                 <Fab size='small' sx={{ marginTop: '-6px', marginLeft: 1 }}>
-                                                                    <Checkbox size='large' icon={<FavoriteBorderIcon fontSize="large" />} checkedIcon={<FavoriteIcon color='error' />} />
+                                                                    <Checkbox onClick={()=>handleCheck(data._id)} size='large' icon={<FavoriteBorderIcon fontSize="large" />} checkedIcon={<FavoriteIcon checked={status} color='error' />} />
                                                                 </Fab>
                                                             </Grid>
                                                             <Grid item>
-                                                                <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5 }}>Book</Button>
+                                                                <Button onClick={() => handleClick(data._id)} size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5 }}>Book</Button>
                                                             </Grid>
                                                         </Grid>
                                                     </CardActions>
@@ -146,8 +174,8 @@ function Cards() {
                                 {
                                     turf && turf.map((data, index) => (
                                         <SwiperSlide>
-                                            <Box>
-                                                <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 300 }}>
+                                            <Box sx={{height:335}}>
+                                                <Card elevation={10} varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '8px', height: 300 }}>
                                                     <CardMedia sx={{ textAlign: 'center' }}>
                                                         <img style={{ height: 185, width: 260, borderRadius: 1 }}
                                                             alt='football court'
@@ -159,12 +187,12 @@ function Cards() {
                                                     <CardActions>
                                                         <Grid container sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                                             <Grid item >
-                                                                <Fab size='small' sx={{ marginTop: '-6px', marginLeft: 1 }}>
-                                                                    <Checkbox size='large' icon={<FavoriteBorderIcon fontSize="large" />} checkedIcon={<FavoriteIcon color='error' />} />
-                                                                </Fab>
+                                                                <Fab  size='small' sx={{ marginTop: '-6px', marginLeft: 1 }} >
+                                                                    <Checkbox onClick={()=>handleCheck(data._id)}  size='large' icon={<FavoriteBorderIcon fontSize="large" />} checkedIcon={<FavoriteIcon checked={status} color='error' />} />
+                                                                </Fab> 
                                                             </Grid>
                                                             <Grid item>
-                                                                <Button size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5 }}>Book</Button>
+                                                                <Button onClick={() => handleClick(data._id)} size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5 }}>Book</Button>
                                                             </Grid>
                                                         </Grid>
                                                     </CardActions>

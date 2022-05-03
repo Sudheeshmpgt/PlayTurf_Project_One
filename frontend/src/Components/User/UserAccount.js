@@ -1,16 +1,33 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Avatar, Box, Fab, Grid, Typography } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit';
 import { UserContext } from '../../Store/usercontext';
 import { useNavigate } from 'react-router-dom';
+import axios from '../../axiosinstance'
 
 function UserAccount() {
 
-    const { user } = useContext(UserContext)
+    const { user, setUser } = useContext(UserContext)
     const navigate = useNavigate()
+    const userId = localStorage.getItem("userId")
+    
+    useEffect(() => {
+        const id = localStorage.getItem("userId")
+        axios.get(`admin_panel/user_management/update/${id}`, {
+            headers: {
+                'authToken': localStorage.getItem("usertoken"),
+            }
+        })
+            .then((res) => {
+                setUser(res.data.user[0])
+            })
+    },[])
+
     const edit =(id)=>{
         navigate('/useredit', { state: { id: id } })
     }
+
+    const Id = user ? user._id : userId
 
     return (
         <Grid container>
@@ -26,10 +43,10 @@ function UserAccount() {
                         height: 100,
                         width: 100,
                         margin: '10px'
-                    }} ><img alt='Profile' src={user? user.userImg : ''}></img></Avatar>
+                    }} ><img alt='Profile' src={user? user.userImg:''}></img></Avatar> 
                     <Box>
                         <Fab size='small'
-                            onClick={()=>edit(user._id)}
+                            onClick={()=>edit(Id)}
                             sx={{ margin: 3 }}
                             color='secondary'>
                             <EditIcon sx={{ fontSize: 20 }} />
@@ -58,7 +75,7 @@ function UserAccount() {
                     //  width={410}
                         marginLeft='10%'
                         marginTop='3px'>
-                        {user ? user.name : ''}
+                        {user ? user.name: ''}
                     </Typography>
                     <Typography
                         fontWeight={600}
@@ -71,7 +88,7 @@ function UserAccount() {
                     //  width={410}
                         marginLeft='10%'
                         marginTop='3px'>
-                        {user ? user.email : ''}
+                        {user ? user.email: ''}
                     </Typography>
                     <Typography
                         fontWeight={600}

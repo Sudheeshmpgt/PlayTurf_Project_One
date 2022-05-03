@@ -83,9 +83,6 @@ function Turfadd() {
             values.append('category', category)
             values.append('price', price)
         }
-        // for (var [key, value] of values.entries()) {
-        //     console.log(key, value); 
-        // }
         if (centername && phone && location && price && category) {
             axios({
                 method: 'post',

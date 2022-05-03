@@ -61,7 +61,6 @@ function Categoryupdate() {
 
     const Edit = () => {
         const id = categoryid
-        console.log(id)
         const { centername, location, category } = categories
 
         if (centername && location && category) {

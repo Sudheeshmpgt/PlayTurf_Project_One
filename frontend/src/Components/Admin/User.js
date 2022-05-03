@@ -17,7 +17,7 @@ function User() {
     const navigate = useNavigate()
     const theme = useTheme()
     const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
-    const isMedium = useMediaQuery(theme.breakpoints.down('md'))
+    const isMedium = useMediaQuery(theme.breakpoints.down('md')) 
 
     //user management get request
     const getUserData = async () => {

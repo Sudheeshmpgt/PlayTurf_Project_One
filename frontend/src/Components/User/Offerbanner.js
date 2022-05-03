@@ -7,7 +7,7 @@ function Offerbanner() {
         <Grid container>
             <Grid item xs={12} md={12}>
                 <Paper
-                    elevation={3}
+                    elevation={10}
                     sx={{
                         width: '83%',
                         height: 100,

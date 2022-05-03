@@ -4,7 +4,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './TurfList.css'
 import { TurfViewContext } from '../../Store/turfviewcontext';
 import { UserContext } from '../../Store/usercontext'
@@ -21,16 +21,17 @@ function TurfviewIndividual() {
     const [eveningTimeslots, setEveningTimeslots] = useState([])
     const [value, setValue] = useState('Morning')
     const navigate = useNavigate()
-    const { turfView } = useContext(TurfViewContext)
+    const location = useLocation()
+    const { turfView, setTurfView } = useContext(TurfViewContext)
     const { user } = useContext(UserContext)
-    const {setBooking} = useContext(BookingContext)
+    const { setBooking } = useContext(BookingContext)
 
     const Toast = Swal.mixin({
         toast: true,
         position: 'bottom-right',
         width: '400px',
         showConfirmButton: false,
-        timer: 5000,
+        timer: 4000,
         didOpen: (toast) => {
             toast.addEventListener('mouseenter', Swal.stopTimer)
             toast.addEventListener('mouseleave', Swal.resumeTimer)
@@ -70,52 +71,83 @@ function TurfviewIndividual() {
         setMorningTimeslots(arrM)
         let arrE = createEveningTimeSlots('16:00 ', '22:00 ')
         setEveningTimeslots(arrE)
+        const id = location.state.id
+        axios.get(`admin_panel/turfs/edit_turfs/${id}`, {
+            headers: {
+                'authToken': localStorage.getItem("usertoken"),
+            }
+        })
+            .then((res) => {
+                setTurfView(res.data.turf[0])
+            })
     }, [])
+
+    const userId = localStorage.getItem("userId")
+
 
     const handleClick = () => {
 
-        const fdate = moment(date).format('DD-MM-YYYY HH:MM:SS').split(' ');
-        const fstartTime = moment(startTime).format('DD-MM-YYYY HH:MM').split(' ');
-        const fendTime = moment(endTime).format('DD-MM-YYYY HH:MM').split(' ');
+        if (date == null || startTime == null || endTime == null) {
+            Toast.fire({
+                icon: 'error',
+                title: 'Please choose valid date and Time'
+            })
+        }
+
+        const dateFormated = moment(date).format('DD-MM-YYYY HH:MM:SS').split(' ')
+        const startTimeHour = moment(startTime).format('DD-MM-YYYY HH:MM').split(' ')
+        const endTimeHour = moment(endTime).format('DD-MM-YYYY HH:MM').split(' ')
         const nowdate = moment().format('DD-MM-YYYY')
-        // console.log('fst,fet', fstartTime[1],fendTime[1])
-        // console.log(fendTime[1] == fstartTime[1])
+        const startHour = moment(startTime).format('DD-MM-YYYY hh').split(' ')
+        const duration = moment.duration(endTime.diff(startTime) + 0.2)
+        const hours = duration.asHours()
+        const hoursRound = Math.round(hours)
 
-
-        if(fdate[0] < nowdate){
+    
+        if (dateFormated[0] < nowdate) {
             Toast.fire({
                 icon: 'error',
                 title: 'Please choose valid date'
             })
-        }else if((fendTime[1] == fstartTime[1])){
+        } else if ((endTimeHour[1] === startTimeHour[1])) {
+            Toast.fire({
+                icon: 'error',
+                title: 'Please choose valid time'
+            })
+        } else if (startHour === '12' || startHour === '01' || startHour === '02' || startHour === '03') {
             Toast.fire({
                 icon: 'error',
                 title: 'Please choose valid time'
             })
         }
 
+        const totalPrice = turfView.price * hoursRound
+
         const values = {
             centerId: turfView._id,
-            createdBy: user._id,
-            date: fdate[0],
-            startTime: fstartTime[1],
-            endTime: fendTime[1]
-        } 
-        axios.post("admin_panel/booking/check", values, {
+            createdBy: user ? user._id : userId,
+            date: dateFormated[0],
+            startTime: startTimeHour[1],
+            endTime: endTimeHour[1],
+            totalPrice: totalPrice
+        }
+        axios.get(`admin_panel/booking/check/?centerId=${turfView._id}&date=${dateFormated[0]}&startTime=${startTimeHour[1]}`, {
             headers: {
                 'authToken': localStorage.getItem("usertoken"),
             }
         })
             .then((res) => {
-                if(res.data.message){
-                    console.log(values)
+                if (res.data.message) {
                     setBooking(values)
                     navigate('/bookingpage')
-                }else{
-                    alert(res.data.error)
+                } else {
+                    const message = res.data.error
+                    Toast.fire({
+                        icon: 'warning',
+                        title: message
+                    })
                 }
             })
-
     }
 
     const handleChange = (e) => {
@@ -306,7 +338,7 @@ function TurfviewIndividual() {
                                                 return true;
                                             }
                                             return false;
-                                        }} 
+                                        }}
                                     />
                                     <TimePicker
                                         label="End Time"
@@ -320,7 +352,7 @@ function TurfviewIndividual() {
                                                 return true;
                                             }
                                             return false;
-                                        }} 
+                                        }}
                                     />
                                 </LocalizationProvider>
                             </CardActions>

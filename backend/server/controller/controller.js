@@ -4,12 +4,16 @@ const TurfModel = require('../model/turfschema');
 const CategoryModel = require('../model/categoryschema');
 const BannerModel = require('../model/bannerschema');
 const BookingModel = require('../model/bookingschema')
+const OrderModel = require('../model/orderschema')
+const FavouritesModel = require('../model/favouritesschema')
+const Razorpay = require('razorpay')
 const config = require('../../config')
 const ObjectId = require('mongoose').Types.ObjectId;
 const multer = require("multer");
 const { OAuth2Client } = require('google-auth-library');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const { find } = require('../model/userschema');
 const cloudinary = require('cloudinary').v2
 
 
@@ -64,7 +68,7 @@ exports.login = async (req, res) => {
                     expiresIn: '1h',
                     httpOnly: true
                 });
-                res.send({ message: "Login Successfull", user: user })
+                res.send({ message: "Login Successfull", user: user, token: token })
             } else {
                 res.send({ message: "Invalid login details" })
             }
@@ -122,7 +126,7 @@ exports.adminLogin = async (req, res) => {
                     expiresIn: '1h',
                     httpOnly: true
                 });
-                res.send({ message: "Login Successfull", admin: admin })
+                res.send({ message: "Login Successfull", admin: admin, token: token })
             }
             else {
                 res.send({ message: "Inavalid Admin details" });
@@ -452,7 +456,7 @@ exports.updateBannerData = async (req, res) => {
         res.send({ message: "Bad request", err: error })
     }
 }
-      
+
 //admin banner mangement delete
 exports.deleteBannerData = async (req, res) => {
     try {
@@ -466,36 +470,38 @@ exports.deleteBannerData = async (req, res) => {
     } catch (error) {
         res.send({ messsage: "Error", error: error })
     }
-}               
+}
 
 
 //user Booking check
-exports.checkBooking = async (req, res) =>{
+exports.checkBooking = async (req, res) => {
     try {
-        const { centerId, createdBy, date, startTime, endTime } = req.body
-        const prevBooking = await BookingModel.find({ centerId: ObjectId(centerId), date:date, startTime:startTime});
+
+        const { centerId, date, startTime } = req.query
+        const prevBooking = await BookingModel.find({ centerId: ObjectId(centerId), date: date, startTime: startTime });
         if (prevBooking.length > 0) {
-            res.send({error:"The slot is already booked"})
+            res.send({ error: "The slot is already booked" })
         } else {
-            res.send({message:"Success"})
+            res.send({ message: "Success" })
         }
     } catch (error) {
-        
+        res.send(error)
     }
 }
 
 //admin or use booking management
 exports.addBooking = async (req, res) => {
     try {
-        const { centerId, createdBy, date, startTime, endTime } = req.body
-        const prevBooking = await BookingModel.find({ centerId: centerId, date: date, startTime: startTime});
-        if (prevBooking.length <= 0) {   
+        const { centerId, createdBy, date, startTime, endTime, totalPrice } = req.body
+        const prevBooking = await BookingModel.find({ centerId: ObjectId(centerId), date: date, startTime: startTime });
+        if (prevBooking.length <= 0) {
             const newBooking = new BookingModel({
-                centerId: centerId ,
+                centerId: centerId,
                 createdBy: createdBy,
                 date: date,
-                startTime: startTime, 
-                endTime: endTime
+                startTime: startTime,
+                endTime: endTime,
+                totalPrice: totalPrice
             });
             const booking = await newBooking.save();
             res.send({ message: "Booked Successfully", booking: booking });
@@ -503,23 +509,23 @@ exports.addBooking = async (req, res) => {
             res.send({ message: "The slot is already booked" });
         }
     } catch (error) {
-        console.log(error)
+        res.send(error)
     }
 }
 
 //user booking get request
 exports.getBookingDetails = async (req, res) => {
-    const userId = req.params.id 
+    const userId = req.params.id
     const data = await BookingModel.aggregate([
         {
-            $match:{createdBy:ObjectId(userId)}
+            $match: { createdBy: ObjectId(userId) }
         },
         {
-            $lookup:{
-                from:'turves',
-                localField:'centerId',
-                foreignField:'_id',
-                as:'turfDetails'
+            $lookup: {
+                from: 'turves',
+                localField: 'centerId',
+                foreignField: '_id',
+                as: 'turfDetails'
             }
         }
     ])
@@ -528,4 +534,241 @@ exports.getBookingDetails = async (req, res) => {
     } else {
         res.send({ message: "Error" })
     }
+}
+
+//admin booking management get request
+exports.bookingManagement = async (req, res) => {
+    const data = await BookingModel.aggregate([
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'createdBy',
+                foreignField: '_id',
+                as: 'userDetails'
+            }
+        },
+        {
+            $lookup: {
+                from: 'turves',
+                localField: 'centerId',
+                foreignField: '_id',
+                as: 'turfDetails'
+            }
+        }
+    ])
+    if (data) {
+        res.send({ message: "Successful", booking: data })
+    } else {
+        res.send({ message: "Error" })
+    }
+}
+
+//admin booking management booking status change
+exports.changeBookingStatus = async (req, res) => {
+    try {
+        const status = req.body.data
+
+        const data = await BookingModel.findByIdAndUpdate(
+            {
+                _id: req.params.id
+            },
+            {
+                status: status
+            })
+        if (data) {
+            const bookings = await BookingModel.aggregate([
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'createdBy',
+                        foreignField: '_id',
+                        as: 'userDetails'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'turves',
+                        localField: 'centerId',
+                        foreignField: '_id',
+                        as: 'turfDetails'
+                    }
+                }
+            ])
+            res.send({ message: "Booking status updated successfully", booking: bookings })
+        } else {
+            res.send({ message: "Request failed" })
+        }
+    } catch (error) {
+        console.log('error', error)
+    }
+}
+
+//admin booking management delete booking details
+exports.deleteBookingData = async (req, res) => {
+    try {
+        const data = await BookingModel.findByIdAndDelete({ _id: req.params.id })
+        const booking = await BookingModel.aggregate([
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'createdBy',
+                    foreignField: '_id',
+                    as: 'userDetails'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'turves',
+                    localField: 'centerId',
+                    foreignField: '_id',
+                    as: 'turfDetails'
+                }
+            }
+        ])
+        if (data) {
+            res.send({ message: "Deleted Successfully", booking: booking })
+        } else {
+            res.send({ message: "Some error in deleting the data" })
+        }
+    } catch (error) {
+        res.send({ messsage: "Error", error: error })
+    }
+}
+
+//user booking cancellation
+exports.cancelBooking = async (req, res) => {
+    try {
+        const id = req.params.id
+        const status = req.body.data
+        const userId = req.body.userid
+        const data = await BookingModel.findByIdAndUpdate(
+            {
+                _id: req.params.id
+            },
+            {
+                status: status
+            })
+        if (data) {
+            const booking = await BookingModel.aggregate([
+                {
+                    $match: { createdBy: ObjectId(userId) }
+                },
+                {
+                    $lookup: {
+                        from: 'turves',
+                        localField: 'centerId',
+                        foreignField: '_id',
+                        as: 'turfDetails'
+                    }
+                }
+            ])
+            res.send({ message: "Successful", booking: booking })
+        } else {
+            res.send({ message: "Request Failed" })
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+//user add to favourites
+exports.addToFavourites = async (req, res) => {
+    try {
+        const userId = req.body.userId
+        const turfId = req.body.turfId
+        const data = await FavouritesModel.find({ userId: ObjectId(userId), turfId: ObjectId(turfId) })
+        if (data.length <= 0) {
+            const favourite = new FavouritesModel({
+                userId: userId,
+                turfId: turfId
+            })
+            const favourites = await favourite.save()
+            const value = await FavouritesModel.find({userId: ObjectId(userId)})
+           res.send({message:'Successfull', turf: value})
+        } else {
+            const id = data[0]._id
+            const deleteData = await FavouritesModel.findByIdAndDelete({ _id: id })
+            const value = await FavouritesModel.find({userId: ObjectId(userId)})
+            res.send({message:'Deleted Successfully', turf: value})
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+//user favourites get request
+exports.getFavourites = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const data = await FavouritesModel.aggregate([
+            {
+                $match: { userId: ObjectId(userId) }
+            },
+            {
+                $lookup: {
+                    from: 'turves',
+                    localField: 'turfId',
+                    foreignField: '_id',
+                    as: 'turfDetails'
+                }
+            }
+        ])
+        if (data) {
+            res.send({ message: "Success", turf: data })
+        } else {
+            res.send({ message: "Request failed" })
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+//razorpay setup
+exports.getRazorpayKey = async (req, res) => {
+    res.send({key:config.RAZORPAY_KEY_ID})
+}
+
+//razorpay create order
+exports.createOrder = async (req, res) => {
+    try {
+        const instance = new Razorpay({
+            key_id: config.RAZORPAY_KEY_ID,
+            key_secret: config.RAZORPAY_KEY_SECRET
+        })
+        const options = {
+            amount: req.body.amount,
+            currency:'INR',
+        }
+        const order = await instance.orders.create(options)
+        if(!order) return res.send({message:'some error occured'})
+        res.send(order)
+    } catch (error) {
+        res.send(error)
+    }
+}
+
+//razorpay pay order
+exports.payOrder = async(req,res) => {
+    try {
+        const {amount, razorpayPaymentId, razorpayOrderId, razorpaySignature} = req.body
+        const newPayment = OrderModel({
+            isPaid: true,
+            amount: amount,
+            razorpay:{
+                orderId:razorpayOrderId,
+                paymentId:razorpayPaymentId,
+                signature:razorpaySignature,
+            },
+        })
+        await newPayment.save()
+        res.send({message: 'Payment was successful'})
+    } catch (error) {
+        console.log(error)
+        res.send(error)
+    }
+}
+
+exports.listOrder = async (req,res) => {
+    const orders =  await OrderModel.find()
+    res.send(orders);
 }

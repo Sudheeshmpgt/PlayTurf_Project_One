@@ -26,14 +26,13 @@ function AdminLogin() {
         if (email && password) {
             axios.post("admin_login", data)
                 .then((res) => {
-                    console.log(res)
                     // setUser(res.data.user)
                     const message = res.data.message
                     Toast.fire({
                         icon: 'success',
                         title: message
                     })
-                    const token = res.data.admin.tokens[0].token
+                    const token = res.data.token
                     localStorage.setItem("admintoken", token)
                     navigate('/adminhome')
                 }).catch((e) => {

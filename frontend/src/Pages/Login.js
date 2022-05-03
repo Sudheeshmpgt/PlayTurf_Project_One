@@ -35,10 +35,17 @@ function Login() {
                         icon: 'success',
                         title: message
                     })
-                    const token = res.data.user.tokens[0].token
+                    const token = res.data.token
                     localStorage.setItem("usertoken", token)
+                    localStorage.setItem("userId", res.data.user._id)
+                    localStorage.setItem("userName", res.data.user.name)
+                    localStorage.setItem("userPhone", res.data.user.phone)
+                    localStorage.setItem("userEmail", res.data.user.email)
+                    localStorage.setItem("userImage", res.data.user.userImg)
+                    localStorage.setItem("userAddress", res.data.user.address)                       
                     navigate('/')
                 }).catch((e) => {
+                    console.log(e)
                     Toast.fire({
                         icon: 'error',
                         title: 'Something went wrong'
