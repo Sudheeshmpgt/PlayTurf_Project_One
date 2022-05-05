@@ -6,6 +6,7 @@ const BannerModel = require('../model/bannerschema');
 const BookingModel = require('../model/bookingschema')
 const OrderModel = require('../model/orderschema')
 const FavouritesModel = require('../model/favouritesschema')
+const OfferModel = require('../model/offerschema')
 const Razorpay = require('razorpay')
 const config = require('../../config')
 const ObjectId = require('mongoose').Types.ObjectId;
@@ -13,7 +14,6 @@ const multer = require("multer");
 const { OAuth2Client } = require('google-auth-library');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { find } = require('../model/userschema');
 const cloudinary = require('cloudinary').v2
 
 
@@ -489,10 +489,10 @@ exports.checkBooking = async (req, res) => {
     }
 }
 
-//admin or use booking management
+//admin or user booking management
 exports.addBooking = async (req, res) => {
     try {
-        const { centerId, createdBy, date, startTime, endTime, totalPrice } = req.body
+        const { centerId, createdBy, date, startTime, endTime, totalPrice, paymentMode } = req.body
         const prevBooking = await BookingModel.find({ centerId: ObjectId(centerId), date: date, startTime: startTime });
         if (prevBooking.length <= 0) {
             const newBooking = new BookingModel({
@@ -501,7 +501,8 @@ exports.addBooking = async (req, res) => {
                 date: date,
                 startTime: startTime,
                 endTime: endTime,
-                totalPrice: totalPrice
+                totalPrice: totalPrice,
+                paymentMode: paymentMode
             });
             const booking = await newBooking.save();
             res.send({ message: "Booked Successfully", booking: booking });
@@ -683,13 +684,13 @@ exports.addToFavourites = async (req, res) => {
                 turfId: turfId
             })
             const favourites = await favourite.save()
-            const value = await FavouritesModel.find({userId: ObjectId(userId)})
-           res.send({message:'Successfull', turf: value})
+            const value = await FavouritesModel.find({ userId: ObjectId(userId) })
+            res.send({ message: 'Successfull', turf: value })
         } else {
             const id = data[0]._id
             const deleteData = await FavouritesModel.findByIdAndDelete({ _id: id })
-            const value = await FavouritesModel.find({userId: ObjectId(userId)})
-            res.send({message:'Deleted Successfully', turf: value})
+            const value = await FavouritesModel.find({ userId: ObjectId(userId) })
+            res.send({ message: 'Deleted Successfully', turf: value })
         }
     } catch (error) {
         console.log(error)
@@ -725,7 +726,7 @@ exports.getFavourites = async (req, res) => {
 
 //razorpay setup
 exports.getRazorpayKey = async (req, res) => {
-    res.send({key:config.RAZORPAY_KEY_ID})
+    res.send({ key: config.RAZORPAY_KEY_ID })
 }
 
 //razorpay create order
@@ -737,10 +738,10 @@ exports.createOrder = async (req, res) => {
         })
         const options = {
             amount: req.body.amount,
-            currency:'INR',
+            currency: 'INR',
         }
         const order = await instance.orders.create(options)
-        if(!order) return res.send({message:'some error occured'})
+        if (!order) return res.send({ message: 'some error occured' })
         res.send(order)
     } catch (error) {
         res.send(error)
@@ -748,27 +749,211 @@ exports.createOrder = async (req, res) => {
 }
 
 //razorpay pay order
-exports.payOrder = async(req,res) => {
+exports.payOrder = async (req, res) => {
     try {
-        const {amount, razorpayPaymentId, razorpayOrderId, razorpaySignature} = req.body
+        const { amount, razorpayPaymentId, razorpayOrderId, razorpaySignature } = req.body
         const newPayment = OrderModel({
             isPaid: true,
             amount: amount,
-            razorpay:{
-                orderId:razorpayOrderId,
-                paymentId:razorpayPaymentId,
-                signature:razorpaySignature,
+            razorpay: {
+                orderId: razorpayOrderId,
+                paymentId: razorpayPaymentId,
+                signature: razorpaySignature,
             },
         })
         await newPayment.save()
-        res.send({message: 'Payment was successful'})
+        res.send({ message: 'Payment was successful' })
     } catch (error) {
         console.log(error)
         res.send(error)
     }
 }
 
-exports.listOrder = async (req,res) => {
-    const orders =  await OrderModel.find()
+exports.listOrder = async (req, res) => {
+    const orders = await OrderModel.find()
     res.send(orders);
 }
+
+exports.addOffer = async (req, res) => {
+    try {
+        const { turfId, offerPercent, fromDate, toDate } = req.body
+        const data = await OfferModel.find({ turfId: ObjectId(turfId) })
+        if (data.length === 0) {
+            const offer = new OfferModel({
+                turfId: turfId,
+                offerPercent: offerPercent,
+                fromDate: fromDate,
+                toDate: toDate
+            })
+            const newOffer = await offer.save()
+            res.send({ message: 'New offer created successfully', offer: newOffer })
+        } else {
+            res.send({ error: 'Turf already have an offer' })
+        }
+    } catch (error) {
+        res.send(error)
+    }
+}
+
+exports.offerManagement = async (req, res) => {
+    try {
+        const offer = await OfferModel.aggregate([
+            {
+                $lookup: {
+                    from: 'turves',
+                    localField: 'turfId',
+                    foreignField: '_id',
+                    as: 'turfDetails'
+                }
+            }
+        ])
+        if (offer) {
+            res.send({ message: "Success", offer: offer })
+        } else {
+            res.send({ error: "something went wrong" })
+        }
+    } catch (error) {
+
+    }
+}
+
+exports.offerStatus = async (req, res) => {
+    try {
+        const id = req.params.id
+        const data = await OfferModel.findOne({ _id: req.params.id })
+        const status = data.status
+        if (!data) {
+            res.send({ message: 'No matching data found' })
+        } else {
+            if (data.status) {
+                const stats = !status
+                const user = await OfferModel.updateOne({ _id: id }, { status: stats })
+            } else {
+                const stats = !status
+                const user = await OfferModel.updateOne({ _id: id }, { status: stats })
+            }
+        }
+        const offer = await OfferModel.aggregate([
+            {
+                $lookup: {
+                    from: 'turves',
+                    localField: 'turfId',
+                    foreignField: '_id',
+                    as: 'turfDetails'
+                }
+            }
+        ])
+        res.send({ message: 'ok', offer: offer })
+    } catch (error) {
+        res.send(error)
+    }
+
+}
+
+exports.getOfferData = async (req, res) => {
+    try {
+        const id = req.params.id
+        const offer = await OfferModel.aggregate([
+            {
+                $match: {
+                    _id: ObjectId(id)
+                }
+            },
+            {
+                $lookup: {
+                    from: 'turves',
+                    localField: 'turfId',
+                    foreignField: '_id',
+                    as: 'turfDetails'
+                }
+            }
+        ])
+        res.send({ message: 'ok', offer: offer })
+    } catch (error) {
+        res.send(error)
+    }
+}
+
+exports.updateOfferData = async (req, res) => {
+    try {
+        const { offerPercent, fromDate, toDate, turfId } = req.body
+        const offer = await OfferModel.findByIdAndUpdate({ _id: req.params.id }, req.body)
+        if (offer) {
+            res.send({ message: "Offer details Updated Successfully", offer: offer })
+        } else {
+            res.send({ message: "Request failed" })
+        }
+    } catch (error) {
+        res.send(error)
+    }
+}
+
+exports.deleteOfferData = async (req, res) => {
+    try {
+        const data = await OfferModel.findByIdAndDelete({ _id: req.params.id })
+        const offer = await OfferModel.aggregate([
+            {
+                $lookup: {
+                    from: 'turves',
+                    localField: 'turfId',
+                    foreignField: '_id',
+                    as: 'turfDetails'
+                }
+            }
+        ])
+        if (offer) {
+            res.send({ message: "Deleted Successfully", offer: offer })
+        } else {
+            res.send({ error: "Some error in deleting the data" })
+        }
+    } catch (error) {
+        res.send({ messsage: "Error", error: error })
+    }
+}
+
+//user turf get data
+exports.getOfferTurfData = async (req, res) => {
+    try {
+        const id = req.params.id
+        const offer = await OfferModel.aggregate([
+            {
+                $match: {
+                    turfId: ObjectId(id)
+                }
+            },
+            {
+                $lookup: {
+                    from: 'turves',
+                    localField: 'turfId',
+                    foreignField: '_id',
+                    as: 'turfDetails'
+                }
+            }
+        ])
+        res.send({ message: 'ok', offer: offer })
+    } catch (error) {
+        res.send(error)
+    }
+}
+
+exports.changePassword = async (req, res) => {
+    try {
+       
+        const {email, password } = req.body
+        const hashedPw = await bcrypt.hash(password, 12)
+        const filter = {
+            email:email
+        }  
+        const values = {
+            password: hashedPw
+        }
+        const data = await UserModel.findOneAndUpdate(filter,values)
+        if(data.length == 0){
+            res.send({message:'Please try again'})
+        }else{
+            res.send({message:'Password updated successfully'})
+        }
+    } catch (error) {
+        res.send(error)
+    }
+} 

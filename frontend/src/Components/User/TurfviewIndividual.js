@@ -19,6 +19,7 @@ function TurfviewIndividual() {
     const [endTime, setEndTime] = useState(null);
     const [morningTimeslots, setMorningTimeslots] = useState([])
     const [eveningTimeslots, setEveningTimeslots] = useState([])
+    const [offer, setOffer] = useState([])
     const [value, setValue] = useState('Morning')
     const navigate = useNavigate()
     const location = useLocation()
@@ -51,6 +52,22 @@ function TurfviewIndividual() {
         }
         return arrM;
     }
+
+    useEffect(()=>{
+        const turfId = location.state.id
+            axios.get(`user/offers/edit_offers/${turfId}`,{
+                headers: {
+                    'authToken': localStorage.getItem("usertoken"),
+                }
+            })
+            .then((res)=>{
+                console.log(res.data)
+                setOffer(res.data.offer[0])
+            })
+            .catch((err)=>{
+                alert(err)
+            })
+    },[turfView])
 
     const createEveningTimeSlots = (fromTime, toTime) => {
         let startingTime = moment(fromTime, 'hh:mm ')
@@ -103,7 +120,6 @@ function TurfviewIndividual() {
         const hours = duration.asHours()
         const hoursRound = Math.round(hours)
 
-    
         if (dateFormated[0] < nowdate) {
             Toast.fire({
                 icon: 'error',
@@ -121,7 +137,23 @@ function TurfviewIndividual() {
             })
         }
 
-        const totalPrice = turfView.price * hoursRound
+        let totalPrice;
+        
+        if(offer){
+            const toDate = offer.toDate
+            console.log(toDate)
+            const offer_Percent = offer.offerPercent
+            const one = moment(toDate).isBefore(nowdate)
+            if (!one){
+                const offerPrice = turfView.price * hoursRound * offer_Percent / 100
+                totalPrice= turfView.price * hoursRound - offerPrice
+                console.log(totalPrice)
+            }else{
+                totalPrice = turfView.price * hoursRound
+            }
+        }else{
+              totalPrice = turfView.price * hoursRound 
+        }
 
         const values = {
             centerId: turfView._id,
@@ -129,7 +161,8 @@ function TurfviewIndividual() {
             date: dateFormated[0],
             startTime: startTimeHour[1],
             endTime: endTimeHour[1],
-            totalPrice: totalPrice
+            totalPrice: totalPrice,
+            offer:offer && offer.offerPercent
         }
         axios.get(`admin_panel/booking/check/?centerId=${turfView._id}&date=${dateFormated[0]}&startTime=${startTimeHour[1]}`, {
             headers: {
@@ -160,47 +193,24 @@ function TurfviewIndividual() {
 
     //className='scrollbar-hidden'
     return (
-        <Paper sx={{ m: 2, backgroundColor: 'rgba(255, 255, 255, 0.2)', borderRadius: '1px' }}>
+        <Paper sx={{ m: 2, backgroundColor: 'rgba(255, 255, 255, 0.2)', borderRadius: '10px' }}>
             <Grid container p={2}>
                 <Grid item xs={12} md={6}>
-                    <Card sx={{ height: 515, m: 1, px: 1, display: 'flex', flexDirection: 'column', backgroundColor: 'rgba(255, 255, 255, 0.87)', borderRadius: '2px' }}>
-                        <CardContent>
-                            <Typography
-                                variant="h1"
-                                textAlign='center'
-                                color='secondary'
-                                fontFamily='Atkinson Hyperlegible, sans-serif'
-                                fontWeight={600}>
-                                {turfView.centername}
-                            </Typography>
-                        </CardContent>
-                        <Box sx={{ display: 'flex' }}>
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                {/* <CardMedia
-                                    component="img"
-                                    sx={{ width: '85%', height: '25%', m: '5px 10px' }}
-                                    image={imageTwo}
-                                    alt="Live from space album cover" />
-                                <CardMedia
-                                    component="img"
-                                    sx={{ width: '85%', height: '25%', m: '5px 10px' }}
-                                    image={imageOne}
-                                    alt="Live from space album cover" />
-                                <CardMedia
-                                    component="img"
-                                    sx={{ width: '85%', height: '25%', m: '5px 10px' }}
-                                    image={imageOne}
-                                    alt="Live from space album cover" /> */}
-                            </Box>
-                            <Box>
-                                <CardMedia
-                                    component="img"
-                                    sx={{ width: 600, height: 300, m: .5 }}
-                                    image={turfView.turfPictures}
-                                    alt="Live from space album cover" />
-                            </Box>
-                        </Box>
-                        <CardContent sx={{ marginTop: '15px' }}>
+                    <Card sx={{ height: 515, m: 1, px: 0, display: 'flex', flexDirection: 'column', backgroundColor: 'rgba(255, 255, 255, 0.87)', borderRadius: '2px' }}>
+                        <CardMedia
+                            component="img"
+                            height={350}
+                            image={turfView.turfPictures}
+                            alt="Live from space album cover" />
+                        <Typography
+                        fontSize={28}
+                            textAlign='center'
+                            color='secondary'
+                            fontFamily='Atkinson Hyperlegible, sans-serif'
+                            fontWeight={900}> 
+                            {turfView.centername}
+                        </Typography>
+                        <CardContent sx={{ marginTop: '1px' }}>
                             <Typography variant="subtitle1" color="text.secondary" component="div" fontWeight={600}>
                                 Contact: {turfView.phone}
                             </Typography>
@@ -272,7 +282,6 @@ function TurfviewIndividual() {
                                     </RadioGroup>
                                 </FormControl>
                             </CardActions>
-                            {/* </CardContent> */}
                             <CardContent sx={{ marginTop: -4 }}>
                                 <Typography
                                     fontSize={15}
@@ -360,14 +369,12 @@ function TurfviewIndividual() {
                                 <Button variant='contained'
                                     color='secondary'
                                     onClick={goBack}
-                                // sx={{ marginLeft: 'auto', marginRight: 'auto' }}
                                 >
                                     Back
                                 </Button>
                                 <Button variant='contained'
                                     color='secondary'
                                     onClick={handleClick}
-                                // sx={{ marginLeft: 'auto', marginRight: 'auto' }}
                                 >
                                     Book Now
                                 </Button>

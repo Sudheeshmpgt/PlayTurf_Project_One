@@ -85,8 +85,7 @@ function AdminLogin() {
                             fontWeight={500}
                             marginTop='25px'
                             marginBottom='15px'>Play Turf</Typography>
-                            <h2 style={{ marginBottom: '10px' }}>ADMIN</h2>
-                            <h4 style={{ marginBottom: '10px' }}>SIGN IN</h4>
+                            <h2 style={{ marginBottom: '10px', fontFamily:'sans-serif' }}>ADMIN</h2>
                             <form onSubmit={handleSubmit(logOnSubmit)}>
                                 <TextField
                                     style={textStyle}

@@ -121,7 +121,7 @@ function Booking() {
                             <Typography variant='h6' component={Box} sx={{
                                 fontWeight: 700
                             }}>
-                                USER DETAILS
+                                BOOKING DETAILS
                             </Typography>
                         </Box>
                         <TableContainer className='scrollbar-hidden' component={Paper} style={{ width: '95%', margin: '-20px auto', height: 450, overflow: 'scroll' }}>
@@ -203,7 +203,7 @@ function Booking() {
                                 <Typography variant='h6' component={Box} sx={{
                                     fontWeight: 700
                                 }}>
-                                    USER DETAILS
+                                    BOOKING DETAILS
                                 </Typography>
                             </Box>
                             <TableContainer className='scrollbar-hidden' component={Paper} style={{ width: '95%', margin: '-20px auto', height: 450, overflow: 'scroll' }}>
@@ -285,7 +285,7 @@ function Booking() {
                                 <Typography variant='h6' component={Box} sx={{
                                     fontWeight: 700
                                 }}>
-                                    USER DETAILS
+                                    BOOKING DETAILS
                                 </Typography>
                             </Box>
                             <TableContainer className='scrollbar-hidden' component={Paper} style={{ width: '95%', margin: '-20px auto', height: 450, overflow: 'scroll' }}>

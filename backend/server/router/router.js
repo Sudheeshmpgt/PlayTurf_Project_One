@@ -137,4 +137,28 @@ route.post('/pay_order', verifyAuth, controller.payOrder)
 //razoypay list orders
 route.get('/list_orders', verifyAuth, controller.listOrder)
 
+//admin offer management
+route.post('/admin_panel/offer/add_offer', verifyAuth, controller.addOffer) 
+
+//admin offer management 
+route.get('/admin_panel/offers', controller.offerManagement)
+
+//admin offer status edit
+route.put('/admin_panel/offers/:id', controller.offerStatus)
+
+//admin offer edit get request
+route.get('/admin_panel/offers/edit_offers/:id', verifyAuth, controller.getOfferData)
+
+//admin offer details get updated
+route.put('/admin_panel/offers/edit_offers/:id', verifyAuth, controller.updateOfferData)
+
+//admin offer delete offer details
+route.delete('/admin_panel/offers/delete_offers/:id', verifyAuth, controller.deleteOfferData)
+
+//user get request for turf offer 
+route.get('/user/offers/edit_offers/:id', verifyAuth, controller.getOfferTurfData)
+
+//user password change
+route.put('/user/update_data', verifyAuth, controller.changePassword)
+
 module.exports = route;

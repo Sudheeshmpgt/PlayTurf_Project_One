@@ -16,7 +16,6 @@ function Cards() {
     const { turf, setTurf } = useContext(TurfContext)
     const [status, setStatus] = useState(false)
     const [favourite, setFavourite] = useState([])
-    console.log(favourite)
     const navigate = useNavigate()
     const theme = useTheme()
     const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
@@ -88,7 +87,7 @@ function Cards() {
                                 turf.map((data, index) => (
                                     <SwiperSlide>
                                         <Box>
-                                            <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 300 }}>
+                                            <Card elevation={10} varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '7px', height: 300 }}>
                                                 <CardMedia sx={{ textAlign: 'center' }}>
                                                     <img style={{ height:190, width: 320, borderRadius: 1 }}
                                                         alt='football court'
@@ -132,7 +131,7 @@ function Cards() {
                                     turf.map((data, index) => (
                                         <SwiperSlide>
                                             <Box>
-                                                <Card varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '2px', height: 270 }}>
+                                                <Card elevation={10} varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '7px', height: 270 }}>
                                                     <CardMedia sx={{ textAlign: 'center' }}>
                                                         <img style={{ height: 158, width: 260, borderRadius: 1 }}
                                                             alt='football court'
@@ -175,7 +174,7 @@ function Cards() {
                                     turf && turf.map((data, index) => (
                                         <SwiperSlide>
                                             <Box sx={{height:335}}>
-                                                <Card elevation={10} varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '8px', height: 300 }}>
+                                                <Card elevation={10} varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '7px', height: 300 }}>
                                                     <CardMedia sx={{ textAlign: 'center' }}>
                                                         <img style={{ height: 185, width: 260, borderRadius: 1 }}
                                                             alt='football court'

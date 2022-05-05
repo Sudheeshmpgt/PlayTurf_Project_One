@@ -71,8 +71,6 @@ function UserAccount() {
                         Name :
                     </Typography>
                     <Typography
-                    //  borderBottom={1}
-                    //  width={410}
                         marginLeft='10%'
                         marginTop='3px'>
                         {user ? user.name: ''}
@@ -84,8 +82,6 @@ function UserAccount() {
                         E-mail :
                     </Typography>
                     <Typography
-                    //  borderBottom={1}
-                    //  width={410}
                         marginLeft='10%'
                         marginTop='3px'>
                         {user ? user.email: ''}
@@ -97,8 +93,6 @@ function UserAccount() {
                         Phone :
                     </Typography>
                     <Typography
-                    //  borderBottom={1}
-                    //  width={410}
                         marginLeft='10%'
                         marginTop='3px'>
                         {user ? user.phone : ''}
@@ -110,8 +104,6 @@ function UserAccount() {
                         Address :
                     </Typography>
                     <Typography
-                    // borderBottom={1}
-                    // width={410}
                         marginLeft='10%'
                         marginTop='3px'>
                         {user ? user.address : ''}

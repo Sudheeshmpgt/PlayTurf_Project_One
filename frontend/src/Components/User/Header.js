@@ -84,6 +84,10 @@ function Header() {
         navigate('/myfavouritespage')
     }
 
+    const onClickPassword = () =>{
+        navigate('/updatedata')
+    }
+
     useEffect(() => {
         const token = localStorage.getItem("usertoken")
         if (!token) {
@@ -154,7 +158,7 @@ function Header() {
                                             token ? (
                                                 <>
                                                     <MenuItem onClick={handleCloseNavMenu}>
-                                                        <Typography  onClick={handleClickFavourites} textAlign="center">My Favourites</Typography>
+                                                        <Typography onClick={handleClickFavourites} textAlign="center">My Favourites</Typography>
                                                     </MenuItem>
                                                     <MenuItem onClick={handleCloseNavMenu}>
                                                         <Typography onClick={onClickAccount} textAlign="center">My Account</Typography>
@@ -214,7 +218,7 @@ function Header() {
                                                     My Favourites
                                                 </Button>
                                                 : ' '
-                                       }
+                                        }
                                     </Box >
                                     {
                                         isSmall ? (
@@ -281,13 +285,12 @@ function Header() {
                                             open={Boolean(anchorElUser)}
                                             onClose={handleCloseUserMenu}
                                         >
-                                            {
-                                                // user ?
-                                                <MenuItem onClick={handleCloseUserMenu}>
-                                                    <Typography textAlign="center" onClick={onClickAccount}>Account</Typography>
-                                                </MenuItem>
-                                                // : ''
-                                            }
+                                            <MenuItem onClick={handleCloseUserMenu}>
+                                                <Typography textAlign="center" onClick={onClickAccount}>Account</Typography>
+                                            </MenuItem>
+                                            <MenuItem onClick={handleCloseUserMenu}>
+                                                <Typography textAlign="center" onClick={onClickPassword}>Change Password</Typography>
+                                            </MenuItem>
                                             <MenuItem onClick={handleCloseUserMenu}>
                                                 <Typography textAlign="center" onClick={logout}>Logout</Typography>
                                             </MenuItem>

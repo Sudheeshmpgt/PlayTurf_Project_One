@@ -1,21 +1,23 @@
-import { Card, CardActions, CardContent, Grid, Typography, Button, Box } from '@mui/material'
+import { Card, CardActions, CardContent, Grid, Typography, Button, Box, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './TurfList.css'
 import { TurfViewContext } from '../../Store/turfviewcontext';
 import { UserContext } from '../../Store/usercontext';
-import {BookingContext} from '../../Store/bookingcontext'
+import { BookingContext } from '../../Store/bookingcontext'
 import axios from '../../axiosinstance'
 import Swal from 'sweetalert2';
+import moment from 'moment'
 
 function BookingConfirmation() {
 
     const navigate = useNavigate()
     const { turfView } = useContext(TurfViewContext)
     const { user } = useContext(UserContext)
-    const {booking} = useContext(BookingContext)
+    const { booking } = useContext(BookingContext)
     const [loading, setLoading] = useState(false)
-
+    const [value, setValue] = useState('Pay At Venue')
+    console.log(value)
 
     const userName = localStorage.getItem('userName')
     const userPhone = localStorage.getItem('userPhone')
@@ -33,63 +35,73 @@ function BookingConfirmation() {
         }
     })
 
-    function loadRazorpay(){
+    const handleChange = (e) => {
+        setValue(e.target.value)
+    }
+
+    function loadRazorpay() {
         const script = document.createElement('script')
-        script.src = 'https://checkout.razorpay.com/v1/checkout.js' 
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js'
         script.onerror = () => {
             console.log('Razorpay SDK failed to load. Are you online?');
         }
-        script.onload = async ()=>{
+        script.onload = async () => {
             try {
                 setLoading(true)
-                const result = await axios.post('create_order',{
-                    amount:booking.totalPrice + '00',
-                },{
+                const result = await axios.post('create_order', {
+                    amount: booking.totalPrice + '00',
+                }, {
                     headers: {
                         'authToken': localStorage.getItem("usertoken"),
                     }
                 })
-                const {amount, id: order_id, currency} = result.data
+                const { amount, id: order_id, currency } = result.data
                 const {
-                    data:{key:razorpayKey}
-                } = await axios.get('get_key',{
+                    data: { key: razorpayKey }
+                } = await axios.get('get_key', {
                     headers: {
                         'authToken': localStorage.getItem("usertoken"),
                     }
                 })
                 const options = {
-                    key:razorpayKey,
-                    amount:amount.toString(),
-                    currency:currency,
-                    name:'example name',
-                    description:'example transaction',
+                    key: razorpayKey,
+                    amount: amount.toString(),
+                    currency: currency,
+                    name: 'example name',
+                    description: 'example transaction',
                     order_id: order_id,
-                    handler: async function(response){
-                        const result = await axios.post('pay_order',{
+                    handler: async function (response) {
+                        const result = await axios.post('pay_order', {
                             amount: amount,
-                            razorpayPaymentId:response.razorpay_payment_id,
-                            razorpayOrderId:response.razorpay_order_id,
-                            razorpaySignature:response.razorpay_Signature,
-                        },{
+                            razorpayPaymentId: response.razorpay_payment_id,
+                            razorpayOrderId: response.razorpay_order_id,
+                            razorpaySignature: response.razorpay_Signature,
+                        }, {
                             headers: {
                                 'authToken': localStorage.getItem("usertoken"),
                             }
                         })
-                        console.log(result.data.message)
+                        .then((res)=>{
+                            const message = res.data.message
+                            console.log(message)
+                            if(message == 'Payment was successful'){
+                                bookingConfirm() 
+                            }
+                        })
                     },
                     prefill: {
                         name: 'example name',
                         email: 'email@example.com',
                         contact: '1111111111',
-                    }, notes:{
-                        address:'example address'
-                    }, theme:{
-                        color:'#FF5A09'
+                    }, notes: {
+                        address: 'example address'
+                    }, theme: {
+                        color: '#FF5A09'
                     }
                 }
                 setLoading(false)
-                const paymentObject = new window.Razorpay(options) 
-                paymentObject.open() 
+                const paymentObject = new window.Razorpay(options)
+                paymentObject.open()
             } catch (error) {
                 console.log(error)
                 setLoading(false)
@@ -98,28 +110,37 @@ function BookingConfirmation() {
         document.body.appendChild(script);
     }
 
-    const handleClick = () => {
-        const {centerId, createdBy, date, startTime} = booking
-        if(centerId && createdBy && date && startTime){
-            axios.post("admin_panel/booking/add_booking", booking, {
+    function bookingConfirm() {
+        const { centerId, createdBy, date, startTime, endTime, totalPrice } = booking
+        const values = {
+            centerId: centerId,
+            createdBy: createdBy,
+            date: date,
+            startTime: startTime,
+            endTime: endTime,
+            totalPrice: totalPrice,
+            paymentMode: value
+        }
+        if (centerId && createdBy && date && startTime) {
+            axios.post("admin_panel/booking/add_booking", values, {
                 headers: {
                     'authToken': localStorage.getItem("usertoken"),
                 }
             })
-            .then((res) => {
-                const message = res.data.message
-                Toast.fire({
-                    icon: 'success',
-                    title: message
+                .then((res) => {
+                    const message = res.data.message
+                    Toast.fire({
+                        icon: 'success',
+                        title: message
+                    })
+                    navigate('/turf')
+                }).catch((e) => {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Something went wrong'
+                    })
                 })
-                navigate('/turf')
-            }).catch((e)=>{
-                Toast.fire({
-                    icon: 'error',
-                    title: 'Something went wrong'
-                })
-            })
-        }else {
+        } else {
             Toast.fire({
                 icon: 'error',
                 title: 'Invalid credentials'
@@ -127,63 +148,22 @@ function BookingConfirmation() {
         }
     }
 
+    const handleClick = () => {
+        const type = value
+        if (type === 'Online Payment') {
+            loadRazorpay();
+        }else{
+            bookingConfirm();
+        }
+
+    }
+
     const goBack = () => {
         navigate('/turf')
     }
 
     return (
-        // <Paper sx={{ m: 2, backgroundColor: 'rgba(255, 255, 255, 0.2)', borderRadius: '1px' }}>
         <Grid container p={2}>
-            {/* <Grid item xs={12} md={6}>
-                    <Card sx={{ height: 515, m: 1, px: 1, display: 'flex', flexDirection: 'column', backgroundColor: 'rgba(255, 255, 255, 0.87)', borderRadius: '2px' }}>
-                        <CardContent>
-                            <Typography
-                                variant="h1"
-                                textAlign='center'
-                                color='secondary'
-                                fontFamily='Atkinson Hyperlegible, sans-serif'
-                                fontWeight={600}>
-                                {turfView.centername}
-                            </Typography>
-                        </CardContent>
-                        <Box sx={{ display: 'flex' }}>
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                <CardMedia
-                                    component="img"
-                                    sx={{ width: '85%', height: '25%', m: '5px 10px' }}
-                                    image={imageTwo}
-                                    alt="Live from space album cover" />
-                                <CardMedia
-                                    component="img"
-                                    sx={{ width: '85%', height: '25%', m: '5px 10px' }}
-                                    image={imageOne}
-                                    alt="Live from space album cover" />
-                                <CardMedia
-                                    component="img"
-                                    sx={{ width: '85%', height: '25%', m: '5px 10px' }}
-                                    image={imageOne}
-                                    alt="Live from space album cover" />
-                            </Box>
-                            <Box>
-                                <CardMedia
-                                    component="img"
-                                    sx={{ width: 600, height: 300, m: .5 }}
-                                    image={turfView.turfPictures}
-                                    alt="Live from space album cover" />
-                            </Box>
-                        </Box>
-                        <CardContent sx={{ marginTop: '15px' }}>
-                            <Typography variant="subtitle1" color="text.secondary" component="div" fontWeight={600}>
-                                Contact: {turfView.phone}
-                            </Typography>
-                            <Typography variant="subtitle1" color="text.secondary" component="div" fontWeight={600}>
-                                Location: {turfView.location}
-                            </Typography>
-                            <Typography variant="subtitle1" color="text.secondary" component="div" fontWeight={600}>
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid> */}
             <Grid sx={{ margin: '10px auto' }}>
                 <Card sx={{ m: 1, backgroundColor: 'rgba(255, 255, 255, 0.87)' }}>
                     <CardContent sx={{ marginTop: 2 }}>
@@ -213,7 +193,7 @@ function BookingConfirmation() {
                                 </Typography>
                             </Box>
                             <Box>
-                                <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{display:'flex'}}>
+                                <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{ display: 'flex' }}>
                                     <Box>
                                         Center Name
                                     </Box>
@@ -221,23 +201,23 @@ function BookingConfirmation() {
                                         :{turfView.centername}
                                     </Box>
                                 </Typography>
-                                <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{display:'flex'}}>
+                                <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{ display: 'flex' }}>
                                     <Box>
                                         Phone
                                     </Box>
                                     <Box marginLeft={8.8}>
-                                    :{turfView.phone}
+                                        :{turfView.phone}
                                     </Box>
                                 </Typography>
-                                <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{display:'flex'}}>
+                                <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{ display: 'flex' }}>
                                     <Box>
                                         Address
                                     </Box>
                                     <Box marginLeft={7.2}>
-                                    :{turfView.location}
+                                        :{turfView.location}
                                     </Box>
                                 </Typography>
-                            </Box> 
+                            </Box>
                         </CardContent>
                     </CardContent>
                     <CardContent sx={{ marginTop: -3.5 }}>
@@ -258,7 +238,7 @@ function BookingConfirmation() {
                                 </Typography>
                             </Box>
                             <Box>
-                                <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{display:'flex'}}>
+                                <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{ display: 'flex' }}>
                                     <Box>
                                         Date
                                     </Box>
@@ -266,7 +246,7 @@ function BookingConfirmation() {
                                         :{booking.date}
                                     </Box>
                                 </Typography>
-                                <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{display:'flex'}}>
+                                <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{ display: 'flex' }}>
                                     <Box>
                                         Time
                                     </Box>
@@ -274,15 +254,15 @@ function BookingConfirmation() {
                                         :{`${booking.startTime} to ${booking.endTime}`}
                                     </Box>
                                 </Typography>
-                                <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{display:'flex'}}>
+                                <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{ display: 'flex' }}>
                                     <Box>
                                         Offers
                                     </Box>
                                     <Box marginLeft={8.8}>
-                                        :Nill
+                                        :{booking.offer? `${booking.offer}%` : 'Nill'}
                                     </Box>
                                 </Typography>
-                                <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{display:'flex'}}>
+                                <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{ display: 'flex' }}>
                                     <Box>
                                         Total Amount
                                     </Box>
@@ -311,23 +291,23 @@ function BookingConfirmation() {
                                 </Typography>
                             </Box>
                             <Box>
-                                <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{display:'flex'}}>
+                                <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{ display: 'flex' }}>
                                     <Box>
                                         Name
                                     </Box>
-                                    <Box  marginLeft={9.1}>
+                                    <Box marginLeft={9.1}>
                                         :{user ? user.name : userName}
                                     </Box>
                                 </Typography>
-                                <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{display:'flex'}}>
+                                <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{ display: 'flex' }}>
                                     <Box>
                                         Phone
                                     </Box>
                                     <Box marginLeft={8.8}>
-                                    :{user ? user.phone : userPhone}
+                                        :{user ? user.phone : userPhone}
                                     </Box>
                                 </Typography>
-                                <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{display:'flex'}}>
+                                <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{ display: 'flex' }}>
                                     <Box>
                                         E-mail
                                     </Box>
@@ -342,21 +322,45 @@ function BookingConfirmation() {
                                 </Typography>
                             </Box>
                         </CardContent>
+                        <CardActions sx={{ display: 'flex', justifyContent: 'flex-start', marginTop: -2 }}>
+                            <FormControl>
+                                <FormLabel id='section-group-label'
+                                    sx={{
+                                        color: 'black',
+                                        marginBottom: 1,
+                                        fontSize: 15,
+                                        fontWeight: 600,
+                                        marginLeft: 1
+                                    }}
+                                >
+                                    Select Payment Mode
+                                </FormLabel>
+                                <RadioGroup
+                                    name='sections-group'
+                                    aria-labelledby='section-group-label'
+                                    value={value}
+                                    onChange={handleChange}
+                                    sx={{ marginLeft: 3 }}
+                                >
+                                    <FormControlLabel control={<Radio color='secondary' />} label='Pay At Venue' value='Pay At Venue' />
+                                    <FormControlLabel control={<Radio color='secondary' />} label='Online Payment' value='Online Payment' />
+                                </RadioGroup>
+                            </FormControl>
+                        </CardActions>
                         <CardActions>
-                            <Box width='100%' sx={{display:'flex', justifyContent:'space-between' }}> 
+                            <Box width='100%' sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Box>
                                     <Button variant='contained' onClick={goBack}>Back</Button>
                                 </Box>
                                 <Box>
-                                    <Button color='secondary' variant='contained' onClick={loadRazorpay}>Confirm</Button>
+                                    <Button color='secondary' variant='contained' onClick={handleClick}>Confirm</Button>
                                 </Box>
                             </Box>
                         </CardActions>
-                    </CardContent> 
+                    </CardContent>
                 </Card>
             </Grid>
         </Grid>
-        // </Paper>
     )
 }
 

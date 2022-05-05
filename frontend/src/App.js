@@ -25,6 +25,11 @@ import Bookingconfirmationpage from './Pages/Bookingconfirmationpage';
 import Mybookingpage from './Pages/Mybookingpage';
 import Bookingpage from './Pages/Bookingpage';
 import Myfavouritespage from './Pages/Myfavouritespage';
+import Offerpage from './Pages/Offerpage';
+import Offeraddpage from './Pages/Offeraddpage';
+import Offerupdatepage from './Pages/Offerupdatepage';
+import Admindashboard from './Pages/Admindashboard';
+import Changepasswordpage from './Pages/Changepasswordpage';
 
 
 
@@ -56,6 +61,11 @@ function App() {
      <Route path='/mybooking' element={ <Mybookingpage/>}/>
      <Route path='/adminbookingpage' element={ <Bookingpage/>}/>  
      <Route path='/myfavouritespage' element={ <Myfavouritespage/>}/>  
+     <Route path='/offerpage' element={ <Offerpage/>}/> 
+     <Route path='/offeradd' element={ <Offeraddpage/>}/>  
+     <Route path='/offerupdate' element={ <Offerupdatepage/>}/>  
+     <Route path='/dashboard' element={ <Admindashboard/>}/>  
+     <Route path='/updatedata' element={ <Changepasswordpage/>}/>  
    </Routes>
   );
 }

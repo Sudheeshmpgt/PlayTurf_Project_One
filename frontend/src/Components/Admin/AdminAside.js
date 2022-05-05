@@ -31,6 +31,12 @@ function AdminAside() {
     const BookingSubmit = ()=>{
         navigate('/adminbookingpage')
     }
+    const offerSubmit = () =>{
+        navigate('/offerpage')
+    }
+    const dashboardSubmit = () =>{
+        navigate('/dashboard')
+    }
 
     return (
         <Grid container>
@@ -53,7 +59,7 @@ function AdminAside() {
                         padding:5,
                     }}>
                         <Box sx={{margin:'5px 0'}}>
-                            <Button sx={{color:'black', fontWeight:600, fontSize:'1.1rem',fontFamily:'Open Sans,sans-serif'}}>
+                            <Button onClick={dashboardSubmit} sx={{color:'black', fontWeight:600, fontSize:'1.1rem',fontFamily:'Open Sans,sans-serif'}}>
                                 <HomeIcon sx={{marginRight:2}}/>
                                 Dashboard
                             </Button>
@@ -77,7 +83,7 @@ function AdminAside() {
                             </Button>
                         </Box>
                         <Box  sx={{margin:'5px 0'}}>
-                            <Button sx={{color:'black', fontWeight:600, fontSize:'1.1rem',fontFamily:'Open Sans,sans-serif'}}>
+                            <Button onClick={offerSubmit} sx={{color:'black', fontWeight:600, fontSize:'1.1rem',fontFamily:'Open Sans,sans-serif'}}>
                             <LocalOfferIcon sx={{marginRight:2}}/>
                             Offers
                             </Button>
