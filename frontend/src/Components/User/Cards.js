@@ -41,8 +41,8 @@ function Cards() {
         navigate('/turfview', { state: { id: id } })
     }
 
-    const handleCheck =(id) =>{
-       const value= !status; 
+    const handleCheck = (id) => {
+        const value = !status;
         setStatus(value)
 
         const data = {
@@ -55,16 +55,21 @@ function Cards() {
                 'authToken': localStorage.getItem("usertoken"),
             }
         })
-        .then((res)=>{
-            setFavourite(res.data.turf)
-        })
+            .then((res) => {
+                setFavourite(res.data.turf)
+            })
     }
 
     return (
         <Grid container>
             <Grid item width='83%' height={380} margin='35px auto'>
                 <Typography fomtFamily='Atkinson Hyperlegible, sans-serif'
-                    fontSize={27}
+                    sx={{
+                        fontSize: {
+                            xs: '1rem',
+                            md: '1.6rem'
+                        }
+                    }}
                     fontWeight={900}
                     color='secondary'
                     marginBottom={1}>
@@ -89,7 +94,7 @@ function Cards() {
                                         <Box>
                                             <Card elevation={10} varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '7px', height: 300 }}>
                                                 <CardMedia sx={{ textAlign: 'center' }}>
-                                                    <img style={{ height:190, width: 320, borderRadius: 1 }}
+                                                    <img style={{ height: 190, width: 320, borderRadius: 1 }}
                                                         alt='football court'
                                                         src={data.turfPictures}></img>
                                                 </CardMedia>
@@ -100,7 +105,7 @@ function Cards() {
                                                     <Grid container sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                                         <Grid item >
                                                             <Fab size='small' sx={{ marginTop: '-6px', marginLeft: 1 }}>
-                                                                <Checkbox onClick={()=>handleCheck(data._id)} size='large' icon={<FavoriteBorderIcon fontSize="large" />} checkedIcon={<FavoriteIcon checked={status} color='error' />} />
+                                                                <Checkbox onClick={() => handleCheck(data._id)} size='large' icon={<FavoriteBorderIcon fontSize="large" />} checkedIcon={<FavoriteIcon checked={status} color='error' />} />
                                                             </Fab>
                                                         </Grid>
                                                         <Grid item>
@@ -144,7 +149,7 @@ function Cards() {
                                                         <Grid container sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                                             <Grid item >
                                                                 <Fab size='small' sx={{ marginTop: '-6px', marginLeft: 1 }}>
-                                                                    <Checkbox onClick={()=>handleCheck(data._id)} size='large' icon={<FavoriteBorderIcon fontSize="large" />} checkedIcon={<FavoriteIcon checked={status} color='error' />} />
+                                                                    <Checkbox onClick={() => handleCheck(data._id)} size='large' icon={<FavoriteBorderIcon fontSize="large" />} checkedIcon={<FavoriteIcon checked={status} color='error' />} />
                                                                 </Fab>
                                                             </Grid>
                                                             <Grid item>
@@ -173,7 +178,7 @@ function Cards() {
                                 {
                                     turf && turf.map((data, index) => (
                                         <SwiperSlide>
-                                            <Box sx={{height:335}}>
+                                            <Box sx={{ height: 335 }}>
                                                 <Card elevation={10} varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '7px', height: 300 }}>
                                                     <CardMedia sx={{ textAlign: 'center' }}>
                                                         <img style={{ height: 185, width: 260, borderRadius: 1 }}
@@ -186,9 +191,9 @@ function Cards() {
                                                     <CardActions>
                                                         <Grid container sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                                             <Grid item >
-                                                                <Fab  size='small' sx={{ marginTop: '-6px', marginLeft: 1 }} >
-                                                                    <Checkbox onClick={()=>handleCheck(data._id)}  size='large' icon={<FavoriteBorderIcon fontSize="large" />} checkedIcon={<FavoriteIcon checked={status} color='error' />} />
-                                                                </Fab> 
+                                                                <Fab size='small' sx={{ marginTop: '-6px', marginLeft: 1 }} >
+                                                                    <Checkbox onClick={() => handleCheck(data._id)} size='large' icon={<FavoriteBorderIcon fontSize="large" />} checkedIcon={<FavoriteIcon checked={status} color='error' />} />
+                                                                </Fab>
                                                             </Grid>
                                                             <Grid item>
                                                                 <Button onClick={() => handleClick(data._id)} size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5 }}>Book</Button>

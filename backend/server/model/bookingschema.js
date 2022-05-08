@@ -34,6 +34,9 @@ const bookingSchema = new mongoose.Schema({
     paymentMode:{
         type:String,
         required:true
+    },
+    offer:{
+        type:Number,
     }
 })  
 

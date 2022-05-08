@@ -19,16 +19,21 @@ function Offerbanner() {
                         justifyContent: 'center'
                     }}
                     className='offer_banner'>
-                    <Box 
-                    border={1.5}
-                    width='100%'
-                    padding={0}
-                    display='flex'
-                    justifyContent='center'>
+                    <Box
+                        border={1.5}
+                        width='100%'
+                        padding={0}
+                        display='flex'
+                        justifyContent='center'>
                         <Typography
                             textAlign='center'
                             fontFamily='Atkinson Hyperlegible, sans-serif'
-                            fontSize={22}
+                            sx={{
+                                fontSize: {
+                                    sm: '1.4rem', 
+                                    xs: '0.6rem',
+                                }
+                            }}
                             p={4}>
                             50% Offer on First Booking
                         </Typography>

@@ -14,10 +14,9 @@ function BookingConfirmation() {
     const navigate = useNavigate()
     const { turfView } = useContext(TurfViewContext)
     const { user } = useContext(UserContext)
-    const { booking } = useContext(BookingContext)
+    const { booking, setBooking } = useContext(BookingContext)
     const [loading, setLoading] = useState(false)
     const [value, setValue] = useState('Pay At Venue')
-    console.log(value)
 
     const userName = localStorage.getItem('userName')
     const userPhone = localStorage.getItem('userPhone')
@@ -83,7 +82,6 @@ function BookingConfirmation() {
                         })
                         .then((res)=>{
                             const message = res.data.message
-                            console.log(message)
                             if(message == 'Payment was successful'){
                                 bookingConfirm() 
                             }
@@ -103,7 +101,6 @@ function BookingConfirmation() {
                 const paymentObject = new window.Razorpay(options)
                 paymentObject.open()
             } catch (error) {
-                console.log(error)
                 setLoading(false)
             }
         }
@@ -111,7 +108,7 @@ function BookingConfirmation() {
     }
 
     function bookingConfirm() {
-        const { centerId, createdBy, date, startTime, endTime, totalPrice } = booking
+        const { centerId, createdBy, date, startTime, endTime, totalPrice, offer } = booking
         const values = {
             centerId: centerId,
             createdBy: createdBy,
@@ -119,7 +116,8 @@ function BookingConfirmation() {
             startTime: startTime,
             endTime: endTime,
             totalPrice: totalPrice,
-            paymentMode: value
+            paymentMode: value,
+            offer: offer
         }
         if (centerId && createdBy && date && startTime) {
             axios.post("admin_panel/booking/add_booking", values, {
@@ -128,12 +126,14 @@ function BookingConfirmation() {
                 }
             })
                 .then((res) => {
+                    setBooking(res.data.booking)
                     const message = res.data.message
                     Toast.fire({
                         icon: 'success',
                         title: message
                     })
-                    navigate('/turf')
+                    localStorage.setItem("bookingId", res.data.booking._id)
+                    navigate('/preview')
                 }).catch((e) => {
                     Toast.fire({
                         icon: 'error',
@@ -155,7 +155,6 @@ function BookingConfirmation() {
         }else{
             bookingConfirm();
         }
-
     }
 
     const goBack = () => {

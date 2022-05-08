@@ -65,14 +65,13 @@ function Booking() {
                 }
             })
                 .then((res) => {
-                    console.log(res.data.booking)
                     setbooking(res.data.booking)
                     
                 }).catch(e => {
-                    console.log(e)
+                    alert(e)
                 })
         } catch (error) {
-            console.log(error)
+            alert(error)
         }
     }
 
@@ -94,7 +93,6 @@ function Booking() {
                     }
                 })
                     .then((res) => {
-                        console.log(res.data.booking)
                         setbooking(res.data.booking)
                     })
                 Swal.fire(

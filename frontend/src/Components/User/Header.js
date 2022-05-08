@@ -69,7 +69,7 @@ function Header() {
     }
 
     const onClickAccount = () => {
-        navigate('/useraccount')
+        navigate('/account')
     }
 
     const handleClick = () => {
@@ -77,15 +77,11 @@ function Header() {
     }
 
     const handleClickBooking = () => {
-        navigate('/mybooking')
+        navigate('/bookings')
     }
 
     const handleClickFavourites = () => {
-        navigate('/myfavouritespage')
-    }
-
-    const onClickPassword = () =>{
-        navigate('/updatedata')
+        navigate('/favourites')
     }
 
     useEffect(() => {
@@ -159,9 +155,6 @@ function Header() {
                                                 <>
                                                     <MenuItem onClick={handleCloseNavMenu}>
                                                         <Typography onClick={handleClickFavourites} textAlign="center">My Favourites</Typography>
-                                                    </MenuItem>
-                                                    <MenuItem onClick={handleCloseNavMenu}>
-                                                        <Typography onClick={onClickAccount} textAlign="center">My Account</Typography>
                                                     </MenuItem>
                                                     <MenuItem onClick={handleCloseNavMenu}>
                                                         <Typography onClick={logout} textAlign="center">Logout</Typography>
@@ -260,7 +253,7 @@ function Header() {
 
                                 </Box>
                                 {
-                                    token ? <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
+                                  !isSmall &&  token ? <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
                                         <Tooltip title="Open settings">
                                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, color: 'white' }}>
                                                 <Typography>
@@ -287,9 +280,6 @@ function Header() {
                                         >
                                             <MenuItem onClick={handleCloseUserMenu}>
                                                 <Typography textAlign="center" onClick={onClickAccount}>Account</Typography>
-                                            </MenuItem>
-                                            <MenuItem onClick={handleCloseUserMenu}>
-                                                <Typography textAlign="center" onClick={onClickPassword}>Change Password</Typography>
                                             </MenuItem>
                                             <MenuItem onClick={handleCloseUserMenu}>
                                                 <Typography textAlign="center" onClick={logout}>Logout</Typography>

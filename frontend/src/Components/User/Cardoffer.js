@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Grid, CardActions, Button, Typography, CardMedia, useTheme, useMediaQuery } from '@mui/material'
+import { Card, Grid, CardActions, Button, Typography, CardMedia, useTheme, useMediaQuery, Avatar } from '@mui/material'
 import { Box } from '@mui/system'
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Pagination } from "swiper";
 import axios from '../../axiosinstance'
 import { useNavigate } from 'react-router-dom';
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
 
 function CardFavourite() {
     const [offer, setOffer] = useState([])
+    console.log(offer)
     const navigate = useNavigate()
     const theme = useTheme()
     const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
@@ -39,7 +41,12 @@ function CardFavourite() {
         <Grid container>
             <Grid item width='83%' height={380} margin='35px auto'>
                 <Typography fomtFamily='Atkinson Hyperlegible, sans-serif'
-                    fontSize={27}
+                    sx={{
+                        fontSize:{
+                            xs:'1rem',
+                            md:'1.6rem'
+                        }
+                    }}
                     fontWeight={900}
                     color='secondary'
                     marginBottom={1}>
@@ -61,7 +68,12 @@ function CardFavourite() {
                                 offer.map((data, index) => (
                                     <SwiperSlide>
                                         <Box>
-                                            <Card elevation={10} varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '7px', height: 370 }}>
+                                            <Card elevation={10} varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '7px', height: 320 }}>
+                                                <Avatar elevation={10} sx={{ height: 75, width: 75, backgroundColor: 'rgba(15, 255, 79, 0.9)', mb: -7.5, ml: -2, mt: -2 }}>
+                                                    <Typography fontSize={18} fontWeight={700} fontFamily='sans-serif' ml={1.5} mt={1}>
+                                                        {data.offerPercent}%
+                                                    </Typography>
+                                                </Avatar>
                                                 <CardMedia sx={{ textAlign: 'center' }}>
                                                     <img style={{ height: 190, width: 320, borderRadius: 1 }}
                                                         alt='football court'
@@ -71,15 +83,18 @@ function CardFavourite() {
                                                     {data.turfDetails[0].centername}
                                                 </Typography>
                                                 <CardActions>
-                                                    <Grid container sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                                                        <Grid item >
-                                                            <Typography textAlign='center' >
-                                                                {`${data.offerPercent}% OFF on ${data.turfDetails[0].category} grounds`}
+                                                    <Grid container sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                                                        <Box display='flex' justifyContent='center'>
+                                                            <Typography textAlign='center' fontSize={21} fontWeight={700} color='green'>
+                                                                <CurrencyRupeeIcon />{data.turfDetails[0].price - data.turfDetails[0].price * data.offerPercent / 100}
                                                             </Typography>
-                                                        </Grid>
-                                                        <Grid item>
-                                                            <Button onClick={()=>handleClick(data.turfDetails[0]._id)} size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop: 1 }}>Book</Button>
-                                                        </Grid>
+                                                            <Typography textAlign='center' fontSize={15} color='text.secondary' sx={{ textDecoration: 'line-through' }} >
+                                                                <CurrencyRupeeIcon />{data.turfDetails[0].price}
+                                                            </Typography>
+                                                        </Box>
+                                                        <Box m='1px auto'>
+                                                            <Button onClick={() => handleClick(data.turfDetails[0]._id)} size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop: 1 }}>Book Now</Button>
+                                                        </Box>
                                                     </Grid>
                                                 </CardActions>
                                             </Card>
@@ -105,7 +120,12 @@ function CardFavourite() {
                                     offer.map((data, index) => (
                                         <SwiperSlide>
                                             <Box>
-                                                <Card elevation={10} varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '7px', height: 300 }}>
+                                                <Card elevation={10} varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '7px', height: 310 }}>
+                                                    <Avatar elevation={10} sx={{ height: 75, width: 75, backgroundColor: 'rgba(15, 255, 79, 0.9)', mb: -7.5, ml: -2, mt: -2 }}>
+                                                        <Typography fontSize={18} fontWeight={700} fontFamily='sans-serif' ml={1.5} mt={1}>
+                                                            {data.offerPercent}%
+                                                        </Typography>
+                                                    </Avatar>
                                                     <CardMedia sx={{ textAlign: 'center' }}>
                                                         <img style={{ height: 190, width: 320, borderRadius: 1 }}
                                                             alt='football court'
@@ -115,15 +135,18 @@ function CardFavourite() {
                                                         {data.turfDetails[0].centername}
                                                     </Typography>
                                                     <CardActions>
-                                                        <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
-                                                            <Grid item >
-                                                                <Typography textAlign='center' fontSize={15} >
-                                                                    {`${data.offerPercent}% OFF on ${data.turfDetails[0].category} grounds`}
+                                                        <Grid container sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                                                            <Box display='flex' justifyContent='center'>
+                                                                <Typography textAlign='center' fontSize={18} fontWeight={700} color='green'>
+                                                                    <CurrencyRupeeIcon />{data.turfDetails[0].price - data.turfDetails[0].price * data.offerPercent / 100}
                                                                 </Typography>
-                                                            </Grid>
-                                                            <Grid item>
-                                                                <Button onClick={()=>handleClick(data.turfDetails[0]._id)} size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop: 1 }}>Book</Button>
-                                                            </Grid>
+                                                                <Typography textAlign='center' fontSize={13} color='text.secondary' sx={{ textDecoration: 'line-through' }} >
+                                                                    <CurrencyRupeeIcon />{data.turfDetails[0].price}
+                                                                </Typography>
+                                                            </Box>
+                                                            <Box m='1px auto'>
+                                                                <Button onClick={() => handleClick(data.turfDetails[0]._id)} size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop: 1 }}>Book Now</Button>
+                                                            </Box>
                                                         </Grid>
                                                     </CardActions>
                                                 </Card>
@@ -149,25 +172,34 @@ function CardFavourite() {
                                         <SwiperSlide>
                                             <Box>
                                                 <Card elevation={10} varient='outlined' sx={{ backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '7px', height: 325 }}>
+                                                    <Avatar elevation={10} sx={{ height: 75, width: 75, backgroundColor: 'rgba(15, 255, 79, 0.9)', mb: -7.5, ml: -2, mt: -2 }}>
+                                                        <Typography fontSize={18} fontWeight={700} fontFamily='sans-serif' ml={1.5} mt={1}>
+                                                            {data.offerPercent}%
+                                                        </Typography>
+                                                    </Avatar>
                                                     <CardMedia
                                                         sx={{ textAlign: 'center' }}>
                                                         <img style={{ height: 190, width: 320, borderRadius: 1 }}
                                                             alt='football court'
                                                             src={data.turfDetails[0].turfPictures[0]}></img>
                                                     </CardMedia>
+
                                                     <Typography variant='h3' sx={{ marginTop: 0.5, marginBottom: 0.5, textAlign: 'center', fontWeight: 900, color: 'black' }}>
                                                         {data.turfDetails[0].centername}
                                                     </Typography>
                                                     <CardActions>
-                                                        <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
-                                                            <Grid item >
-                                                                <Typography textAlign='center' >
-                                                                    {`${data.offerPercent}% OFF on ${data.turfDetails[0].category} grounds`}
+                                                        <Grid container sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                                                            <Box display='flex' justifyContent='center'>
+                                                                <Typography textAlign='center' fontSize={21} fontWeight={700} color='green'>
+                                                                    <CurrencyRupeeIcon />{data.turfDetails[0].price - data.turfDetails[0].price * data.offerPercent / 100}
                                                                 </Typography>
-                                                            </Grid>
-                                                            <Grid item>
-                                                                <Button onClick={()=>handleClick(data.turfDetails[0]._id)} size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop: 1 }}>Book</Button>
-                                                            </Grid>
+                                                                <Typography textAlign='center' fontSize={15} color='text.secondary' sx={{ textDecoration: 'line-through' }} >
+                                                                    <CurrencyRupeeIcon />{data.turfDetails[0].price}
+                                                                </Typography>
+                                                            </Box>
+                                                            <Box m='1px auto'>
+                                                                <Button onClick={() => handleClick(data.turfDetails[0]._id)} size="small" variant="contained" color='secondary' sx={{ color: 'black', fontSize: '0.9rem', fontWeight: 800, marginRight: 1.5, marginTop: 1 }}>Book Now</Button>
+                                                            </Box>
                                                         </Grid>
                                                     </CardActions>
                                                 </Card>

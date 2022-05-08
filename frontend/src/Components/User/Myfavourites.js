@@ -1,4 +1,4 @@
-import { Card, CardActions, CardContent, CardMedia, Grid, Typography, Button, Box, Paper } from '@mui/material'
+import { Card, CardActions, CardContent, CardMedia, Grid, Typography, Button, Box } from '@mui/material'
 import axios from '../../axiosinstance'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'

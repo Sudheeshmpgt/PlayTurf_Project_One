@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Button, Grid, Paper, TextField, useTheme, useMediaQuery, Avatar, IconButton } from '@mui/material'
+import { Button, Grid, Paper, TextField, useTheme, useMediaQuery, Avatar, IconButton, Fab } from '@mui/material'
 import { styled } from '@mui/material/styles';
 import { useForm } from 'react-hook-form'
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
@@ -96,7 +96,7 @@ function UserAccountEdit() {
     }
 
     const goBack = () => {
-        navigate('/useraccount')
+        navigate('/account')
     }
 
     const changeImage = (e)=>{
@@ -115,7 +115,7 @@ function UserAccountEdit() {
             height: 'auto',
             width: 280,
             margin: "50px auto",
-            borderRadius: '2px'
+            borderRadius: '20px 0 20px 0',
         }
     } else {
         paperStyle = {
@@ -123,12 +123,12 @@ function UserAccountEdit() {
             height: 'auto',
             width: 500,
             margin: "50px auto",
-            borderRadius: '2px',
+            borderRadius: '25px 0 25px 0',
             backgroundColor: 'rgba(255, 255, 255, 0.8)'
         }
     }
 
-    const avatarStyle = { margin: 15, height: 100, width: 100, }
+    const avatarStyle = { margin: 15, height: 125, width: 125, }
     const textStyle = { margin: '6px auto' }
     return (
         <Grid container width='100%'>
@@ -146,7 +146,8 @@ function UserAccountEdit() {
             <Paper style={paperStyle}>
                 <Grid align='center'>
                     <Avatar style={avatarStyle}><img alt='profile' src={image ? URL.createObjectURL(image) : users.userImg }></img></Avatar> 
-                    <label htmlFor="icon-button-file" >
+                    <Fab size='small' sx={{marginLeft:'60px', marginTop:'-65px',}}>
+                        <label htmlFor="icon-button-file" >
                         <Input accept="image/*" 
                         id="icon-button-file" 
                         type="file"
@@ -154,9 +155,10 @@ function UserAccountEdit() {
                             onChange={changeImage}
                          />
                         <IconButton color="primary" aria-label="upload picture" component="span">
-                            <PhotoCamera style={{marginLeft:'60px', marginTop:'-65px', fontSize:30}}/>
+                            <PhotoCamera style={{ fontSize:25}}/>
                         </IconButton>
                     </label>
+                    </Fab>
                     <form onSubmit={handleSubmit(Edit)}>
                         <TextField
                             {...register('name', {

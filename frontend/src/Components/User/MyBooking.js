@@ -7,10 +7,13 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { Box } from '@mui/system'
 import Swal from 'sweetalert2';
 import './MyBooking.css'
+import { useNavigate } from 'react-router-dom';
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 
 function MyBooking() {
     const [bookingData, setBookingData] = useState([])
     const { user } = useContext(UserContext)
+    const navigate = useNavigate() 
     const userId = localStorage.getItem("userId")
 
     const Toast = Swal.mixin({
@@ -37,6 +40,11 @@ function MyBooking() {
                 setBookingData(value)
             })
     }
+
+    const handleView = (id) => {
+        localStorage.setItem("bookingId", id)
+        navigate('/preview')
+    } 
 
     const handleCancel = (id) => {
         const bookingId = id
@@ -144,13 +152,13 @@ function MyBooking() {
                                 {data.turfDetails[0].category}
                             </Box>
                             <Box sx={{ width: 100, margin: 3, textAlign: 'center' }}>
-                                {data.totalPrice}
+                                <CurrencyRupeeIcon/>{data.totalPrice}
                             </Box>
                             <Box sx={{ width: 100, margin: 3, textAlign: 'center' }}>
                                 {data.status}
                             </Box>
                             <CardActions sx={{ width: 60 }}>
-                                <Fab size='small' color='primary' >
+                                <Fab size='small' color='primary' onClick={() => handleView(data._id)} >
                                     <RemoveRedEyeIcon sx={{ fontSize: 27 }} />
                                 </Fab>
                             </CardActions>
@@ -162,7 +170,6 @@ function MyBooking() {
                                             <CancelIcon sx={{ fontSize: 27 }} />
                                         </Fab>
                                 }
-
                             </CardActions>
                         </Card>
                     ))}

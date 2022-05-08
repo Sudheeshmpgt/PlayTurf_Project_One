@@ -1,9 +1,9 @@
 import React from 'react'
 import {
-    Button, Grid,
-    Link, Paper,
+    Button, Fab, Grid,
+    IconButton,
+    Paper,
     TextField,
-    Typography,
     useMediaQuery,
     useTheme
 } from '@mui/material'
@@ -12,6 +12,8 @@ import { useForm } from 'react-hook-form'
 import axios from '../../axiosinstance'
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import LockResetIcon from '@mui/icons-material/LockReset';
 
 function Passwordchange() {
     const navigate = useNavigate()
@@ -66,35 +68,51 @@ function Passwordchange() {
         }
     }
 
+    const goBack = () => {
+        navigate('/account')
+    }
+
     let paperStyle
     if (isMatch) {
         paperStyle = {
-            backgroundColor: 'rgba(255, 255, 255, 0.7)',
             padding: 20,
             height: 'auto',
             width: 280,
             margin: "50px auto",
-            borderRadius: '2px'
+            borderRadius: '20px 0 20px 0',
         }
     } else {
         paperStyle = {
-            backgroundColor: 'rgba(255, 255, 255, 0.8)',
             padding: 20,
             height: 'auto',
-            width: 500,
+            width: 400,
             margin: "50px auto",
-            borderRadius: '2px',
+            borderRadius: '20px 0 20px 0',
+            backgroundColor: 'rgba(255, 255, 255, 0.8)'
         }
     }
 
-    const textStyle = { margin: '6px auto' }
+    const textStyle = { margin: '10px auto' }
   return (
     <Grid container>
+         <Grid>
+                <IconButton
+                    variant='text'
+                    onClick={goBack}
+                    sx={{
+                        marginTop: '10%',
+                        color: 'white'
+                    }}>
+                    <ArrowBackIcon /> Go Back
+                </IconButton>
+            </Grid>
             <Grid item xs={12}>
                 <Box>
                     <Paper elevation={3} style={paperStyle} sx={{ display: 'flex' }}>
                         <Grid align='center'>
-                            <h2 style={{ marginBottom: '10px', fontFamily: 'sans-serif', fontWeight: 700 }}></h2>
+                            <Fab color='secondary' sx={{m:3}}> 
+                                <LockResetIcon size='small' sx={{fontSize:35}}/> 
+                            </Fab>
                             <form onSubmit={handleSubmit(changeOnSubmit)} autoComplete='off'>
                                 <TextField
                                     style={textStyle}

@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname,'public')));
 require('./server/database/database')();
 
 //calling routes
-app.use('/',require('./server/router/router'));
+app.use('/', require('./server/router/router'));
 
 app.listen(PORT,()=>{
     console.log("Server started at http://localhost:9000");

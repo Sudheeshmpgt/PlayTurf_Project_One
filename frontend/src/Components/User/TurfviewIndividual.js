@@ -12,6 +12,9 @@ import axios from '../../axiosinstance'
 import moment from 'moment'
 import { BookingContext } from '../../Store/bookingcontext';
 import Swal from 'sweetalert2';
+import MyLocationIcon from '@mui/icons-material/MyLocation';
+import CallIcon from '@mui/icons-material/Call';
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 
 function TurfviewIndividual() {
     const [date, setDate] = useState(null);
@@ -19,6 +22,8 @@ function TurfviewIndividual() {
     const [endTime, setEndTime] = useState(null);
     const [morningTimeslots, setMorningTimeslots] = useState([])
     const [eveningTimeslots, setEveningTimeslots] = useState([])
+    const [prevBooking, setPrevBooking] = useState([])
+    const [prevTime, setPrevTime] = useState([])
     const [offer, setOffer] = useState([])
     const [value, setValue] = useState('Morning')
     const navigate = useNavigate()
@@ -40,44 +45,61 @@ function TurfviewIndividual() {
     })
 
     const createMorningTimeSlots = (fromTime, toTime) => {
-        let startingTime = moment(fromTime, 'hh:mm ')
-        let endingTime = moment(toTime, 'hh:mm ')
+        let startingTime = moment(fromTime, 'hh:mm A')
+        let endingTime = moment(toTime, 'hh:mm A')
         if (endingTime.isBefore(startingTime)) {
             endingTime.add(1, 'day')
         }
         let arrM = [];
         while (startingTime <= endingTime) {
-            arrM.push(new moment(startingTime).format('hh:mm '));
+            arrM.push(new moment(startingTime).format('hh:mm A'));
             startingTime.add(60, 'minutes');
         }
         return arrM;
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         const turfId = location.state.id
-            axios.get(`user/offers/edit_offers/${turfId}`,{
-                headers: {
-                    'authToken': localStorage.getItem("usertoken"),
-                }
-            })
-            .then((res)=>{
-                console.log(res.data)
+        axios.get(`user/offers/edit_offers/${turfId}`, {
+            headers: {
+                'authToken': localStorage.getItem("usertoken"),
+            }
+        })
+            .then((res) => {
                 setOffer(res.data.offer[0])
             })
-            .catch((err)=>{
+            .catch((err) => {
                 alert(err)
             })
-    },[turfView])
+    }, [turfView])
+
+    useEffect(() => {
+        const turfId = location.state.id
+        const formatDate = moment(date).format('DD-MM-YYYY')
+        let arr = []
+        arr = prevBooking.filter((data) => {
+            if (data.centerId == turfId) {
+                return data
+            }
+        })
+
+        let dateArr = arr.map((data) => {
+            if (data.date == formatDate)
+                return data.startTime
+        })
+        setPrevTime(dateArr)
+
+    }, [date])
 
     const createEveningTimeSlots = (fromTime, toTime) => {
-        let startingTime = moment(fromTime, 'hh:mm ')
-        let endingTime = moment(toTime, 'hh:mm ')
+        let startingTime = moment(fromTime, 'hh:mm A')
+        let endingTime = moment(toTime, 'hh:mm A')
         if (endingTime.isBefore(startingTime)) {
             endingTime.add(1, 'day')
         }
         let arrE = [];
         while (startingTime <= endingTime) {
-            arrE.push(new moment(startingTime).format('hh:mm '));
+            arrE.push(new moment(startingTime).format('hh:mm A'));
             startingTime.add(60, 'minutes');
         }
         return arrE;
@@ -97,23 +119,32 @@ function TurfviewIndividual() {
             .then((res) => {
                 setTurfView(res.data.turf[0])
             })
+
+        axios.get("/admin_panel/booking",
+            {
+                headers: {
+                    'authToken': localStorage.getItem("usertoken")
+                }
+            })
+            .then((res) => {
+                setPrevBooking(res.data.booking)
+            })
     }, [])
 
     const userId = localStorage.getItem("userId")
 
-
     const handleClick = () => {
-
+        
         if (date == null || startTime == null || endTime == null) {
             Toast.fire({
                 icon: 'error',
                 title: 'Please choose valid date and Time'
             })
         }
-
+        let totalPrice;
         const dateFormated = moment(date).format('DD-MM-YYYY HH:MM:SS').split(' ')
-        const startTimeHour = moment(startTime).format('DD-MM-YYYY HH:MM').split(' ')
-        const endTimeHour = moment(endTime).format('DD-MM-YYYY HH:MM').split(' ')
+        const startTimeHour = moment(startTime).format('hh:mm A')
+        const endTimeHour = moment(endTime).format('hh:mm A')
         const nowdate = moment().format('DD-MM-YYYY')
         const startHour = moment(startTime).format('DD-MM-YYYY hh').split(' ')
         const duration = moment.duration(endTime.diff(startTime) + 0.2)
@@ -125,7 +156,14 @@ function TurfviewIndividual() {
                 icon: 'error',
                 title: 'Please choose valid date'
             })
-        } else if ((endTimeHour[1] === startTimeHour[1])) {
+        }else if(nowdate === dateFormated[0]){
+            if (moment(startTime).isBefore(date)){
+            Toast.fire({
+                icon: 'error',
+                title: 'Please choose valid time'
+            })
+        }
+        }else if ((endTimeHour === startTimeHour)) {
             Toast.fire({
                 icon: 'error',
                 title: 'Please choose valid time'
@@ -135,52 +173,62 @@ function TurfviewIndividual() {
                 icon: 'error',
                 title: 'Please choose valid time'
             })
-        }
-
-        let totalPrice;
-        
-        if(offer){
-            const toDate = offer.toDate
-            console.log(toDate)
-            const offer_Percent = offer.offerPercent
-            const one = moment(toDate).isBefore(nowdate)
-            if (!one){
-                const offerPrice = turfView.price * hoursRound * offer_Percent / 100
-                totalPrice= turfView.price * hoursRound - offerPrice
-                console.log(totalPrice)
-            }else{
+        } else if (prevTime.includes(startTimeHour)) {
+            Toast.fire({
+                icon: 'error',
+                title: 'Slot is Already Booked'
+            })
+        }else if(hours > 3){
+            Toast.fire({
+                icon: 'warning',
+                title: 'Maximum booking time is 3 hours'
+            })
+        }else {
+            if (offer) {
+                const toDate = offer.toDate
+                const offer_Percent = offer.offerPercent
+                const one = moment(toDate).isBefore(nowdate)
+                if (!one) {
+                    const offerPrice = turfView.price * hoursRound * offer_Percent / 100
+                    totalPrice = turfView.price * hoursRound - offerPrice
+                    console.log(totalPrice)
+                } else {
+                    totalPrice = turfView.price * hoursRound
+                }
+            } else {
                 totalPrice = turfView.price * hoursRound
             }
-        }else{
-              totalPrice = turfView.price * hoursRound 
-        }
 
-        const values = {
-            centerId: turfView._id,
-            createdBy: user ? user._id : userId,
-            date: dateFormated[0],
-            startTime: startTimeHour[1],
-            endTime: endTimeHour[1],
-            totalPrice: totalPrice,
-            offer:offer && offer.offerPercent
-        }
-        axios.get(`admin_panel/booking/check/?centerId=${turfView._id}&date=${dateFormated[0]}&startTime=${startTimeHour[1]}`, {
-            headers: {
-                'authToken': localStorage.getItem("usertoken"),
+            const values = {
+                centerId: turfView._id,
+                createdBy: user ? user._id : userId,
+                date: dateFormated[0],
+                startTime: startTimeHour,
+                endTime: endTimeHour,
+                totalPrice: totalPrice,
+                offer: offer && offer.offerPercent
             }
-        })
-            .then((res) => {
-                if (res.data.message) {
-                    setBooking(values)
-                    navigate('/bookingpage')
-                } else {
-                    const message = res.data.error
-                    Toast.fire({
-                        icon: 'warning',
-                        title: message
-                    })
+            axios.get(`admin_panel/booking/check/?centerId=${turfView._id}&date=${dateFormated[0]}&startTime=${startTimeHour[1]}`, {
+                headers: {
+                    'authToken': localStorage.getItem("usertoken"),
                 }
             })
+                .then((res) => {
+                    if (res.data.message) {
+                        setBooking(values)
+                        navigate('/bookingpage')
+                    } else {
+
+                        const message = res.data.error
+                        Toast.fire({
+                            icon: 'warning',
+                            title: message
+                        })
+                    }
+                }).catch((err) => {
+                    console.log(err)
+                })
+        }
     }
 
     const handleChange = (e) => {
@@ -201,24 +249,38 @@ function TurfviewIndividual() {
                             component="img"
                             height={350}
                             image={turfView.turfPictures}
-                            alt="Live from space album cover" />
+                            alt="turf image" />
                         <Typography
-                        fontSize={28}
+                            fontSize={28}
                             textAlign='center'
                             color='secondary'
                             fontFamily='Atkinson Hyperlegible, sans-serif'
-                            fontWeight={900}> 
+                            fontWeight={900}
+                            mt={2.5}>
                             {turfView.centername}
                         </Typography>
-                        <CardContent sx={{ marginTop: '1px' }}>
-                            <Typography variant="subtitle1" color="text.secondary" component="div" fontWeight={600}>
-                                Contact: {turfView.phone}
-                            </Typography>
-                            <Typography variant="subtitle1" color="text.secondary" component="div" fontWeight={600}>
-                                Location: {turfView.location}
-                            </Typography>
-                            <Typography variant="subtitle1" color="text.secondary" component="div" fontWeight={600}>
-                            </Typography>
+                        <CardContent sx={{ marginTop: '1px', display: 'flex', justifyContent: 'space-between' }}>
+                            <Box>
+                                <Box display='flex'>
+                                    <CallIcon color='secondary' sx={{ fontSize: 22, mt: 0.4 }} />
+                                    <Typography variant="subtitle1" color="text.primary" component="div" fontWeight={600} ml={1.3}>
+                                        {turfView.phone}
+                                    </Typography>
+                                </Box>
+                                <Box display='flex' mt={1}>
+                                    <MyLocationIcon color='secondary' sx={{ fontSize: 22, mt: 0.4 }} />
+                                    <Typography variant="subtitle1" color="text.primary" component="div" fontWeight={600} ml={1.3}>
+                                        {turfView.location}
+                                    </Typography>
+                                </Box>
+                            </Box>
+                            <Box display='flex'>
+                                <CurrencyRupeeIcon sx={{ fontSize: 22, mt: 0.4 }} />
+                                <Typography variant="subtitle1" color="text.primary" component="div" fontWeight={600}>
+                                    {turfView.price}
+                                </Typography>
+                            </Box>
+
                         </CardContent>
                     </Card>
                 </Grid>
@@ -293,19 +355,37 @@ function TurfviewIndividual() {
                                     {
                                         value === 'Morning' ? (
                                             morningTimeslots.map((data, index) => (
-                                                <Paper
-                                                    component="span"
-                                                    sx={{ margin: 1, backgroundColor: 'secondary.light', p: 1, fontFamily: 'sans-serif' }}>
-                                                    {data}
-                                                </Paper>
+                                                <Box>
+                                                    <Button
+                                                        component='button'
+                                                        m={0.5}
+                                                        disabled={prevTime.includes(data)}
+                                                        color='secondary'
+                                                    >
+                                                        <Typography
+                                                            fontSize={14.5}
+                                                            fontWeight={600}>
+                                                            {data}
+                                                        </Typography>
+                                                    </Button>
+                                                </Box>
                                             ))) : (
                                             value === 'Evening' ? (
                                                 eveningTimeslots.map((data, index) => (
-                                                    <Paper
-                                                        component="span"
-                                                        sx={{ margin: 1, backgroundColor: 'secondary.light', p: 1, fontFamily: 'sans-serif' }}>
-                                                        {data}
-                                                    </Paper>
+                                                    <Box>
+                                                        <Button
+                                                            component='button'
+                                                            m={0.5}
+                                                            disabled={prevTime.includes(data)}
+                                                            color='secondary'
+                                                        >
+                                                            <Typography
+                                                                fontSize={14.5}
+                                                                fontWeight={600}>
+                                                                {data}
+                                                            </Typography>
+                                                        </Button>
+                                                    </Box>
                                                 ))) :
                                                 (
                                                     <Typography>No available time slots</Typography>
@@ -343,7 +423,7 @@ function TurfviewIndividual() {
                                         }}
                                         renderInput={(params) => <TextField {...params} />}
                                         shouldDisableTime={(timeValue, clockType) => {
-                                            if (clockType === 'minutes' && timeValue % 30) {
+                                            if (clockType === 'minutes' && timeValue % 60) {
                                                 return true;
                                             }
                                             return false;
