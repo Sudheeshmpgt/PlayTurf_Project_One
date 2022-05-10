@@ -10,22 +10,26 @@ exports.googleLogin = async (req, res) => {
         client.verifyIdToken({ idToken: tokenId, audience: config.GOOGLE_CLIENT_ID })
             .then(response => {
                 const { email_verified, name, email } = response.payload;
+                
                 if (email_verified) {
                     UserModel.findOne({ email }).exec((err, user) => {
                         if (err) {
                             return res.status(400).json({ message: "Something went wrong..." })
                         } else {
                             if (user) {
-                                const token = user.generateAuthToken();
-                                res.cookie("jwtoken", token, {
-                                    expiresIn: '1h',
-                                    httpOnly: true
-                                });
-                                res.send({ message: "Login Successfull", user: user })
+                                (async ()=>{
+                                    const token = await user.generateAuthToken()
+                                    res.cookie("jwtoken", token, {
+                                        expiresIn: '1h',
+                                        httpOnly: true
+                                    })
+                                    res.send({ message: "Login Successfull", user: user, token: token })
+                                })()
                             } else {
                                 return res.status(400).json({ message: "Something went wrong..." })
                             }
                         }
+                        
                     })
                 }
 

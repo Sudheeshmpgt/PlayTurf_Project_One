@@ -25,6 +25,7 @@ function TurfviewIndividual() {
     const [prevBooking, setPrevBooking] = useState([])
     const [prevTime, setPrevTime] = useState([])
     const [offer, setOffer] = useState([])
+    const [firstOffer, setFirstOffer] = useState('')
     const [value, setValue] = useState('Morning')
     const navigate = useNavigate()
     const location = useLocation()
@@ -142,6 +143,18 @@ function TurfviewIndividual() {
             })
         }
         let totalPrice;
+        
+        axios.get(`user/check_first_offer/?id=${userId}`,{
+            headers: {
+                'authToken': localStorage.getItem("usertoken"),
+            }
+        })
+        .then((res)=>{
+            if(res.data.message === 'Eligible'){
+                setFirstOffer(50)
+            }
+        })
+
         const dateFormated = moment(date).format('DD-MM-YYYY HH:MM:SS').split(' ')
         const startTimeHour = moment(startTime).format('hh:mm A')
         const endTimeHour = moment(endTime).format('hh:mm A')
@@ -156,13 +169,11 @@ function TurfviewIndividual() {
                 icon: 'error',
                 title: 'Please choose valid date'
             })
-        }else if(nowdate === dateFormated[0]){
-            if (moment(startTime).isBefore(date)){
+        }else if(nowdate == dateFormated[0] && (moment(startTime).isBefore(date))){
             Toast.fire({
                 icon: 'error',
                 title: 'Please choose valid time'
             })
-        }
         }else if ((endTimeHour === startTimeHour)) {
             Toast.fire({
                 icon: 'error',
@@ -191,12 +202,16 @@ function TurfviewIndividual() {
                 if (!one) {
                     const offerPrice = turfView.price * hoursRound * offer_Percent / 100
                     totalPrice = turfView.price * hoursRound - offerPrice
-                    console.log(totalPrice)
                 } else {
                     totalPrice = turfView.price * hoursRound
                 }
             } else {
                 totalPrice = turfView.price * hoursRound
+            }
+            
+            if(firstOffer){
+               const offerPrice = turfView.price * hoursRound * firstOffer / 100
+                totalPrice = turfView.price * hoursRound - offerPrice
             }
 
             const values = {

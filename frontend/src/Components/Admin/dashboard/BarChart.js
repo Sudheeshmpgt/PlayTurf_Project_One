@@ -27,17 +27,15 @@ function BarChart() {
         const uniqueArea = [...new Set(area)]
         setValue(uniqueArea)
         const data = []
-        let kakkanad = 0
-        let kochi = 0
-        area.filter((data) => {
-            if (data === 'Kakkanad') {
-                kakkanad++
-            } else {
-                kochi++
+        for (const unique of uniqueArea){
+            let count = 0
+            for (const ar of area){
+                if(unique === ar){
+                    count ++
+                }
             }
-        })
-        data.push(kochi)
-        data.push(kakkanad)
+            data.push(count)
+        }
         setData(data)
     }, [turf])
 
@@ -46,8 +44,19 @@ function BarChart() {
     }, [])
 
     return (
-        <div style={{ height: 240, width: 470 }}>
-            <Bar data={{
+        <div style={{width:'87%', margin:'5px auto'}}>
+            <Bar 
+           options={{
+            scales: {
+                y: {
+                    ticks: {
+                        stepSize: 1,
+                    },
+                    beginAtZero:true,
+                }
+            },
+        }}
+            data={{
                 labels: value,
                 datasets: [
                     {

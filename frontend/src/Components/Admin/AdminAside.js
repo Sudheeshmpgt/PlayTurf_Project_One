@@ -8,6 +8,7 @@ import CategoryIcon from '@mui/icons-material/Category';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import SummarizeIcon from '@mui/icons-material/Summarize';
 import { useNavigate } from 'react-router-dom';
 
 function AdminAside() {
@@ -51,6 +52,9 @@ function AdminAside() {
         handleClose();
         navigate('/couponpage')
     }
+    const reportSubmit = () => {
+        navigate('/report')
+    }
 
     return (
         <Grid container>
@@ -74,33 +78,35 @@ function AdminAside() {
                             }}>
                             <Box sx={{ margin: '5px 0' }}>
                                 <Button onClick={dashboardSubmit} sx={{ color: 'black', fontWeight: 600, fontSize: '1.1rem', fontFamily: 'Open Sans,sans-serif' }}>
-                                    <HomeIcon sx={{ marginRight: 2 }} />
+                                    <HomeIcon sx={{ marginRight: 2, fontSize:22}} />
                                     Dashboard
                                 </Button>
                             </Box>
                             <Box sx={{ margin: '5px 0' }}>
+                                <Button onClick={reportSubmit} sx={{ color: 'black', fontWeight: 600, fontSize: '1.1rem', fontFamily: 'Open Sans,sans-serif' }}>
+                                    <SummarizeIcon sx={{ marginRight: 2, fontSize:22 }} />
+                                    Sales Report
+                                </Button>
+                            </Box>
+                            <Box sx={{ margin: '5px 0' }}>
                                 <Button onClick={turfSubmit} sx={{ color: 'black', fontWeight: 600, fontSize: '1.1rem', fontFamily: 'Open Sans,sans-serif' }}>
-                                    <SportsSoccerIcon sx={{ marginRight: 2 }} />
+                                    <SportsSoccerIcon sx={{ marginRight: 2, fontSize:22 }} />
                                     Turfs
                                 </Button>
                             </Box>
                             <Box sx={{ margin: '5px 0' }}>
                                 <Button onClick={BookingSubmit} sx={{ color: 'black', fontWeight: 600, fontSize: '1.1rem', fontFamily: 'Open Sans,sans-serif' }}>
-                                    <DateRangeIcon sx={{ marginRight: 2 }} />
+                                    <DateRangeIcon sx={{ marginRight: 2, fontSize:22 }} />
                                     Bookings
                                 </Button>
                             </Box>
                             <Box sx={{ margin: '5px 0' }}>
                                 <Button onClick={categorySubmit} sx={{ color: 'black', fontWeight: 600, fontSize: '1.1rem', fontFamily: 'Open Sans,sans-serif' }}>
-                                    <CategoryIcon sx={{ marginRight: 2 }} />
+                                    <CategoryIcon sx={{ marginRight: 2, fontSize:22 }} />
                                     Category
                                 </Button>
                             </Box>
                             <Box sx={{ margin: '5px 0' }}>
-                                {/* <Button onClick={offerSubmit} sx={{color:'black', fontWeight:600, fontSize:'1.1rem',fontFamily:'Open Sans,sans-serif'}}>
-                            <LocalOfferIcon sx={{marginRight:2}}/>
-                            Offers
-                            </Button> */}
                                 <Button
                                     id="basic-button"
                                     aria-controls={open ? 'basic-menu' : undefined}
@@ -113,7 +119,7 @@ function AdminAside() {
                                         fontSize:'1.1rem',
                                         fontFamily:'Open Sans,sans-serif'}}
                                 >
-                                  <LocalOfferIcon sx={{marginRight:2}}/>  Offers 
+                                  <LocalOfferIcon sx={{marginRight:2, fontSize:22}}/>  Offers 
                                 </Button>
                                 <Menu
                                     id="basic-menu"
@@ -130,13 +136,13 @@ function AdminAside() {
                             </Box>
                             <Box sx={{ margin: '5px 0' }}>
                                 <Button onClick={userSubmit} sx={{ color: 'black', fontWeight: 600, fontSize: '1.1em', fontFamily: 'Open Sans,sans-serif' }}>
-                                    <AccountCircleIcon sx={{ marginRight: 2 }} />
+                                    <AccountCircleIcon sx={{ marginRight: 2, fontSize:22 }} />
                                     Users
                                 </Button>
                             </Box>
                             <Box sx={{ margin: '5px 0' }}>
                                 <Button onClick={bannerSubmit} sx={{ color: 'black', fontWeight: 600, fontSize: '1.1rem', fontFamily: 'Open Sans,sans-serif' }}>
-                                    <ViewCarouselIcon sx={{ marginRight: 2 }} />
+                                    <ViewCarouselIcon sx={{ marginRight: 2, fontSize:22 }} />
                                     Banners
                                 </Button>
                             </Box>

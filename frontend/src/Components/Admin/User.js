@@ -1,5 +1,5 @@
 import {
-    Grid, Paper, useTheme, useMediaQuery, TableContainer, Table, TableRow, TableCell, TableHead, TableBody, Box, Typography, Fab, Switch
+    Button, Paper, useTheme, useMediaQuery, TableContainer, Table, TableRow, TableCell, TableHead, TableBody, Box, Typography, Fab, Switch
 } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -17,7 +17,7 @@ function User() {
     const navigate = useNavigate()
     const theme = useTheme()
     const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
-    const isMedium = useMediaQuery(theme.breakpoints.down('md')) 
+    const isMedium = useMediaQuery(theme.breakpoints.down('md'))
 
     //user management get request
     const getUserData = async () => {
@@ -138,9 +138,17 @@ function User() {
                                                 <TableCell align="center" >{data.phone}</TableCell>
                                                 <TableCell align="center" >{data.email}</TableCell>
                                                 <TableCell align="center">
-                                                    <Switch
-                                                        color='error'
-                                                        onClick={(e) => block(data._id)} />
+                                                    {
+                                                        data.isActive ? (
+                                                            <Button size='small' variant='contained' onClick={(e) => block(data._id)} color='secondary'>
+                                                                Block
+                                                            </Button>
+                                                        ) : (
+                                                            <Button size='small' variant='contained' onClick={(e) => block(data._id)} color='primary'>
+                                                                UnBlock
+                                                            </Button>
+                                                        )
+                                                    }
                                                 </TableCell>
                                                 <TableCell >
                                                     <Fab color='primary' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
@@ -208,9 +216,17 @@ function User() {
                                                     <TableCell align="center" >{data.phone}</TableCell>
                                                     <TableCell align="center" >{data.email}</TableCell>
                                                     <TableCell align="center">
-                                                        <Switch
-                                                            color='error'
-                                                            onClick={(e) => block(data._id)} />
+                                                        {
+                                                            data.isActive ? (
+                                                                <Button size='small' variant='contained' onClick={(e) => block(data._id)} color='secondary'>
+                                                                    Block
+                                                                </Button>
+                                                            ) : (
+                                                                <Button size='small' variant='contained' onClick={(e) => block(data._id)} color='primary'>
+                                                                    UnBlock
+                                                                </Button>
+                                                            )
+                                                        }
                                                     </TableCell>
                                                     <TableCell >
                                                         <Fab color='primary' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
@@ -278,9 +294,17 @@ function User() {
                                                     <TableCell align="center" >{data.phone}</TableCell>
                                                     <TableCell align="center" >{data.email}</TableCell>
                                                     <TableCell align="center">
-                                                        <Switch
-                                                            color='error'
-                                                            onClick={(e) => block(data._id)} />
+                                                        {
+                                                            data.isActive ? (
+                                                                <Button size='small' variant='contained' onClick={(e) => block(data._id)} color='secondary'>
+                                                                    Block
+                                                                </Button>
+                                                            ) : (
+                                                                <Button size='small' variant='contained' onClick={(e) => block(data._id)} color='primary'>
+                                                                    UnBlock
+                                                                </Button>
+                                                            )
+                                                        }
                                                     </TableCell>
                                                     <TableCell >
                                                         <Fab color='primary' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>

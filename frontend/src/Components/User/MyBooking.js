@@ -97,7 +97,7 @@ function MyBooking() {
 
     return (
         <Grid container>
-            <Paper className='scrollbar-hidden' sx={{ margin: '30px auto', width: '92%', overflow: 'scroll' }}>
+            <Paper className='scrollbar-hidden' sx={{ margin: '30px auto', width: '92%', height: 550, overflow: 'scroll' }}>
                 <Typography
                     margin={3}
                     fontSize={25}

@@ -1,4 +1,4 @@
-import { Grid,  Box } from '@mui/material'
+import { Grid, Box } from '@mui/material'
 import React from 'react'
 import AdminAside from '../Components/Admin/AdminAside'
 import AdminHeader from '../Components/Admin/AdminHeader'
@@ -7,16 +7,16 @@ import Coupon from '../Components/Admin/Coupon'
 function Couponpage() {
   return (
     <Grid container>
-    <AdminHeader />
-    <Grid item sx={{display: 'flex',}}>
+      <AdminHeader />
+      <Grid item sx={{ display: 'flex', }}>
         <Box>
-            <AdminAside />
+          <AdminAside />
         </Box>
         <Box>
-            <Coupon />
+          <Coupon />
         </Box>
+      </Grid>
     </Grid>
-</Grid>
   )
 }
 

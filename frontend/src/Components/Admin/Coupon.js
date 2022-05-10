@@ -50,10 +50,10 @@ function Coupon() {
 
     const handleStatus = (id) => {
         try {
-            axios.put(`admin_panel/coupon/edit_status/${id}`)    
-            .then((res)=>{
-                setCoupon(res.data.coupon)
-            })
+            axios.put(`admin_panel/coupon/edit_status/${id}`)
+                .then((res) => {
+                    setCoupon(res.data.coupon)
+                })
         } catch (error) {
             alert('error')
         }
@@ -89,7 +89,7 @@ function Coupon() {
                     'Deleted!',
                     'Your file has been deleted.',
                     'success'
-                ) 
+                )
             }
         })
     }
@@ -109,7 +109,7 @@ function Coupon() {
                             <Typography variant='h6' component={Box} sx={{
                                 fontWeight: 700
                             }}>
-                               COUPON DETAILS
+                                COUPON DETAILS
                             </Typography>
                             <Fab color="success" size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
                                 <AddIcon onClick={() => navigate('/couponadd')} />
@@ -151,8 +151,14 @@ function Coupon() {
                                                 <TableCell align="center" >{data.fromDate}</TableCell>
                                                 <TableCell align="center" >{data.toDate}</TableCell>
                                                 <TableCell align="center" >
-                                                        <Button onClick={() => handleStatus(data._id)} variant='contained'>{data.status ? 'Active' : 'InActive'}</Button>
-                                                    </TableCell>
+                                                    {
+                                                        data.status ? (
+                                                            <Button size='small' color='secondary' onClick={() => handleStatus(data._id)} variant='contained'> Active </Button>
+                                                        ) : (
+                                                            <Button size='small' color='primary' onClick={() => handleStatus(data._id)} variant='contained'> InActive </Button>
+                                                        )
+                                                    }
+                                                </TableCell>
                                                 <TableCell >
                                                     <Fab color='primary' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
                                                         <EditIcon onClick={() => editCoupon(data._id)} />
@@ -182,7 +188,7 @@ function Coupon() {
                                 <Typography variant='h6' component={Box} sx={{
                                     fontWeight: 700
                                 }}>
-                                   COUPON DETAILS
+                                    COUPON DETAILS
                                 </Typography>
                                 <Fab color="success" size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
                                     <AddIcon onClick={() => navigate('/couponadd')} />
@@ -224,7 +230,13 @@ function Coupon() {
                                                     <TableCell align="center" >{data.fromDate}</TableCell>
                                                     <TableCell align="center" >{data.toDate}</TableCell>
                                                     <TableCell align="center" >
-                                                        <Button onClick={() => handleStatus(data._id)} variant='contained'>{data.status ? 'Active' : 'InActive'}</Button>
+                                                    {
+                                                        data.status ? (
+                                                            <Button size='small' color='secondary' onClick={() => handleStatus(data._id)} variant='contained'> Active </Button>
+                                                        ) : (
+                                                            <Button size='small' color='primary' onClick={() => handleStatus(data._id)} variant='contained'> InActive </Button>
+                                                        )
+                                                    }
                                                     </TableCell>
                                                     <TableCell >
                                                         <Fab color='primary' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
@@ -255,7 +267,7 @@ function Coupon() {
                                 <Typography variant='h6' component={Box} sx={{
                                     fontWeight: 700
                                 }}>
-                                   COUPON DETAILS
+                                    COUPON DETAILS
                                 </Typography>
                                 <Fab color="success" size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
                                     <AddIcon onClick={() => navigate('/couponadd')} />
@@ -297,7 +309,13 @@ function Coupon() {
                                                     <TableCell align="center" >{data.fromDate}</TableCell>
                                                     <TableCell align="center" >{data.toDate}</TableCell>
                                                     <TableCell align="center" >
-                                                        <Button onClick={() => handleStatus(data._id)} variant='contained'>{data.status ? 'Active' : 'InActive'}</Button>
+                                                    {
+                                                        data.status ? (
+                                                            <Button size='small' color='secondary' onClick={() => handleStatus(data._id)} variant='contained'> Active </Button>
+                                                        ) : (
+                                                            <Button size='small' color='primary' onClick={() => handleStatus(data._id)} variant='contained'> InActive </Button>
+                                                        )
+                                                    }
                                                     </TableCell>
                                                     <TableCell >
                                                         <Fab color='primary' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>

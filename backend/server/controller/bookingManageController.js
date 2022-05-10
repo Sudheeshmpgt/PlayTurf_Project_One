@@ -78,7 +78,7 @@ exports.bookingManagement = async (req, res) => {
 }
 
 //admin booking management booking status change
-exports.changeBookingStatus = async (req, res) => { 
+exports.changeBookingStatus = async (req, res) => {
     try {
         const status = req.body.data
 
@@ -206,4 +206,19 @@ exports.getBookingData = async (req, res) => {
     } else {
         res.send({ message: "Error" })
     }
+}
+
+exports.verifyFirstOffer = async (req, res) => {
+    try {
+        const userId = req.query.id
+        const data = await BookingModel.findOne({ createdBy: ObjectId(userId) })
+        if (data.length != 0) {
+            res.send({error:'Not Eligible'})
+        } else {
+             res.send({ message: 'Eligible' })
+        }
+    } catch (error) {
+        res.send(error)
+    }
+
 }

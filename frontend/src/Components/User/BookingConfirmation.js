@@ -1,8 +1,9 @@
-import { Card, CardActions, CardContent, Grid, Typography, Button, Box, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material'
+import { Card, CardActions, CardContent, Grid, Typography, Button, Box, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, TextField, Input } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './TurfList.css'
 import { TurfViewContext } from '../../Store/turfviewcontext';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { UserContext } from '../../Store/usercontext';
 import { BookingContext } from '../../Store/bookingcontext'
 import axios from '../../axiosinstance'
@@ -15,9 +16,13 @@ function BookingConfirmation() {
     const { turfView } = useContext(TurfViewContext)
     const { user } = useContext(UserContext)
     const { booking, setBooking } = useContext(BookingContext)
+    // console.log(booking)
     const [loading, setLoading] = useState(false)
     const [value, setValue] = useState('Pay At Venue')
-
+    const [code, setCode] = useState('')
+    const [coupon, setCoupon] = useState('')
+    const [totalPrice, setTotalPrice] = useState('')
+    const [couponStatus, setCouponStatus] = useState(false)
     const userName = localStorage.getItem('userName')
     const userPhone = localStorage.getItem('userPhone')
     const userEmail = localStorage.getItem('userEmail')
@@ -80,12 +85,12 @@ function BookingConfirmation() {
                                 'authToken': localStorage.getItem("usertoken"),
                             }
                         })
-                        .then((res)=>{
-                            const message = res.data.message
-                            if(message == 'Payment was successful'){
-                                bookingConfirm() 
-                            }
-                        })
+                            .then((res) => {
+                                const message = res.data.message
+                                if (message == 'Payment was successful') {
+                                    bookingConfirm()
+                                }
+                            })
                     },
                     prefill: {
                         name: 'example name',
@@ -108,14 +113,15 @@ function BookingConfirmation() {
     }
 
     function bookingConfirm() {
-        const { centerId, createdBy, date, startTime, endTime, totalPrice, offer } = booking
+        const { centerId, createdBy, date, startTime, endTime, offer } = booking
+        const price = totalPrice
         const values = {
             centerId: centerId,
             createdBy: createdBy,
             date: date,
             startTime: startTime,
             endTime: endTime,
-            totalPrice: totalPrice,
+            totalPrice: price,
             paymentMode: value,
             offer: offer
         }
@@ -152,13 +158,82 @@ function BookingConfirmation() {
         const type = value
         if (type === 'Online Payment') {
             loadRazorpay();
-        }else{
+        } else {
             bookingConfirm();
         }
     }
 
+    const handleCouponChange = (e) => {
+        setCode(e.target.value)
+    }
+
     const goBack = () => {
         navigate('/turf')
+    }
+
+    const couponSubmit = () => {
+        if (code) {
+
+            axios.get(`user/check_coupon/?code=${code}`, {
+                headers: {
+                    'authToken': localStorage.getItem("usertoken"),
+                }
+            })
+                .then((res) => {
+                    const expDate = res.data.coupon.toDate
+                    const nowDate = moment().format('DD-MM-YYYY')
+                    const verifyDate = moment(expDate).isBefore(nowDate)    
+                    const status = res.data.coupon.status
+                    if (!verifyDate && status) {
+                        if (res.data.message === 'OK') {
+                            setCoupon(res.data.coupon)
+                            const couponPercent = res.data.coupon.offerPercent
+                            const userId = localStorage.getItem('userId')
+                            const couponId = res.data.coupon._id
+                            axios.get(`user/coupon/verify_user/?userId=${userId}&couponId=${couponId}`, {
+                                headers: {
+                                    'authToken': localStorage.getItem("usertoken"),
+                                }
+                            })
+                                .then((res) => {
+                                    if (res.data.message === 'OK') {
+                                        const price = booking.totalPrice
+                                        setTotalPrice(price - price * couponPercent / 100)
+                                        setCouponStatus(true)
+                                    } else {
+                                        const message = res.data.error
+                                        Toast.fire({
+                                            icon: 'error',
+                                            title: message
+                                        })
+                                    }
+                                })
+                                .catch((e) => {
+                                    Toast.fire({
+                                        icon: 'error',
+                                        title: 'Something went wrong'
+                                    })
+                                })
+                        } else {
+                            const message = res.data.error
+                            Toast.fire({
+                                icon: 'error',
+                                title: message
+                            })
+                        }
+                    }else{
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'Coupon Expired'
+                        })
+                    }
+                })
+        } else {
+            Toast.fire({
+                icon: 'error',
+                title: 'Please enter the coupon code'
+            })
+        }
     }
 
     return (
@@ -258,7 +333,7 @@ function BookingConfirmation() {
                                         Offers
                                     </Box>
                                     <Box marginLeft={8.8}>
-                                        :{booking.offer? `${booking.offer}%` : 'Nill'}
+                                        :{booking.offer ? `${booking.offer}%` : 'Nill'}
                                     </Box>
                                 </Typography>
                                 <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{ display: 'flex' }}>
@@ -315,9 +390,32 @@ function BookingConfirmation() {
                                     </Box>
                                 </Typography>
                             </Box>
+                            <Box mt={3} sx={{ cursor: 'pointer', display: 'flex' }}>
+                                <Box width='76%'>
+                                    <TextField
+                                        onChange={handleCouponChange}
+                                        value={code}
+                                        size='small'
+                                        name='couponCode'
+                                        placeholder='Enter Coupon Code'
+                                        Color='secondary'
+                                        fullWidth>
+                                    </TextField>
+                                </Box>
+                                <Button onClick={couponSubmit} color='success' variant='contained'>APPLY COUPON</Button>
+                            </Box>
+                            {
+                                couponStatus &&
+                                <Box mt={1}>
+                                    <Typography color='green' fontSize={18} >
+                                        <CheckCircleIcon sx={{ fontSize: 25, mb: -0.7 }} /> Coupon Applied
+                                    </Typography>
+                                </Box>
+                            }
+
                             <Box marginTop={3}>
                                 <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600}>
-                                    Total Amount (Pay at Venue): {booking.totalPrice}
+                                    Total Amount (Pay at Venue): {totalPrice ? totalPrice : booking.totalPrice}
                                 </Typography>
                             </Box>
                         </CardContent>

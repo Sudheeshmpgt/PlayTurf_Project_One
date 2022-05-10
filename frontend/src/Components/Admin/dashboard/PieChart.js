@@ -30,17 +30,15 @@ function PieChart() {
         const uniqueMode = [...new Set(payment)]
         setValue(uniqueMode)
         const data = []
-        let COV = 0
-        let OP = 0
-        payment.filter((data) => {
-            if (data === 'Pay At Venue') {
-                COV++
-            } else {
-                OP++
+        for (const unique of uniqueMode){
+            let count = 0
+            for (const pay of payment){
+                if(unique === pay){
+                    count ++
+                }
             }
-        })
-        data.push(OP)
-        data.push(COV)
+            data.push(count)
+        }
         setDatas(data)
     }, [booking])
 
@@ -49,7 +47,7 @@ function PieChart() {
     }, [])
 
     return (
-        <div style={{ width: 310 }}>
+        <div style={{ width:'83%', margin:'3px auto' }}> 
             <Pie data={{
                 labels: value,
                 datasets: [

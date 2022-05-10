@@ -174,7 +174,6 @@ function Cards() {
                                 modules={[FreeMode, Pagination]}
                                 className="mySwiper"
                             >
-
                                 {
                                     turf && turf.map((data, index) => (
                                         <SwiperSlide>

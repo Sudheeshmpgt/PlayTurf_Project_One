@@ -34,7 +34,7 @@ import Successpage from './Pages/Successpage';
 import Couponpage from './Pages/Couponpage';
 import Couponaddpage from './Pages/Couponaddpage';
 import Couponupdatepage from './Pages/Couponupdatepage';
-
+import Reportpage from './Pages/Reportpage';
 
 
 function App() {
@@ -74,6 +74,7 @@ function App() {
      <Route path='/couponpage' element={ <Couponpage/>}/>
      <Route path='/couponadd' element={ <Couponaddpage/>}/>  
      <Route path='/couponupdate' element={ <Couponupdatepage/>}/> 
+     <Route path='/report' element={ <Reportpage/>}/>   
    </Routes>
   );
 }

@@ -29,17 +29,15 @@ function PieCategory() {
         const uniqueCategory = [...new Set(category)]
         setValue(uniqueCategory)
         const data = []
-        let football = 0
-        let cricket = 0
-        category.filter((data) => {
-            if (data === 'football') {
-                football++
-            } else {
-                cricket++
+        for (const unique of uniqueCategory){
+            let count = 0
+            for (const cat of category){
+                if(unique === cat){
+                    count ++
+                }
             }
-        })
-        data.push(cricket)
-        data.push(football)
+            data.push(count)
+        }
         setDatas(data)
     }, [booking])
 
@@ -48,7 +46,7 @@ function PieCategory() {
     }, [])
 
     return (
-        <div style={{ width: 310 }}>
+        <div style={{ width:'83%', margin:'3px auto' }}> 
             <Pie data={{
                 labels: value,
                 datasets: [

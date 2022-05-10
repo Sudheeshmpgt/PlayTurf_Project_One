@@ -43,7 +43,7 @@ function DoughnutChart() {
     }, [])
 
     return (
-        <div style={{ width: 310 }}>
+        <div style={{ width:'83%', margin:'3px auto' }}> 
             <Doughnut data={{
                 labels: ['UnBlocked', 'Blocked'],
                 datasets: [

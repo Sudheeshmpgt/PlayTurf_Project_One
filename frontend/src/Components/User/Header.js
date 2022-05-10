@@ -47,6 +47,8 @@ function Header() {
         localStorage.removeItem("userEmail")
         localStorage.removeItem("userImage")
         localStorage.removeItem("userAddress")
+        localStorage.removeItem("centerId")
+        localStorage.removeItem("bookingId")
         navigate('/')
     }
 

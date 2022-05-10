@@ -59,7 +59,7 @@ route.get('/admin_panel/user_management/update/:id', verifyAuth, userManageContr
 route.put('/admin_panel/user_management/edit_user/:id', upload.single("picture"), verifyAuth, userManageController.updateUserData)
 
 //admin user management update user status
-route.put('/admin_panel/user_management/edit_user_status/:id', verifyAuth, userManageController.updateUserStatus)
+route.put('/admin_panel/user_management/edit_user_status/:id', userManageController.updateUserStatus)
 
 //admin user management delete user
 route.delete('/admin_panel/user_management/delete_user/:id', verifyAuth, userManageController.deleteUserData)
@@ -192,6 +192,15 @@ route.put('/admin_panel/coupon/edit_status/:id', couponController.couponStatus)
 
 //admin_panel coupon managemnt delete request
 route.delete('/admin_panel/coupon/delete_coupon/:id', verifyAuth, couponController.deleteCouponData)
+
+//check user Coupon exists
+route.get('/user/check_coupon', verifyAuth,couponController.checkCoupon)
+
+//verify user for coupon application
+route.get('/user/coupon/verify_user', verifyAuth, couponController.couponVerification)
+
+//check for first offer
+route.get('/user/check_first_offer', verifyAuth, bookingController.verifyFirstOffer)
 
 
 module.exports = route;

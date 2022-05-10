@@ -39,6 +39,44 @@ function AdminHeader() {
         setSearch(data.target.value)
     }
 
+    const userSubmit = () => {
+        handleCloseNavMenu()
+        navigate('/userpage')
+    }
+    const turfSubmit = () => {
+        handleCloseNavMenu()
+        navigate('/turfpage')
+    }
+    const categorySubmit = () => {
+        handleCloseNavMenu()
+        navigate('/categorypage')
+    }
+    const bannerSubmit = () => {
+        handleCloseNavMenu()
+        navigate('/bannerpage')
+    }
+    const BookingSubmit = () => {
+        handleCloseNavMenu()
+        navigate('/adminbookingpage')
+    }
+    const offerSubmit = () => {
+        handleCloseNavMenu()
+        navigate('/offerpage')
+    }
+    const dashboardSubmit = () => {
+        handleCloseNavMenu()
+        navigate('/dashboard')
+    }
+    const couponSubmit = () => {
+        handleCloseNavMenu()
+        navigate('/couponpage')
+    }
+    const reportSubmit = () => {
+        handleCloseNavMenu()
+        navigate('/report')
+    }
+
+
 
     return (
         <AppBar position="static" sx={{ backgroundColor: '#393939' }}>
@@ -86,23 +124,29 @@ function AdminHeader() {
                                 display: { xs: 'block', md: 'none' },
                             }}
                         >
-                            <MenuItem onClick={handleCloseNavMenu}>
+                            <MenuItem onClick={dashboardSubmit}>
                                 <Typography textAlign="center">Dashboard</Typography>
                             </MenuItem>
-                            <MenuItem onClick={handleCloseNavMenu}>
+                            <MenuItem onClick={turfSubmit}>
                                 <Typography textAlign="center">Turfs</Typography>
                             </MenuItem>
-                            <MenuItem onClick={handleCloseNavMenu}>
-                                <Typography textAlign="center">Bookings</Typography>
+                            <MenuItem onClick={BookingSubmit}>
+                                <Typography textAlign="center">Bookings</Typography> 
                             </MenuItem>
-                            <MenuItem onClick={handleCloseNavMenu}>
+                            <MenuItem onClick={categorySubmit}>
                                 <Typography textAlign="center">Category</Typography>
                             </MenuItem>
-                            <MenuItem onClick={handleCloseNavMenu}>
+                            <MenuItem onClick={offerSubmit}>
                                 <Typography textAlign="center">Offers</Typography>
                             </MenuItem>
-                            <MenuItem onClick={handleCloseNavMenu}>
-                                <Typography textAlign="center">User</Typography>
+                            <MenuItem onClick={couponSubmit}>
+                                <Typography textAlign="center">Coupons</Typography>
+                            </MenuItem>
+                            <MenuItem onClick={userSubmit}>
+                                <Typography textAlign="center">Users</Typography>
+                            </MenuItem>
+                            <MenuItem onClick={bannerSubmit}>
+                                <Typography textAlign="center">Banners</Typography>
                             </MenuItem>
                         </Menu>
                     </Box>
@@ -168,8 +212,6 @@ function AdminHeader() {
                                     </InputBase>
                                 </Box>
                     }
-
-
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -195,13 +237,6 @@ function AdminHeader() {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
-
-                            <MenuItem onClick={handleCloseUserMenu}>
-                                <Typography textAlign="center">Account</Typography>
-                            </MenuItem>
-                            <MenuItem onClick={handleCloseUserMenu}>
-                                <Typography textAlign="center">Settings</Typography>
-                            </MenuItem>
                             <MenuItem onClick={handleCloseUserMenu}>
                                 <Typography onClick={logout} textAlign="center">Logout</Typography>
                             </MenuItem>

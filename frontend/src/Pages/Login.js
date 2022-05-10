@@ -29,21 +29,28 @@ function Login() {
         if (email && password) {
             axios.post("user_signin", data)
                 .then((res) => {
-                    setUser(res.data.user)
-                    const message = res.data.message
-                    Toast.fire({
-                        icon: 'success',
-                        title: message
-                    })
-                    const token = res.data.token
-                    localStorage.setItem("usertoken", token)
-                    localStorage.setItem("userId", res.data.user._id)
-                    localStorage.setItem("userName", res.data.user.name)
-                    localStorage.setItem("userPhone", res.data.user.phone)
-                    localStorage.setItem("userEmail", res.data.user.email)
-                    localStorage.setItem("userImage", res.data.user.userImg)
-                    localStorage.setItem("userAddress", res.data.user.address)                       
-                    navigate('/')
+                    if (res.data.user.isActive) {
+                        setUser(res.data.user)
+                        const message = res.data.message
+                        Toast.fire({
+                            icon: 'success',
+                            title: message
+                        })
+                        const token = res.data.token
+                        localStorage.setItem("usertoken", token)
+                        localStorage.setItem("userId", res.data.user._id)
+                        localStorage.setItem("userName", res.data.user.name)
+                        localStorage.setItem("userPhone", res.data.user.phone)
+                        localStorage.setItem("userEmail", res.data.user.email)
+                        localStorage.setItem("userImage", res.data.user.userImg)
+                        localStorage.setItem("userAddress", res.data.user.address)
+                        navigate('/')
+                    }else{
+                        Toast.fire({
+                            icon: 'warning',
+                            title: 'Account Blocked'
+                        })
+                    }
                 }).catch((e) => {
                     console.log(e)
                     Toast.fire({
@@ -61,22 +68,29 @@ function Login() {
     }
 
     const responseSuccessGoogle = (response) => {
-        console.log(response)
         axios({
-            method:'POST',
+            method: 'POST',
             url: 'googlelogin',
-            data: {tokenId: response.tokenId}
-        }).then(res=>{
+            data: { tokenId: response.tokenId }
+        }).then(res => {
             setUser(res.data.user)
-                    const message = res.data.message
-                    Toast.fire({
-                        icon: 'success',
-                        title: message
-                    })
-                    const token = res.data.user.tokens[0].token
-                    localStorage.setItem("usertoken", token)
-                    navigate('/')
+            const message = res.data.message
+            Toast.fire({
+                icon: 'success',
+                title: message
+            })
+            const token = res.data.token
+            localStorage.setItem("usertoken", token)
+            localStorage.setItem("usertoken", token)
+            localStorage.setItem("userId", res.data.user._id)
+            localStorage.setItem("userName", res.data.user.name)
+            localStorage.setItem("userPhone", res.data.user.phone)
+            localStorage.setItem("userEmail", res.data.user.email)
+            localStorage.setItem("userImage", res.data.user.userImg)
+            localStorage.setItem("userAddress", res.data.user.address)
+            navigate('/')
         }).catch((e) => {
+            console.log(e)
             Toast.fire({
                 icon: 'error',
                 title: 'Something went wrong'
@@ -142,7 +156,7 @@ function Login() {
                             <h2 style={{ marginBottom: '10px', marginTop: '25px', fontFamily: 'sans-serif' }}>SIGN IN</h2>
                             <form onSubmit={handleSubmit(logOnSubmit)} autoComplete='off'>
                                 <TextField
-                                fontColor='text.primary'
+                                    fontColor='text.primary'
                                     style={textStyle}
                                     label='Username'
                                     placeholder='Enter Username'
@@ -183,30 +197,30 @@ function Login() {
                                 >Sign in</Button>
                             </form>
                             <Box>
-                                <Typography sx={{margin:1}}>Or</Typography>
+                                <Typography sx={{ margin: 1 }}>Or</Typography>
                                 <Typography>
-                                <Grid container spacing={1} sx={{ marginTop: 1 }}>
-                                    <Grid item xs={12} md={6}>
-                                    <GoogleLogin
-                                    clientId="992753020822-b6nncsvofh7in71saop3af9pp1rcuqpk.apps.googleusercontent.com"
-                                    buttonText="Login with Google"
-                                    onSuccess={responseSuccessGoogle}
-                                    onFailure={responseErrorGoogle}
-                                    cookiePolicy={'single_host_origin'}
-                                />
-                                    </Grid>
-                                    {/* <Grid item xs={12} md={4.5}> */}
+                                    <Grid container spacing={1} sx={{ marginTop: 1 }}>
+                                        <Grid item xs={12} md={6}>
+                                            <GoogleLogin
+                                                clientId="992753020822-b6nncsvofh7in71saop3af9pp1rcuqpk.apps.googleusercontent.com"
+                                                buttonText="Login with Google"
+                                                onSuccess={responseSuccessGoogle}
+                                                onFailure={responseErrorGoogle}
+                                                cookiePolicy={'single_host_origin'}
+                                            />
+                                        </Grid>
+                                        {/* <Grid item xs={12} md={4.5}> */}
                                         {/* <Link sx={{ fontSize: '0.9rem', cursor: 'pointer' }}> */}
-                                            {/* Forgot password? */}
+                                        {/* Forgot password? */}
                                         {/* </Link> */}
-                                    {/* </Grid> */}
-                                    <Grid item xs={12} md={6}>
-                                        <Link sx={{ fontSize: '0.9rem', cursor: 'pointer' }} onClick={toSignup}>
-                                            Don't have an account? Sign Up
-                                        </Link>
+                                        {/* </Grid> */}
+                                        <Grid item xs={12} md={6}>
+                                            <Link sx={{ fontSize: '0.9rem', cursor: 'pointer' }} onClick={toSignup}>
+                                                Don't have an account? Sign Up
+                                            </Link>
+                                        </Grid>
                                     </Grid>
-                                </Grid>
-                            </Typography>
+                                </Typography>
                             </Box>
                         </Grid>
                     </Paper>

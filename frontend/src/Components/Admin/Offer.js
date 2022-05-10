@@ -51,7 +51,11 @@ function Offer() {
 
     const handleStatus = (id) => {
         try {
-            axios.put(`admin_panel/offers/${id}`)    
+            axios.put(`admin_panel/offers/${id}`,{
+                headers: {
+                    'authToken': localStorage.getItem("admintoken"),
+                }
+            })    
             .then((res)=>{
                 setOffer(res.data.offer)
             })
@@ -152,7 +156,13 @@ function Offer() {
                                                 <TableCell align="center" >{data.fromDate}</TableCell>
                                                 <TableCell align="center" >{data.toDate}</TableCell>
                                                 <TableCell align="center" >
-                                                        <Button onClick={() => handleStatus(data._id)} variant='contained'>{data.status ? 'Active' : 'InActive'}</Button>
+                                                    {
+                                                        data.status ? (
+                                                            <Button size='small' color='secondary' onClick={() => handleStatus(data._id)} variant='contained'>Active</Button>
+                                                        ) : (
+                                                            <Button size='small' color='primary' onClick={() => handleStatus(data._id)} variant='contained'>InActive</Button>
+                                                        )
+                                                    }
                                                     </TableCell>
                                                 <TableCell >
                                                     <Fab color='primary' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
@@ -225,7 +235,13 @@ function Offer() {
                                                     <TableCell align="center" >{data.fromDate}</TableCell>
                                                     <TableCell align="center" >{data.toDate}</TableCell>
                                                     <TableCell align="center" >
-                                                        <Button onClick={() => handleStatus(data._id)} variant='contained'>{data.status ? 'Active' : 'InActive'}</Button>
+                                                    {
+                                                        data.status ? (
+                                                            <Button size='small' color='secondary' onClick={() => handleStatus(data._id)} variant='contained'>Active</Button>
+                                                        ) : (
+                                                            <Button size='small' color='primary' onClick={() => handleStatus(data._id)} variant='contained'>InActive</Button>
+                                                        )
+                                                    }
                                                     </TableCell>
                                                     <TableCell >
                                                         <Fab color='primary' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>
@@ -298,7 +314,13 @@ function Offer() {
                                                     <TableCell align="center" >{data.fromDate}</TableCell>
                                                     <TableCell align="center" >{data.toDate}</TableCell>
                                                     <TableCell align="center" >
-                                                        <Button onClick={() => handleStatus(data._id)} variant='contained'>{data.status ? 'Active' : 'InActive'}</Button>
+                                                    {
+                                                        data.status ? (
+                                                            <Button size='small' color='secondary' onClick={() => handleStatus(data._id)} variant='contained'>Active</Button>
+                                                        ) : (
+                                                            <Button size='small' color='primary' onClick={() => handleStatus(data._id)} variant='contained'>InActive</Button>
+                                                        )
+                                                    }
                                                     </TableCell>
                                                     <TableCell >
                                                         <Fab color='primary' size='small' component={Box} aria-label="add" sx={{ marginTop: '-6px' }}>

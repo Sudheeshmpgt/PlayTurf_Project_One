@@ -52,7 +52,7 @@ function Couponupdate() {
                 setCouponCode(res.data.coupon.couponCode)
                 setOfferPercents(res.data.coupon.offerPercent)
                 setFromDate(res.data.coupon.fromDate)
-                setToDate(res.data.coupon.toDate) 
+                setToDate(res.data.coupon.toDate)  
             })
     }, [location.state.id]) 
 
@@ -139,7 +139,7 @@ function Couponupdate() {
             <Paper elevation={3} style={paperStyle}>
                 <Grid align='center'>
                     <Avatar style={avatarStyle} ><EditIcon /></Avatar>
-                    <h2 style={{ marginBottom: '10px', fontFamily: 'Atkinson Hyperlegible, sans-serif' }}>EDIT OFFER</h2>
+                    <h2 style={{ marginBottom: '10px', fontFamily: 'Atkinson Hyperlegible, sans-serif' }}>EDIT COUPON</h2>
                     <form onSubmit={handleSubmit(Edit)} autoComplete='off'>
                         <TextField
                             {...register('couponCode', {

@@ -1,10 +1,9 @@
-import { Grid } from '@mui/material'
+import { Grid, Box } from '@mui/material'
 import React, { useEffect} from 'react'
 import AdminHeader from '../Components/Admin/AdminHeader'
 import { useNavigate } from 'react-router-dom';
 import AdminAside from '../Components/Admin/AdminAside';
-
-
+import Dashboard from '../Components/Admin/Dashboard';
 
 function AdminHome() {
 
@@ -22,7 +21,14 @@ function AdminHome() {
   return (
     <Grid container>
       <AdminHeader />
-      <AdminAside/>
+      <Grid item sx={{display: 'flex',}}>
+            <Box>
+                <AdminAside />
+            </Box>
+            <Box>
+                <Dashboard />
+            </Box>
+        </Grid>  
     </Grid>
   )
 }

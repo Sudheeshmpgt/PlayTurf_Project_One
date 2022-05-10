@@ -1,4 +1,6 @@
 const CouponModel = require('../model/couponSchema')
+const VerifyCouponModel = require('../model/verifyCouponSchema')
+const ObjectId = require('mongoose').Types.ObjectId
 
 exports.addCoupon = async (req, res) => {
     try {
@@ -25,7 +27,7 @@ exports.couponManagement = async (req, res) => {
     try {
         const coupon = await CouponModel.find({})
         if (coupon) {
-            res.send({ message: "Success", coupon:coupon })
+            res.send({ message: "Success", coupon: coupon })
         } else {
             res.send({ error: "something went wrong" })
         }
@@ -51,7 +53,7 @@ exports.couponStatus = async (req, res) => {
             }
         }
         const coupon = await CouponModel.find({})
-        res.send({ message: 'ok', coupon:coupon })
+        res.send({ message: 'ok', coupon: coupon })
     } catch (error) {
         res.send(error)
     }
@@ -60,7 +62,7 @@ exports.couponStatus = async (req, res) => {
 exports.getCouponData = async (req, res) => {
     try {
         const id = req.params.id
-        const coupon = await CouponModel.findOne({_id:id})
+        const coupon = await CouponModel.findOne({ _id: id })
         res.send({ message: 'ok', coupon: coupon })
     } catch (error) {
         res.send(error)
@@ -69,7 +71,7 @@ exports.getCouponData = async (req, res) => {
 
 exports.updateCouponData = async (req, res) => {
     try {
-        const { couponCode, offerPercent, fromDate, toDate} = req.body
+        const { couponCode, offerPercent, fromDate, toDate } = req.body
         const coupon = await CouponModel.findByIdAndUpdate({ _id: req.params.id }, req.body)
         if (coupon) {
             res.send({ message: "Coupon Details Updated Successfully", coupon: coupon })
@@ -92,5 +94,39 @@ exports.deleteCouponData = async (req, res) => {
         }
     } catch (error) {
         res.send({ messsage: "Error", error: error })
+    }
+}
+
+exports.checkCoupon = async (req, res) => {
+    try {
+        const code = req.query.code
+        const data = await CouponModel.findOne({ couponCode: code })
+        if (data.length === 0) {
+            res.send({ error: 'Invallid Coupon' })
+        } else {
+            res.send({ message: 'OK', coupon: data })
+        }
+    } catch (error) {
+        res.send(error)
+    }
+}
+
+exports.couponVerification = async (req, res) => {
+    try {
+        const couponId = req.query.couponId
+        const userId = req.query.userId
+        const data = await VerifyCouponModel.findOne({ couponId: ObjectId(couponId), userId: ObjectId(userId) })
+        if (data) {
+            res.send({ error: 'Coupon already applied' })
+        } else {
+            const value = new VerifyCouponModel({
+                userId: userId,
+                couponId: couponId
+            })
+            const newValue = await value.save()
+            res.send({ message: 'OK', result: newValue })
+        }
+    } catch (error) {
+        res.send(error)
     }
 }
