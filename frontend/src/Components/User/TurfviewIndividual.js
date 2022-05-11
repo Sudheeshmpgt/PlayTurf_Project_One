@@ -130,12 +130,23 @@ function TurfviewIndividual() {
             .then((res) => {
                 setPrevBooking(res.data.booking)
             })
+
+        axios.get(`user/check_first_offer/?id=${userId}`, {
+            headers: {
+                'authToken': localStorage.getItem("usertoken"),
+            }
+        })
+            .then((res) => {
+                if (res.data.message === 'Eligible') {
+                    setFirstOffer('50')
+                }
+            })
     }, [])
 
     const userId = localStorage.getItem("userId")
 
     const handleClick = () => {
-        
+
         if (date == null || startTime == null || endTime == null) {
             Toast.fire({
                 icon: 'error',
@@ -143,17 +154,6 @@ function TurfviewIndividual() {
             })
         }
         let totalPrice;
-        
-        axios.get(`user/check_first_offer/?id=${userId}`,{
-            headers: {
-                'authToken': localStorage.getItem("usertoken"),
-            }
-        })
-        .then((res)=>{
-            if(res.data.message === 'Eligible'){
-                setFirstOffer(50)
-            }
-        })
 
         const dateFormated = moment(date).format('DD-MM-YYYY HH:MM:SS').split(' ')
         const startTimeHour = moment(startTime).format('hh:mm A')
@@ -169,12 +169,12 @@ function TurfviewIndividual() {
                 icon: 'error',
                 title: 'Please choose valid date'
             })
-        }else if(nowdate == dateFormated[0] && (moment(startTime).isBefore(date))){
+        } else if (nowdate == dateFormated[0] && (moment(startTime).isBefore(date))) {
             Toast.fire({
                 icon: 'error',
                 title: 'Please choose valid time'
             })
-        }else if ((endTimeHour === startTimeHour)) {
+        } else if ((endTimeHour === startTimeHour)) {
             Toast.fire({
                 icon: 'error',
                 title: 'Please choose valid time'
@@ -189,13 +189,16 @@ function TurfviewIndividual() {
                 icon: 'error',
                 title: 'Slot is Already Booked'
             })
-        }else if(hours > 3){
+        } else if (hours > 3) {
             Toast.fire({
                 icon: 'warning',
                 title: 'Maximum booking time is 3 hours'
             })
-        }else {
-            if (offer) {
+        } else {
+            if (firstOffer) {
+                const offerPrice = turfView.price * hoursRound * firstOffer / 100
+                totalPrice = turfView.price * hoursRound - offerPrice
+            } else if (offer) {
                 const toDate = offer.toDate
                 const offer_Percent = offer.offerPercent
                 const one = moment(toDate).isBefore(nowdate)
@@ -208,11 +211,8 @@ function TurfviewIndividual() {
             } else {
                 totalPrice = turfView.price * hoursRound
             }
-            
-            if(firstOffer){
-               const offerPrice = turfView.price * hoursRound * firstOffer / 100
-                totalPrice = turfView.price * hoursRound - offerPrice
-            }
+
+
 
             const values = {
                 centerId: turfView._id,
@@ -221,7 +221,7 @@ function TurfviewIndividual() {
                 startTime: startTimeHour,
                 endTime: endTimeHour,
                 totalPrice: totalPrice,
-                offer: offer && offer.offerPercent
+                offer: offer ? offer.offerPercent : firstOffer ? firstOffer : ''
             }
             axios.get(`admin_panel/booking/check/?centerId=${turfView._id}&date=${dateFormated[0]}&startTime=${startTimeHour[1]}`, {
                 headers: {

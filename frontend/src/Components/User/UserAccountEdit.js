@@ -85,7 +85,7 @@ function UserAccountEdit() {
                         icon: 'success',
                         title: message
                     })
-                    navigate('/useraccount')
+                    navigate('/account')
                 })
         } else {
             Toast.fire({

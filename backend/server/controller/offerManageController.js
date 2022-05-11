@@ -2,23 +2,27 @@ const OfferModel = require('../model/offerschema')
 const ObjectId = require('mongoose').Types.ObjectId
 
 exports.addOffer = async (req, res) => {
-    try {
-        const { turfId, offerPercent, fromDate, toDate } = req.body
-        const data = await OfferModel.find({ turfId: ObjectId(turfId) })
-        if (data.length === 0) {
-            const offer = new OfferModel({
-                turfId: turfId,
-                offerPercent: offerPercent,
-                fromDate: fromDate,
-                toDate: toDate
-            })
-            const newOffer = await offer.save()
-            res.send({ message: 'New offer created successfully', offer: newOffer })
-        } else {
-            res.send({ error: 'Turf already have an offer' })
+    if (req.authVerified.role === 'admin') {
+        try {
+            const { turfId, offerPercent, fromDate, toDate } = req.body
+            const data = await OfferModel.find({ turfId: ObjectId(turfId) })
+            if (data.length === 0) {
+                const offer = new OfferModel({
+                    turfId: turfId,
+                    offerPercent: offerPercent,
+                    fromDate: fromDate,
+                    toDate: toDate
+                })
+                const newOffer = await offer.save()
+                res.send({ message: 'New offer created successfully', offer: newOffer })
+            } else {
+                res.send({ error: 'Turf already have an offer' })
+            }
+        } catch (error) {
+            res.send(error)
         }
-    } catch (error) {
-        res.send(error)
+    } else {
+        res.status(401).send('Unauthorized Access')
     }
 }
 
@@ -77,63 +81,75 @@ exports.offerStatus = async (req, res) => {
 }
 
 exports.getOfferData = async (req, res) => {
-    try {
-        const id = req.params.id
-        const offer = await OfferModel.aggregate([
-            {
-                $match: {
-                    _id: ObjectId(id)
+    if (req.authVerified.role === 'admin') {
+        try {
+            const id = req.params.id
+            const offer = await OfferModel.aggregate([
+                {
+                    $match: {
+                        _id: ObjectId(id)
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'turves',
+                        localField: 'turfId',
+                        foreignField: '_id',
+                        as: 'turfDetails'
+                    }
                 }
-            },
-            {
-                $lookup: {
-                    from: 'turves',
-                    localField: 'turfId',
-                    foreignField: '_id',
-                    as: 'turfDetails'
-                }
-            }
-        ])
-        res.send({ message: 'ok', offer: offer })
-    } catch (error) {
-        res.send(error)
+            ])
+            res.send({ message: 'ok', offer: offer })
+        } catch (error) {
+            res.send(error)
+        }
+    } else {
+        res.status(401).send('Unauthorized Access')
     }
 }
 
 exports.updateOfferData = async (req, res) => {
-    try {
-        const { offerPercent, fromDate, toDate, turfId } = req.body
-        const offer = await OfferModel.findByIdAndUpdate({ _id: req.params.id }, req.body)
-        if (offer) {
-            res.send({ message: "Offer details Updated Successfully", offer: offer })
-        } else {
-            res.send({ message: "Request failed" })
+    if (req.authVerified.role === 'admin') {
+        try {
+            const { offerPercent, fromDate, toDate, turfId } = req.body
+            const offer = await OfferModel.findByIdAndUpdate({ _id: req.params.id }, req.body)
+            if (offer) {
+                res.send({ message: "Offer details Updated Successfully", offer: offer })
+            } else {
+                res.send({ message: "Request failed" })
+            }
+        } catch (error) {
+            res.send(error)
         }
-    } catch (error) {
-        res.send(error)
+    } else {
+        res.status(401).send('Unauthorized Access')
     }
 }
 
 exports.deleteOfferData = async (req, res) => {
-    try {
-        const data = await OfferModel.findByIdAndDelete({ _id: req.params.id })
-        const offer = await OfferModel.aggregate([
-            {
-                $lookup: {
-                    from: 'turves',
-                    localField: 'turfId',
-                    foreignField: '_id',
-                    as: 'turfDetails'
+    if (req.authVerified.role === 'admin') {
+        try {
+            const data = await OfferModel.findByIdAndDelete({ _id: req.params.id })
+            const offer = await OfferModel.aggregate([
+                {
+                    $lookup: {
+                        from: 'turves',
+                        localField: 'turfId',
+                        foreignField: '_id',
+                        as: 'turfDetails'
+                    }
                 }
+            ])
+            if (offer) {
+                res.send({ message: "Deleted Successfully", offer: offer })
+            } else {
+                res.send({ error: "Some error in deleting the data" })
             }
-        ])
-        if (offer) {
-            res.send({ message: "Deleted Successfully", offer: offer })
-        } else {
-            res.send({ error: "Some error in deleting the data" })
+        } catch (error) {
+            res.send({ messsage: "Error", error: error })
         }
-    } catch (error) {
-        res.send({ messsage: "Error", error: error })
+    } else {
+        res.status(401).send('Unauthorized Access')
     }
 }
 

@@ -12,7 +12,6 @@ import "swiper/css/pagination";
 
 function CardFavourite() {
     const [offer, setOffer] = useState([])
-    console.log(offer)
     const navigate = useNavigate()
     const theme = useTheme()
     const isSmall = useMediaQuery(theme.breakpoints.down('sm'))

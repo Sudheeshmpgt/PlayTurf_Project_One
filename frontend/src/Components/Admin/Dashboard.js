@@ -16,7 +16,6 @@ function Dashboard() {
     const [turfCount, setTurfCount] = useState('') 
     const [userCount, setUserCount] = useState('')
     const [revenue, setRevenue] = useState('')
-    console.log(turfCount, userCount, revenue)
 
 
     useEffect(() => {

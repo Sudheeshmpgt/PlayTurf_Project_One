@@ -28,7 +28,7 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "/uploads",
-  },
+  }, 
 });
 
 const upload = multer({ storage: storage });
@@ -127,7 +127,7 @@ route.put('/admin_panel/booking_management/edit_status/:id', verifyAuth, booking
 //admin booking management delete booking details
 route.delete('/admin_panel/booking_management/delete_booking/:id', verifyAuth, bookingController.deleteBookingData)
 
-//admin booking management delete booking details
+//admin booking management cancel booking details
 route.put('/booking/edit_status/:id', verifyAuth, bookingController.cancelBooking)
 
 //user add to favourites

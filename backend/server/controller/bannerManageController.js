@@ -26,69 +26,83 @@ exports.bannerManagement = async (req, res) => {
 
 //admin banner management add banner
 exports.addBanner = async (req, res) => {
-    try {
-        const { description } = req.body;
-        const url = req.file.path
-        if (url) {
-            const newBanner = new BannerModel({
-                bannerImage: url,
-                description: description
-            });
-            const banner = await newBanner.save();
-            res.send({ message: "Banner details added Successfully", banner: banner });
-        } else {
-            res.send({ error: "Invalid credentials" })
+    if (req.authVerified.role === 'admin') {
+        try {
+            const { description } = req.body;
+            const url = req.file.path
+            if (url) {
+                const newBanner = new BannerModel({
+                    bannerImage: url,
+                    description: description
+                });
+                const banner = await newBanner.save();
+                res.send({ message: "Banner details added Successfully", banner: banner });
+            } else {
+                res.send({ error: "Invalid credentials" })
+            }
+        } catch (error) {
+            res.send({ message: "Invalid details", error: error })
         }
-    } catch (error) {
-        res.send({ message: "Invalid details", error: error })
-        console.log(error)
+    } else {
+        res.status(401).send('Unauthorized Access')
     }
 }
 
 //admin banner management update request
 exports.getBannerData = async (req, res) => {
-    try {
-        const data = await BannerModel.find({ _id: req.params.id })
-        if (data) {
-            res.send({ message: "Successful", banner: data })
-        } else {
-            res.send({ message: "Error" })
+    if (req.authVerified.role === 'admin') {
+        try {
+            const data = await BannerModel.find({ _id: req.params.id })
+            if (data) {
+                res.send({ message: "Successful", banner: data })
+            } else {
+                res.send({ message: "Error" })
+            }
+        } catch (error) {
+            console.log(error)
         }
-    } catch (error) {
-        console.log(error)
+    } else {
+        res.status(401).send('Unauthorized Access')
     }
-
 }
 
 //admin banner management get updated
 exports.updateBannerData = async (req, res) => {
-    try {
-        const values = {
-            description: req.body.description,
-            bannerImage: req.file && req.file.path
+    if (req.authVerified.role === 'admin') {
+        try {
+            const values = {
+                description: req.body.description,
+                bannerImage: req.file && req.file.path
+            }
+            const data = await BannerModel.findByIdAndUpdate({ _id: req.params.id }, values)
+            if (data) {
+                res.send({ message: "Banner details Updated Successfully", banner: data })
+            } else {
+                res.send({ message: "Request failed" })
+            }
+        } catch (error) {
+            res.send({ message: "Bad request", err: error })
         }
-        const data = await BannerModel.findByIdAndUpdate({ _id: req.params.id }, values)
-        if (data) {
-            res.send({ message: "Banner details Updated Successfully", banner: data })
-        } else {
-            res.send({ message: "Request failed" })
-        }
-    } catch (error) {
-        res.send({ message: "Bad request", err: error })
+    } else {
+        res.status(401).send('Unauthorized Access')
     }
 }
 
 //admin banner mangement delete
 exports.deleteBannerData = async (req, res) => {
-    try {
-        const data = await BannerModel.findByIdAndDelete({ _id: req.params.id })
-        const banner = await BannerModel.find({})
-        if (data) {
-            res.send({ message: "Deleted Successfully", banner: banner })
-        } else {
-            res.send({ message: "Some error in deleting the data" })
+    if (req.authVerified.role === 'admin') {
+        try {
+            const data = await BannerModel.findByIdAndDelete({ _id: req.params.id })
+            const banner = await BannerModel.find({})
+            if (data) {
+                res.send({ message: "Deleted Successfully", banner: banner })
+            } else {
+                res.send({ message: "Some error in deleting the data" })
+            }
+        } catch (error) {
+            res.send({ messsage: "Error", error: error })
         }
-    } catch (error) {
-        res.send({ messsage: "Error", error: error })
+    } else {
+        res.status(401).send('Unauthorized Access')
     }
 }

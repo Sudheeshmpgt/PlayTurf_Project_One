@@ -3,36 +3,44 @@ const VerifyCouponModel = require('../model/verifyCouponSchema')
 const ObjectId = require('mongoose').Types.ObjectId
 
 exports.addCoupon = async (req, res) => {
-    try {
-        const { couponCode, offerPercent, fromDate, toDate } = req.body
-        const data = await CouponModel.find({ couponCode: couponCode })
-        if (data.length === 0) {
-            const coupon = new CouponModel({
-                couponCode: couponCode,
-                offerPercent: offerPercent,
-                fromDate: fromDate,
-                toDate: toDate
-            })
-            const newCoupon = await coupon.save()
-            res.send({ message: 'New coupon created successfully', Coupon: newCoupon })
-        } else {
-            res.send({ error: 'Coupon code already exists' })
+    if (req.authVerified.role === 'admin') {
+        try {
+            const { couponCode, offerPercent, fromDate, toDate } = req.body
+            const data = await CouponModel.find({ couponCode: couponCode })
+            if (data.length === 0) {
+                const coupon = new CouponModel({
+                    couponCode: couponCode,
+                    offerPercent: offerPercent,
+                    fromDate: fromDate,
+                    toDate: toDate
+                })
+                const newCoupon = await coupon.save()
+                res.send({ message: 'New coupon created successfully', Coupon: newCoupon })
+            } else {
+                res.send({ error: 'Coupon code already exists' })
+            }
+        } catch (error) {
+            res.send(error)
         }
-    } catch (error) {
-        res.send(error)
+    } else {
+        res.status(401).send('Unauthorized Access')
     }
 }
 
 exports.couponManagement = async (req, res) => {
-    try {
-        const coupon = await CouponModel.find({})
-        if (coupon) {
-            res.send({ message: "Success", coupon: coupon })
-        } else {
-            res.send({ error: "something went wrong" })
+    if (req.authVerified.role === 'admin') {
+        try {
+            const coupon = await CouponModel.find({})
+            if (coupon) {
+                res.send({ message: "Success", coupon: coupon })
+            } else {
+                res.send({ error: "something went wrong" })
+            }
+        } catch (error) {
+            res.send(error)
         }
-    } catch (error) {
-        res.send(error)
+    } else {
+        res.status(401).send('Unauthorized Access')
     }
 }
 
@@ -60,40 +68,52 @@ exports.couponStatus = async (req, res) => {
 }
 
 exports.getCouponData = async (req, res) => {
-    try {
-        const id = req.params.id
-        const coupon = await CouponModel.findOne({ _id: id })
-        res.send({ message: 'ok', coupon: coupon })
-    } catch (error) {
-        res.send(error)
+    if (req.authVerified.role === 'admin') {
+        try {
+            const id = req.params.id
+            const coupon = await CouponModel.findOne({ _id: id })
+            res.send({ message: 'ok', coupon: coupon })
+        } catch (error) {
+            res.send(error)
+        }
+    } else {
+        res.status(401).send('Unauthorized Access')
     }
 }
 
 exports.updateCouponData = async (req, res) => {
-    try {
-        const { couponCode, offerPercent, fromDate, toDate } = req.body
-        const coupon = await CouponModel.findByIdAndUpdate({ _id: req.params.id }, req.body)
-        if (coupon) {
-            res.send({ message: "Coupon Details Updated Successfully", coupon: coupon })
-        } else {
-            res.send({ message: "Request failed" })
+    if (req.authVerified.role === 'admin') {
+        try {
+            const { couponCode, offerPercent, fromDate, toDate } = req.body
+            const coupon = await CouponModel.findByIdAndUpdate({ _id: req.params.id }, req.body)
+            if (coupon) {
+                res.send({ message: "Coupon Details Updated Successfully", coupon: coupon })
+            } else {
+                res.send({ message: "Request failed" })
+            }
+        } catch (error) {
+            res.send(error)
         }
-    } catch (error) {
-        res.send(error)
+    } else {
+        res.status(401).send('Unauthorized Access')
     }
 }
 
 exports.deleteCouponData = async (req, res) => {
-    try {
-        const data = await CouponModel.findByIdAndDelete({ _id: req.params.id })
-        const coupon = await CouponModel.find({})
-        if (coupon) {
-            res.send({ message: "Deleted Successfully", coupon: coupon })
-        } else {
-            res.send({ error: "Some error in deleting the data" })
+    if (req.authVerified.role === 'admin') {
+        try {
+            const data = await CouponModel.findByIdAndDelete({ _id: req.params.id })
+            const coupon = await CouponModel.find({})
+            if (coupon) {
+                res.send({ message: "Deleted Successfully", coupon: coupon })
+            } else {
+                res.send({ error: "Some error in deleting the data" })
+            }
+        } catch (error) {
+            res.send({ messsage: "Error", error: error })
         }
-    } catch (error) {
-        res.send({ messsage: "Error", error: error })
+    } else {
+        res.status(401).send('Unauthorized Access')
     }
 }
 

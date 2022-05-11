@@ -16,7 +16,6 @@ function BookingConfirmation() {
     const { turfView } = useContext(TurfViewContext)
     const { user } = useContext(UserContext)
     const { booking, setBooking } = useContext(BookingContext)
-    // console.log(booking)
     const [loading, setLoading] = useState(false)
     const [value, setValue] = useState('Pay At Venue')
     const [code, setCode] = useState('')
@@ -114,7 +113,9 @@ function BookingConfirmation() {
 
     function bookingConfirm() {
         const { centerId, createdBy, date, startTime, endTime, offer } = booking
-        const price = totalPrice
+        console.log(booking)
+        console.log(date)
+        const price = totalPrice ? totalPrice : booking.totalPrice
         const values = {
             centerId: centerId,
             createdBy: createdBy,
@@ -141,6 +142,7 @@ function BookingConfirmation() {
                     localStorage.setItem("bookingId", res.data.booking._id)
                     navigate('/preview')
                 }).catch((e) => {
+                    console.log(e)
                     Toast.fire({
                         icon: 'error',
                         title: 'Something went wrong'
@@ -272,7 +274,7 @@ function BookingConfirmation() {
                                         Center Name
                                     </Box>
                                     <Box marginLeft={2.5}>
-                                        :{turfView.centername}
+                                        :{turfView && turfView.centername}
                                     </Box>
                                 </Typography>
                                 <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{ display: 'flex' }}>
@@ -280,7 +282,7 @@ function BookingConfirmation() {
                                         Phone
                                     </Box>
                                     <Box marginLeft={8.8}>
-                                        :{turfView.phone}
+                                        :{turfView && turfView.phone}
                                     </Box>
                                 </Typography>
                                 <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{ display: 'flex' }}>
@@ -288,7 +290,7 @@ function BookingConfirmation() {
                                         Address
                                     </Box>
                                     <Box marginLeft={7.2}>
-                                        :{turfView.location}
+                                        :{turfView && turfView.location}
                                     </Box>
                                 </Typography>
                             </Box>
@@ -317,7 +319,7 @@ function BookingConfirmation() {
                                         Date
                                     </Box>
                                     <Box marginLeft={10.2}>
-                                        :{booking.date}
+                                        :{booking && booking.date}
                                     </Box>
                                 </Typography>
                                 <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{ display: 'flex' }}>
@@ -325,7 +327,7 @@ function BookingConfirmation() {
                                         Time
                                     </Box>
                                     <Box marginLeft={10}>
-                                        :{`${booking.startTime} to ${booking.endTime}`}
+                                        :{booking && `${booking.startTime} to ${booking.endTime}`}
                                     </Box>
                                 </Typography>
                                 <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{ display: 'flex' }}>
@@ -333,7 +335,7 @@ function BookingConfirmation() {
                                         Offers
                                     </Box>
                                     <Box marginLeft={8.8}>
-                                        :{booking.offer ? `${booking.offer}%` : 'Nill'}
+                                        :{booking && booking.offer ? `${booking.offer}%` : 'Nill'}
                                     </Box>
                                 </Typography>
                                 <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600} sx={{ display: 'flex' }}>
@@ -341,7 +343,7 @@ function BookingConfirmation() {
                                         Total Amount
                                     </Box>
                                     <Box marginLeft={2}>
-                                        :{booking.totalPrice}
+                                        :{booking && booking.totalPrice}
                                     </Box>
                                 </Typography>
                             </Box>
@@ -415,7 +417,7 @@ function BookingConfirmation() {
 
                             <Box marginTop={3}>
                                 <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600}>
-                                    Total Amount (Pay at Venue): {totalPrice ? totalPrice : booking.totalPrice}
+                                    Total Amount (Pay at Venue): {totalPrice ? totalPrice : booking ? booking.totalPrice : ''}
                                 </Typography>
                             </Box>
                         </CardContent>

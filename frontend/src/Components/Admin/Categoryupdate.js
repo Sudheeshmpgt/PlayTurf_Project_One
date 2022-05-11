@@ -61,9 +61,8 @@ function Categoryupdate() {
 
     const Edit = () => {
         const id = categoryid
-        const { centername, location, category } = categories
-
-        if (centername && location && category) {
+        const { category } = categories
+        if (category) {
             axios.put(`admin_panel/category/edit_category/${id}`, categories, {
                 headers: {
                     'authToken': localStorage.getItem("admintoken"),
@@ -80,7 +79,7 @@ function Categoryupdate() {
         } else {
             Toast.fire({
                 icon: 'error',
-                title: 'Invalid Credetials'
+                title: 'Invalid Credentials'
             })
         }
     }
@@ -128,7 +127,7 @@ function Categoryupdate() {
             <Paper elevation={3} style={paperStyle}>
                 <Grid align='center'>
                     <Avatar style={avatarStyle}><EditIcon /></Avatar>
-                    <h2 style={{ marginBottom: '10px', fontFamily: 'Atkinson Hyperlegible, sans-serif' }}>Edit Turf Details</h2>
+                    <h2 style={{ marginBottom: '10px', fontFamily: 'Atkinson Hyperlegible, sans-serif' }}>Edit Category Details</h2>
                     <form onSubmit={handleSubmit(Edit)} autoComplete='off'>
                         <TextField
                             style={textStyle}

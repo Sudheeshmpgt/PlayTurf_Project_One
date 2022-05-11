@@ -29,99 +29,35 @@ exports.addBooking = async (req, res) => {
 
 //user booking get request
 exports.getBookingDetails = async (req, res) => {
-    const userId = req.params.id
-    const data = await BookingModel.aggregate([
-        {
-            $match: { createdBy: ObjectId(userId) }
-        },
-        {
-            $lookup: {
-                from: 'turves',
-                localField: 'centerId',
-                foreignField: '_id',
-                as: 'turfDetails'
+    if (req.authVerified.role === 'admin' || req.authVerified.role === 'user') {
+        const userId = req.params.id
+        const data = await BookingModel.aggregate([
+            {
+                $match: { createdBy: ObjectId(userId) }
+            },
+            {
+                $lookup: {
+                    from: 'turves',
+                    localField: 'centerId',
+                    foreignField: '_id',
+                    as: 'turfDetails'
+                }
             }
+        ])
+        if (data) {
+            res.send({ message: "Successful", turf: data })
+        } else {
+            res.send({ message: "Error" })
         }
-    ])
-    if (data) {
-        res.send({ message: "Successful", turf: data })
     } else {
-        res.send({ message: "Error" })
+        res.status(401).send('Unauthorized Access')
     }
 }
 
 //admin booking management get request
 exports.bookingManagement = async (req, res) => {
-    const data = await BookingModel.aggregate([
-        {
-            $lookup: {
-                from: 'users',
-                localField: 'createdBy',
-                foreignField: '_id',
-                as: 'userDetails'
-            }
-        },
-        {
-            $lookup: {
-                from: 'turves',
-                localField: 'centerId',
-                foreignField: '_id',
-                as: 'turfDetails'
-            }
-        }
-    ])
-    if (data) {
-        res.send({ message: "Successful", booking: data })
-    } else {
-        res.send({ message: "Error" })
-    }
-}
-
-//admin booking management booking status change
-exports.changeBookingStatus = async (req, res) => {
-    try {
-        const status = req.body.data
-
-        const data = await BookingModel.findByIdAndUpdate(
-            {
-                _id: req.params.id
-            },
-            {
-                status: status
-            })
-        if (data) {
-            const bookings = await BookingModel.aggregate([
-                {
-                    $lookup: {
-                        from: 'users',
-                        localField: 'createdBy',
-                        foreignField: '_id',
-                        as: 'userDetails'
-                    }
-                },
-                {
-                    $lookup: {
-                        from: 'turves',
-                        localField: 'centerId',
-                        foreignField: '_id',
-                        as: 'turfDetails'
-                    }
-                }
-            ])
-            res.send({ message: "Booking status updated successfully", booking: bookings })
-        } else {
-            res.send({ message: "Request failed" })
-        }
-    } catch (error) {
-        console.log('error', error)
-    }
-}
-
-//admin booking management delete booking details
-exports.deleteBookingData = async (req, res) => {
-    try {
-        const data = await BookingModel.findByIdAndDelete({ _id: req.params.id })
-        const booking = await BookingModel.aggregate([
+    if (req.authVerified.role === 'admin' || req.authVerified.role === 'user') {
+        const data = await BookingModel.aggregate([
             {
                 $lookup: {
                     from: 'users',
@@ -140,12 +76,92 @@ exports.deleteBookingData = async (req, res) => {
             }
         ])
         if (data) {
-            res.send({ message: "Deleted Successfully", booking: booking })
+            res.send({ message: "Successful", booking: data })
         } else {
-            res.send({ message: "Some error in deleting the data" })
+            res.send({ message: "Error" })
         }
-    } catch (error) {
-        res.send({ messsage: "Error", error: error })
+    } else {
+        res.status(401).send('Unauthorized Access')
+    }
+}
+
+//admin booking management booking status change
+exports.changeBookingStatus = async (req, res) => {
+    if (req.authVerified.role === 'admin') {
+        try {
+            const status = req.body.data
+
+            const data = await BookingModel.findByIdAndUpdate(
+                {
+                    _id: req.params.id
+                },
+                {
+                    status: status
+                })
+            if (data) {
+                const bookings = await BookingModel.aggregate([
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'createdBy',
+                            foreignField: '_id',
+                            as: 'userDetails'
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'turves',
+                            localField: 'centerId',
+                            foreignField: '_id',
+                            as: 'turfDetails'
+                        }
+                    }
+                ])
+                res.send({ message: "Booking status updated successfully", booking: bookings })
+            } else {
+                res.send({ message: "Request failed" })
+            }
+        } catch (error) {
+            console.log('error', error)
+        }
+    } else {
+        res.status(401).send('Unauthorized Access')
+    }
+}
+
+//admin booking management delete booking details
+exports.deleteBookingData = async (req, res) => {
+    if (req.authVerified.role === 'admin') {
+        try {
+            const data = await BookingModel.findByIdAndDelete({ _id: req.params.id })
+            const booking = await BookingModel.aggregate([
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'createdBy',
+                        foreignField: '_id',
+                        as: 'userDetails'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'turves',
+                        localField: 'centerId',
+                        foreignField: '_id',
+                        as: 'turfDetails'
+                    }
+                }
+            ])
+            if (data) {
+                res.send({ message: "Deleted Successfully", booking: booking })
+            } else {
+                res.send({ message: "Some error in deleting the data" })
+            }
+        } catch (error) {
+            res.send({ messsage: "Error", error: error })
+        }
+    } else {
+        res.status(401).send('Unauthorized Access')
     }
 }
 
@@ -187,6 +203,7 @@ exports.cancelBooking = async (req, res) => {
 
 //user get booking details by booking_id
 exports.getBookingData = async (req, res) => {
+
     const Id = req.params.id
     const data = await BookingModel.aggregate([
         {
@@ -212,10 +229,10 @@ exports.verifyFirstOffer = async (req, res) => {
     try {
         const userId = req.query.id
         const data = await BookingModel.findOne({ createdBy: ObjectId(userId) })
-        if (data.length != 0) {
-            res.send({error:'Not Eligible'})
+        if (data) {
+            res.send({ error: 'Not Eligible' })
         } else {
-             res.send({ message: 'Eligible' })
+            res.send({ message: 'Eligible' })
         }
     } catch (error) {
         res.send(error)
