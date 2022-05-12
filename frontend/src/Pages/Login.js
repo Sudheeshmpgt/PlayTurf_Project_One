@@ -81,7 +81,6 @@ function Login() {
             })
             const token = res.data.token
             localStorage.setItem("usertoken", token)
-            localStorage.setItem("usertoken", token)
             localStorage.setItem("userId", res.data.user._id)
             localStorage.setItem("userName", res.data.user.name)
             localStorage.setItem("userPhone", res.data.user.phone)
