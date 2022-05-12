@@ -3,10 +3,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const ObjectId = require('mongoose').Types.ObjectId
 
-//home
-exports.home = (req, res) => {
-    res.send('<h3>server started</h3>');
-}
 
 //user signup
 exports.registration = async (req, res) => {

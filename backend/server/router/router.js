@@ -33,10 +33,6 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage: storage });
 
-
-//routes
-route.get('/', userController.home)
-
 //user registration
 route.post('/user_registration', userController.registration)
 

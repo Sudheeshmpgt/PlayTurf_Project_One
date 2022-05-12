@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/static/css/main.57048509.css",
+    "main.js": "/static/js/main.584dd29e.js",
+    "static/media/imgOne.jpg": "/static/media/imgOne.88811470e527224e0148.jpg",
+    "static/media/Soccer.gif": "/static/media/Soccer.c92248bff930c9046820.gif",
+    "static/media/Football_Goal.gif": "/static/media/Football_Goal.07552d2df5d381dbe684.gif",
+    "index.html": "/index.html",
+    "main.57048509.css.map": "/static/css/main.57048509.css.map",
+    "main.584dd29e.js.map": "/static/js/main.584dd29e.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.57048509.css",
+    "static/js/main.584dd29e.js"
+  ]
+}
