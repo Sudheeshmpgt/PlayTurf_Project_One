@@ -45,6 +45,9 @@ route.post('/googlelogin', googleLoginController.googleLogin)
 //admin login
 route.post('/admin_login', adminController.adminLogin)
 
+//admin registration
+route.post('/admin_registration', adminController.register)
+
 //admin user management
 route.get('/admin_panel/user_management', verifyAuth, userManageController.userManagement)
 

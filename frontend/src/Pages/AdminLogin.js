@@ -66,7 +66,7 @@ function AdminLogin() {
             padding: 20,
             height: 'auto',
             width: 375,
-            margin: "9.6% auto",
+            margin: "10.6% auto",   
             borderRadius: '15px'
         }
     }

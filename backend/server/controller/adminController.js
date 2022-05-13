@@ -26,3 +26,24 @@ exports.adminLogin = async (req, res) => {
         res.send({ message: "Bad Request", err: error });
     }
 }
+
+//registration
+exports.register = async (req, res) =>{
+    try {
+        const { email, password } = req.body;
+        const admin = await AdminModel.findOne({ email: email });
+        if (admin) {
+            res.send({ message: "Admin already exists" });
+        } else {
+            // const hashedPw = await bcrypt.hash(password, 12);
+            const registerAdmin = new AdminModel({
+                email: req.body.email,
+                password: req.body.password 
+            });
+            const admin = await registerAdmin.save();
+            res.send({ message: "Admin Registered Successfully", admin: admin }); 
+        }
+    } catch (error) {
+        res.send(error);
+    }
+} 

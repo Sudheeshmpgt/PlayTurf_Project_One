@@ -35,6 +35,7 @@ import Couponpage from './Pages/Couponpage';
 import Couponaddpage from './Pages/Couponaddpage';
 import Couponupdatepage from './Pages/Couponupdatepage';
 import Reportpage from './Pages/Reportpage';
+import AdminRegister from './Pages/AdminRegister';
 
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
      <Route path='/login' element={<Login/>}/> 
      <Route path='/signup' element={ <SignUp/>}/> 
      <Route path='/adminlogin' element={ <AdminLogin/>}/> 
+     <Route path='/adminregister' element={ <AdminRegister/>}/>   
      <Route path='/adminhome' element={ <AdminHome/>}/> 
      <Route path='/userpage' element={ <Userpage/>}/> 
      <Route path='/userupdate' element={ <Userupdatepage/>}/> 
