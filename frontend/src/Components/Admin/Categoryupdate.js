@@ -94,7 +94,11 @@ function Categoryupdate() {
             padding: 20,
             height: 'auto',
             width: 280,
-            margin: "50px auto",
+            // margin: "100px auto",
+            marginLeft:'auto',
+            marginRight:'auto',
+            marginTop:115, 
+            marginBottom:200,   
             backgroundColor: 'rgba(255, 255, 255, 0.8)',
             borderRadius: '1px'
         }
@@ -109,7 +113,7 @@ function Categoryupdate() {
         }
     }
 
-    const avatarStyle = { backgroundColor: '#DD0404', margin: 15 }
+    const avatarStyle = { backgroundColor: '#DD0404', margin: '10px auto' } 
     const textStyle = { margin: '6px auto' }
     return (
         <Grid container>

@@ -75,7 +75,10 @@ function Categoryadd() {
             padding: 20,
             height: 'auto',
             width: 280,
-            margin: "50px auto",
+            marginLeft:'auto',
+            marginRight:'auto',
+            marginTop:105, 
+            marginBottom:200,  
             backgroundColor: 'rgba(255, 255, 255, 0.8)',
             borderRadius: '1px'
         }

@@ -88,7 +88,7 @@ function Banneradd() {
             padding: 20,
             height: 'auto',
             width: 280,
-            margin: "50px auto",
+            margin: "75px auto",
             backgroundColor: 'rgba(255, 255, 255, 0.8)',
             borderRadius: '1px'
         }

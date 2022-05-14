@@ -127,6 +127,9 @@ function AdminHeader() {
                             <MenuItem onClick={dashboardSubmit}>
                                 <Typography textAlign="center">Dashboard</Typography>
                             </MenuItem>
+                            <MenuItem onClick={reportSubmit}>
+                                <Typography textAlign="center"> Sales Report</Typography>
+                            </MenuItem>
                             <MenuItem onClick={turfSubmit}>
                                 <Typography textAlign="center">Turfs</Typography>
                             </MenuItem>

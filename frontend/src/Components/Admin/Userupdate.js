@@ -89,7 +89,7 @@ function Userupdate() {
             padding: 20,
             height: 'auto',
             width: 280,
-            margin: "50px auto",
+            margin: "85px auto",
             borderRadius: '2px'
         }
     } else {

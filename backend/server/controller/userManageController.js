@@ -92,7 +92,6 @@ exports.updateUserStatus = async (req, res) => {
 
 //admin user mangement delete
 exports.deleteUserData = async (req, res) => {
-    if (req.authVerified.role === 'admin') {
         try {
             const data = await UserModel.findByIdAndDelete({ _id: req.params.id })
             const user = await UserModel.find({})
@@ -104,7 +103,4 @@ exports.deleteUserData = async (req, res) => {
         } catch (error) {
             res.send({ messsage: "Error", error: error })
         }
-    }else{
-        res.status(401).send('Unauthorized Access')
-    }
 }

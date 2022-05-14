@@ -118,7 +118,7 @@ function Offerupdate() {
             padding: 20,
             height: 'auto',
             width: 280,
-            margin: "10px auto",
+            margin: "105px auto",
             backgroundColor: 'rgba(255, 255, 255, 0.8)',
             borderRadius: '1px'
         }

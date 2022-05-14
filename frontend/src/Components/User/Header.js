@@ -158,6 +158,9 @@ function Header() {
                                                     <MenuItem onClick={handleCloseNavMenu}>
                                                         <Typography onClick={handleClickFavourites} textAlign="center">My Favourites</Typography>
                                                     </MenuItem>
+                                                    <MenuItem onClick={handleCloseUserMenu}>
+                                                        <Typography textAlign="center" onClick={onClickAccount}>Account</Typography>
+                                                    </MenuItem>
                                                     <MenuItem onClick={handleCloseNavMenu}>
                                                         <Typography onClick={logout} textAlign="center">Logout</Typography>
                                                     </MenuItem>
@@ -255,7 +258,7 @@ function Header() {
 
                                 </Box>
                                 {
-                                  !isSmall &&  token ? <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
+                                    !isSmall && token ? <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
                                         <Tooltip title="Open settings">
                                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, color: 'white' }}>
                                                 <Typography>

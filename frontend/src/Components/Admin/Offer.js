@@ -139,7 +139,7 @@ function Offer() {
                                     {offer.filter((data) => {
                                         if (search === "") {
                                             return data
-                                        } else if (data.centername.toLowerCase().includes(search.toLowerCase())) {
+                                        } else if (data.turfDetails[0].centername.toLowerCase().includes(search.toLowerCase())) {
                                             return data
                                         }
                                     })
@@ -218,7 +218,7 @@ function Offer() {
                                         {offer.filter((data) => {
                                             if (search === "") {
                                                 return data
-                                            } else if (data.centername.toLowerCase().includes(search.toLowerCase())) {
+                                            } else if (data.turfDetails[0].centername.toLowerCase().includes(search.toLowerCase())) {
                                                 return data
                                             }
                                         })
@@ -297,7 +297,7 @@ function Offer() {
                                         {offer.filter((data) => {
                                             if (search === "") {
                                                 return data
-                                            } else if (data.centername.toLowerCase().includes(search.toLowerCase())) {
+                                            } else if (data.turfDetails[0].centername.toLowerCase().includes(search.toLowerCase())) {
                                                 return data
                                             }
                                         })

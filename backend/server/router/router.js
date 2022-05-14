@@ -61,8 +61,8 @@ route.put('/admin_panel/user_management/edit_user/:id', upload.single("picture")
 route.put('/admin_panel/user_management/edit_user_status/:id', userManageController.updateUserStatus)
 
 //admin user management delete user
-route.delete('/admin_panel/user_management/delete_user/:id', verifyAuth, userManageController.deleteUserData)
-
+route.delete('/admin_panel/user_management/delete_user/:id', userManageController.deleteUserData)
+ 
 //admin turf management
 route.get('/admin_panel/turfs', turfController.turfManagement)
 

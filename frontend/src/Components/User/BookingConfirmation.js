@@ -1,4 +1,4 @@
-import { Card, CardActions, CardContent, Grid, Typography, Button, Box, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, TextField, Input } from '@mui/material'
+import { Card, CardActions, CardContent, Grid, Typography, Button, Box, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, TextField, Input, useTheme, useMediaQuery } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './TurfList.css'
@@ -25,6 +25,8 @@ function BookingConfirmation() {
     const userName = localStorage.getItem('userName')
     const userPhone = localStorage.getItem('userPhone')
     const userEmail = localStorage.getItem('userEmail')
+    const theme = useTheme()
+    const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
 
     const Toast = Swal.mixin({
         toast: true,
@@ -184,7 +186,7 @@ function BookingConfirmation() {
                 .then((res) => {
                     const expDate = res.data.coupon.toDate
                     const nowDate = moment().format('DD-MM-YYYY')
-                    const verifyDate = moment(expDate).isBefore(nowDate)    
+                    const verifyDate = moment(expDate).isBefore(nowDate)
                     const status = res.data.coupon.status
                     if (!verifyDate && status) {
                         if (res.data.message === 'OK') {
@@ -223,7 +225,7 @@ function BookingConfirmation() {
                                 title: message
                             })
                         }
-                    }else{
+                    } else {
                         Toast.fire({
                             icon: 'error',
                             title: 'Coupon Expired'
@@ -239,12 +241,21 @@ function BookingConfirmation() {
     }
 
     return (
-        <Grid container p={2}>
+        <Grid container sx={{
+            sm:{
+                p:2
+            }
+        }}>
             <Grid sx={{ margin: '10px auto' }}>
                 <Card sx={{ m: 1, backgroundColor: 'rgba(255, 255, 255, 0.87)' }}>
                     <CardContent sx={{ marginTop: 2 }}>
                         <Typography
-                            variant="h1"
+                            sx={{
+                                fontSize: {
+                                    xs: '1.5rem',
+                                    sm: '1.8rem'
+                                }
+                            }}
                             color='text.secondary'
                             textAlign='center'
                             fontFamily='Atkinson Hyperlegible, sans-serif'>
@@ -254,15 +265,23 @@ function BookingConfirmation() {
                     <CardContent sx={{ marginTop: 1 }}>
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', marginTop: -3 }}>
                             <Box sx={{
-                                width: 550,
+                                width: {
+                                    xs: 280,
+                                    sm: 550
+                                },
                                 height: 35,
                                 backgroundColor: 'secondary.light',
                                 color: 'white'
                             }}>
                                 <Typography
-                                    sx={{ margin: '2.5px 10px' }}
+                                    sx={{
+                                        margin: '2.5px 10px',
+                                        fontSize: {
+                                            xs: '1rem',
+                                            sm: '1.2rem'
+                                        }
+                                    }}
                                     fontFamily='Open Sans,sans-serif'
-                                    fontSize={17}
                                     fontWeight={600}
                                 >
                                     CENTER DETAILS
@@ -299,15 +318,23 @@ function BookingConfirmation() {
                     <CardContent sx={{ marginTop: -3.5 }}>
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', marginTop: -3 }}>
                             <Box sx={{
-                                width: 550,
+                                width: {
+                                    xs: 280,
+                                    sm: 550
+                                },
                                 height: 35,
                                 backgroundColor: 'secondary.light',
                                 color: 'white'
                             }}>
                                 <Typography
-                                    sx={{ margin: '2.5px 10px' }}
+                                    sx={{
+                                        margin: '2.5px 10px',
+                                        fontSize: {
+                                            xs: '1rem',
+                                            sm: '1.2rem'
+                                        }
+                                    }}
                                     fontFamily='Open Sans,sans-serif'
-                                    fontSize={17}
                                     fontWeight={600}
                                 >
                                     BOOKING DETAILS
@@ -352,15 +379,23 @@ function BookingConfirmation() {
                     <CardContent sx={{ marginTop: -3.5 }}>
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', marginTop: -3 }}>
                             <Box sx={{
-                                width: 550,
+                                width: {
+                                    xs: 280,
+                                    sm: 550
+                                },
                                 height: 35,
                                 backgroundColor: 'secondary.light',
                                 color: 'white'
                             }}>
                                 <Typography
-                                    sx={{ margin: '2.5px 10px' }}
+                                    sx={{
+                                        margin: '2.5px 10px',
+                                        fontSize: {
+                                            xs: '1rem',
+                                            sm: '1.2rem'
+                                        }
+                                    }}
                                     fontFamily='Open Sans,sans-serif'
-                                    fontSize={17}
                                     fontWeight={600}
                                 >
                                     USER DETAILS
@@ -392,20 +427,39 @@ function BookingConfirmation() {
                                     </Box>
                                 </Typography>
                             </Box>
-                            <Box mt={3} sx={{ cursor: 'pointer', display: 'flex' }}>
-                                <Box width='76%'>
-                                    <TextField
-                                        onChange={handleCouponChange}
-                                        value={code}
-                                        size='small'
-                                        name='couponCode'
-                                        placeholder='Enter Coupon Code'
-                                        Color='secondary'
-                                        fullWidth>
-                                    </TextField>
-                                </Box>
-                                <Button onClick={couponSubmit} color='success' variant='contained'>APPLY COUPON</Button>
-                            </Box>
+                            {
+                                isSmall ? (
+                                    <Box mt={3} sx={{ cursor: 'pointer', display:'flex', flexDirection:'column' }}>
+                                        <Box mb={1}>
+                                            <TextField
+                                                onChange={handleCouponChange}
+                                                value={code}
+                                                size='small'
+                                                name='couponCode'
+                                                placeholder='Enter Coupon Code'
+                                                Color='secondary'
+                                                fullWidth>
+                                            </TextField>
+                                        </Box>
+                                        <Button onClick={couponSubmit} color='success' variant='contained'>APPLY COUPON</Button>
+                                    </Box>
+                                ) : (
+                                    <Box mt={3} sx={{ cursor: 'pointer', display: 'flex' }}>
+                                        <Box width='76%'>
+                                            <TextField
+                                                onChange={handleCouponChange}
+                                                value={code}
+                                                size='small'
+                                                name='couponCode'
+                                                placeholder='Enter Coupon Code'
+                                                Color='secondary'
+                                                fullWidth>
+                                            </TextField>
+                                        </Box>
+                                        <Button onClick={couponSubmit} color='success' variant='contained'>APPLY COUPON</Button>
+                                    </Box>
+                                )
+                            }
                             {
                                 couponStatus &&
                                 <Box mt={1}>
@@ -414,7 +468,6 @@ function BookingConfirmation() {
                                     </Typography>
                                 </Box>
                             }
-
                             <Box marginTop={3}>
                                 <Typography fontFamily='Open Sans,sans-serif' fontSize={15} fontWeight={600}>
                                     Total Amount (Pay at Venue): {totalPrice ? totalPrice : booking ? booking.totalPrice : ''}

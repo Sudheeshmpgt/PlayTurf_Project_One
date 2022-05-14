@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { DataGrid, GridToolbarExport } from '@mui/x-data-grid';
 import { Box, Paper, TableContainer, Typography } from '@mui/material';
 import axios from '../../axiosinstance'
 import { useNavigate } from 'react-router-dom';
+import { SearchContext } from '../../Store/searchcontext';
 
 function SalesReport() {
 
     const navigate = useNavigate()
     const [booking, setBooking] = useState([])
-
+    const { search } = useContext(SearchContext)
     const getBookingData = async () => {
         try {
             const data = await axios.get("admin_panel/booking",
@@ -80,7 +81,13 @@ function SalesReport() {
         },
     ];
 
-    const rows = booking.map((data, index) => (
+    const rows = booking.filter((data) => {
+        if (search === "") {
+            return data
+        } else if (data.turfDetails[0].centername.toLowerCase().includes(search.toLowerCase())) {
+            return data
+        }
+    }).map((data, index) => ( 
         {
             id: index + 1,
             centerName: data.turfDetails[0].centername,

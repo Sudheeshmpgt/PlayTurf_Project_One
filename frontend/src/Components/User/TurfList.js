@@ -33,7 +33,7 @@ function TurfList() {
             const data = await axios.get("admin_panel/turfs")
             setTurf(data.data.turf)
         } catch (error) {
-            alert(error)
+            
         }
     }
 

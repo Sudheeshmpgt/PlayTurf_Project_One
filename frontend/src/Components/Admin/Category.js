@@ -113,7 +113,7 @@ function Category() {
                                     {category.filter((data) => {
                                         if (search === "") {
                                             return data
-                                        } else if (data.centername.toLowerCase().includes(search.toLowerCase())) {
+                                        } else if (data.category.toLowerCase().includes(search.toLowerCase())) {
                                             return data
                                         }
                                     })
@@ -176,7 +176,7 @@ function Category() {
                                         {category.filter((data) => {
                                             if (search === "") {
                                                 return data
-                                            } else if (data.centername.toLowerCase().includes(search.toLowerCase())) {
+                                            } else if (data.category.toLowerCase().includes(search.toLowerCase())) {
                                                 return data
                                             }
                                         })
@@ -239,7 +239,7 @@ function Category() {
                                         {category.filter((data) => {
                                             if (search === "") {
                                                 return data
-                                            } else if (data.centername.toLowerCase().includes(search.toLowerCase())) {
+                                            } else if (data.category.toLowerCase().includes(search.toLowerCase())) {
                                                 return data
                                             }
                                         })

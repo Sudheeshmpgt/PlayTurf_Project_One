@@ -143,8 +143,8 @@ function Booking() {
                                     {booking.filter((data) => {
                                         if (search === "") {
                                             return data
-                                        } else if (data.name.toLowerCase().includes(search.toLowerCase())) {
-                                            return data
+                                        } else if (data.turfDetails[0].centername.toLowerCase().includes(search.toLowerCase())) {
+                                            return data 
                                         }
                                     })
                                         .map((data, index) => (
@@ -225,7 +225,7 @@ function Booking() {
                                         {booking.filter((data) => {
                                             if (search === "") {
                                                 return data
-                                            } else if (data.name.toLowerCase().includes(search.toLowerCase())) {
+                                            } else if (data.turfDetails[0].centername.toLowerCase().includes(search.toLowerCase())) {
                                                 return data
                                             }
                                         })
@@ -307,7 +307,7 @@ function Booking() {
                                         {booking.filter((data) => {
                                             if (search === "") {
                                                 return data
-                                            } else if (data.name.toLowerCase().includes(search.toLowerCase())) {
+                                            } else if (data.turfDetails[0].centername.toLowerCase().includes(search.toLowerCase())) {
                                                 return data
                                             }
                                         })
