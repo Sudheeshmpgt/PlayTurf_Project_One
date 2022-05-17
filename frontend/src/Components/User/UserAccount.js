@@ -110,9 +110,9 @@ function UserAccount() {
                                     ADDRESS
                                 </Typography>
                                 <Typography variant='h4' ml={1}>
-                                    : {user ? user.address : ''}
+                                    : {user && user.address}
                                 </Typography>
-                            </Box>
+                            </Box> 
                         </CardContent>
                     </Card>
                 ) : (

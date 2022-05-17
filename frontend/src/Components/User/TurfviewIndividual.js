@@ -366,7 +366,7 @@ function TurfviewIndividual() {
                                     margin='15px 0'>
                                     Available Time Slots
                                 </Typography>
-                                <Paper sx={{display: 'flex', justifyContent: 'space-evenly', overflow:'scroll' }}>
+                                <Paper className='scrollbar-hidden' sx={{display: 'flex', justifyContent: 'space-evenly',  overflow:'scroll'}}>
                                     {
                                         value === 'Morning' ? (
                                             morningTimeslots.map((data, index) => (
